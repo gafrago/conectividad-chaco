@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despliegue de Infraestructura TIC - Chaco</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9; }
+        .chart-container { width: 90%; max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+    <h1>Matriz de Conectividad Provincial (Chaco)</h1>
+    <p>Distribución de accesos a internet fijo por tipo de tecnología de enlace.</p>
+    
+    <div class="chart-container">
+        <canvas id="miGrafico"></canvas>
+    </div>
+
+    <script>
+        Papa.parse("enacom.csv", {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const datos = results.data;
+                let totalFibra = 0;
+                let totalWireless = 0;
+                let totalCable = 0;
+
+                datos.forEach(fila => {
+                    let provincia = fila['Provincia'];
+                    
+                    if (provincia && provincia.toUpperCase().includes('CHACO')) {
+                        // Limpiamos los puntos de los miles antes de sumar
+                        let fibra = parseInt((fila['Fibra óptica'] || '0').replace(/\./g, ''));
+                        let wireless = parseInt((fila['Wireless'] || '0').replace(/\./g, ''));
+                        let cable = parseInt((fila['Cablemódem'] || '0').replace(/\./g, ''));
+                        
+                        if (!isNaN(fibra)) totalFibra += fibra;
+                        if (!isNaN(wireless)) totalWireless += wireless;
+                        if (!isNaN(cable)) totalCable += cable;
+                    }
+                });
+
+                const ctx = document.getElementById('miGrafico').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Fibra Óptica', 'Enlaces Inalámbricos (Wireless)', 'Cablemódem'],
+                        datasets: [{
+                            data: [totalFibra, totalWireless, totalCable],
+                            backgroundColor: [
+                                'rgba(46, 204, 113, 0.8)', // Verde (Fibra)
+                                'rgba(52, 152, 219, 0.8)', // Azul (Wireless)
+                                'rgba(231, 76, 60, 0.8)'   // Rojo (Cable)
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let valor = context.raw;
+                                        return ' ' + valor.toLocaleString('es-AR') + ' conexiones activas';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
