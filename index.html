@@ -34,42 +34,41 @@
             background-size: 400% 400%; animation: gradientFlow 15s ease infinite;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
             color: white; z-index: 9999; text-align: center; transition: opacity 0.8s ease, visibility 0.8s ease;
-            padding: 50px 20px; box-sizing: border-box; overflow: hidden;
+            padding: 40px 20px; box-sizing: border-box; overflow: hidden;
         }
 
-        /* EFECTO ARTERIAS DE CRISTAL (FIBRA ÓPTICA) */
         .arteries-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .fiber-pulse {
-            position: absolute; width: 250px; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--color-fibra), #ffffff, var(--color-wireless), transparent);
-            box-shadow: 0 0 15px var(--color-fibra), 0 0 30px var(--color-wireless);
-            border-radius: 50%; opacity: 0; animation: pulseAnimation linear infinite;
-        }
-        @keyframes pulseAnimation {
-            0% { transform: translate(-100vw, 100vh) rotate(35deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translate(100vw, -100vh) rotate(35deg); opacity: 0; }
-        }
+        .fiber-pulse { position: absolute; width: 250px; height: 2px; background: linear-gradient(90deg, transparent, var(--color-fibra), #ffffff, var(--color-wireless), transparent); box-shadow: 0 0 15px var(--color-fibra), 0 0 30px var(--color-wireless); border-radius: 50%; opacity: 0; animation: pulseAnimation linear infinite; }
+        @keyframes pulseAnimation { 0% { transform: translate(-100vw, 100vh) rotate(35deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(100vw, -100vh) rotate(35deg); opacity: 0; } }
 
-        /* Aseguramos que el contenido esté por encima de las arterias */
         .splash-content, .certamen-badge, .organizers-footer { z-index: 1; position: relative; }
 
-        .certamen-badge { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 10px 25px; border-radius: 50px; font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #bae6fd; backdrop-filter: blur(8px); margin-bottom: auto; margin-top: 20px; }
+        .certamen-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 10px 25px; border-radius: 50px; font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #bae6fd; backdrop-filter: blur(8px); margin-bottom: auto; margin-top: 10px; }
+        
         .splash-content { margin: auto; }
-        #splash-screen h1 { font-size: 4.5rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #splash-screen h2 { font-size: 1.8rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        #splash-screen p { font-size: 1.2rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 40px auto; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        #splash-screen h1 { font-size: 4.2rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #splash-screen h2 { font-size: 1.7rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        #splash-screen p { font-size: 1.15rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 35px auto; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s; }
         .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
 
-        .organizers-footer { margin-top: auto; padding-top: 40px; }
-        .organizers-footer p { font-size: 0.8rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px !important; }
-        .logos-container { display: flex; align-items: center; justify-content: center; gap: 30px; }
-        .logo-gobierno { text-align: left; line-height: 1.1; border-left: 3px solid var(--color-fibra); padding-left: 15px; }
-        .logo-gobierno .tit { font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
-        .logo-gobierno .sub { font-size: 0.8rem; color: #cbd5e1; text-transform: uppercase; }
-        .logo-udesa { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; color: white; text-align: left; line-height: 1.1; }
+        /* Estructura de Logos Institucionales */
+        .organizers-footer { margin-top: auto; padding-top: 30px; width: 100%; max-width: 1000px; }
+        .organizers-footer > p { font-size: 0.75rem !important; color: #64748b !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px !important; }
+        .logos-container { display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        
+        .logo-item { display: flex; align-items: center; gap: 12px; text-align: left; opacity: 0.9; transition: opacity 0.3s; }
+        .logo-item:hover { opacity: 1; }
+        
+        /* Tipografías específicas para cada institución */
+        .logo-item .gov-tit { font-size: 1rem; font-weight: 700; color: white; letter-spacing: -0.5px; line-height: 1.1; }
+        .logo-item .gov-sub { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; line-height: 1.1; margin-top: 3px; }
+        .logo-item .udesa-tit { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; color: white; line-height: 1.1; }
+        .logo-item .dslab-tit { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700; color: white; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .divider-v { width: 1px; height: 35px; background: rgba(255,255,255,0.15); }
+
+        /* Fin Estructura Logos */
 
         #app-principal { display: none; opacity: 0; transition: opacity 1s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -113,7 +112,6 @@
 
     <div id="splash-screen">
         
-        <!-- EFECTO DE ARTERIAS ÓPTICAS -->
         <div class="arteries-container">
             <div class="fiber-pulse" style="top: 10%; left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
             <div class="fiber-pulse" style="top: 30%; left: 40%; animation-duration: 5s; animation-delay: 1.5s;"></div>
@@ -122,7 +120,16 @@
             <div class="fiber-pulse" style="top: -10%; left: 20%; animation-duration: 4.5s; animation-delay: 3s;"></div>
         </div>
 
-        <div class="certamen-badge">🏆 Certamen Nacional "Contar con Datos"</div>
+        <!-- ETIQUETA DEL CERTAMEN CON LOGO DE DATOS -->
+        <div class="certamen-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+                <path d="M2 10h4"></path>
+            </svg>
+            Certamen Nacional "Contar con Datos"
+        </div>
         
         <div class="splash-content">
             <h1>Arterias de Cristal</h1>
@@ -131,19 +138,59 @@
             <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
         </div>
         
+        <!-- LOGOS DE INSTITUCIONES ORGANIZADORAS -->
         <div class="organizers-footer">
-            <p>Convocatoria Organizada Por</p>
+            <p>Organizan y Avalan</p>
             <div class="logos-container">
-                <div class="logo-gobierno">
-                    <div class="tit">Jefatura de Gabinete</div>
-                    <div class="sub">de Ministros de la Nación</div>
+                
+                <!-- Logo 1: Secretaría de Innovación (Escudo Minimalista) -->
+                <div class="logo-item">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--color-fibra)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        <path d="M2 12h20"></path>
+                    </svg>
+                    <div>
+                        <div class="gov-tit">Secretaría de Innovación,</div>
+                        <div class="gov-sub">Ciencia y Tecnología de la Nación</div>
+                    </div>
                 </div>
-                <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.2);"></div>
-                <div class="logo-udesa">Universidad de<br>San Andrés</div>
+
+                <div class="divider-v"></div>
+
+                <!-- Logo 2: Universidad de San Andrés (Escudo UdeSA) -->
+                <div class="logo-item">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M12 8v4"></path>
+                        <path d="M10 10h4"></path>
+                    </svg>
+                    <div class="udesa-tit">
+                        Universidad de<br>San Andrés
+                    </div>
+                </div>
+
+                <div class="divider-v"></div>
+
+                <!-- Logo 3: Data Science Lab (Nodos de Red) -->
+                <div class="logo-item">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-wireless)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <div class="dslab-tit">
+                        Data Science<br>Lab
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
+    <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-principal">
         <nav class="navbar">
             <div class="nav-brand">
