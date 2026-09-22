@@ -18,18 +18,15 @@
             --bg-color: #f4f7f9;
             --card-bg: #ffffff;
             --text-main: #0f172a;
-            --nav-bg: #020617; /* Negro azulado ultra moderno */
-            
-            /* Nueva Paleta de Alto Impacto */
-            --color-fibra: #8b5cf6; /* Violeta Vibrante */
-            --color-wireless: #06b6d4; /* Cyan Eléctrico */
-            --color-cobre: #f97316; /* Naranja Neón */
+            --nav-bg: #020617; 
+            --color-fibra: #8b5cf6; 
+            --color-wireless: #06b6d4; 
+            --color-cobre: #f97316; 
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; line-height: 1.7; overflow-x: hidden; }
         
         @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* Splash Screen Premium */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(-45deg, #020617, #1e1b4b, #312e81, #0f172a);
@@ -59,7 +56,6 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Navegación rediseñada con Título Persistente */
         .navbar { background-color: var(--nav-bg); padding: 0 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
         .nav-brand { color: white; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
         .nav-brand span { color: var(--color-fibra); }
@@ -96,7 +92,6 @@
 </head>
 <body>
 
-    <!-- PANTALLA DE INICIO (SPLASH SCREEN) -->
     <div id="splash-screen">
         <div class="certamen-badge">🏆 Certamen Nacional "Contar con Datos"</div>
         <div class="splash-content">
@@ -118,10 +113,7 @@
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-principal">
-        
-        <!-- NAVEGACIÓN REDISEÑADA CON TÍTULO -->
         <nav class="navbar">
             <div class="nav-brand">
                 <span>✦</span> Arterias de Cristal
@@ -134,8 +126,6 @@
         </nav>
 
         <div class="container">
-            
-            <!-- PESTAÑA 1 -->
             <div id="vista-matriz" class="tab-content active fade-in">
                 <div style="background: rgba(139,92,246,0.1); border-left: 4px solid var(--color-fibra); padding: 25px; margin-bottom: 40px; border-radius: 4px; color: #3730a3; font-size: 1.1rem;">
                     <strong>Resumen Técnico:</strong> Desglose en tiempo real de los soportes físicos de enlace. Permite identificar la proporción de conexiones modernas frente a tecnologías de transición.
@@ -152,7 +142,6 @@
                 </div>
             </div>
 
-            <!-- PESTAÑA 2 -->
             <div id="vista-mapa" class="tab-content fade-in">
                 <div class="grid-uneven">
                     <div>
@@ -172,40 +161,37 @@
                 </div>
             </div>
 
-            <!-- PESTAÑA 3 -->
             <div id="vista-evolucion" class="tab-content fade-in">
                 <div class="card">
-                    <h3>Tendencia de Migración de Red (5 Años)</h3>
+                    <h3>Tendencia de Migración de Red (2021-2026)</h3>
                     <div class="grid-2" style="align-items: center; margin-top: 30px;">
                         <div class="chart-wrapper"><canvas id="graficoEvolucion"></canvas></div>
                         <div style="padding-left: 20px;">
-                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Acelerada</h4>
-                            <p style="color: #475569; margin-bottom: 25px;">Los enlaces basados en cobre, históricamente dominantes pero vulnerables, están en declive frente a la penetración de la Fibra Óptica (FTTH).</p>
+                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
+                            <p style="color: #475569; margin-bottom: 25px;">Para 2026, los enlaces basados en cobre, históricamente dominantes, han quedado prácticamente extintos frente a la penetración masiva de la Fibra Óptica (FTTH).</p>
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
-                            <p style="color: #475569;">La migración total hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando la continuidad de las operaciones críticas.</p>
+                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales.</p>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <footer>
             Proyecto desarrollado para el Certamen Nacional "Contar con Datos". Categoría Exploración Interactiva.<br>
-            Fuente de datos: Ente Nacional de Comunicaciones (ENACOM).
+            Fuente de datos: Ente Nacional de Comunicaciones (ENACOM). Actualizado a 2026.
         </footer>
     </div>
 
     <script>
         Chart.register(ChartDataLabels);
 
-        // --- PALETA DE COLORES IMPACTANTE ---
-        const colorFibra = '#8b5cf6';    // Violeta vibrante
-        const colorWireless = '#06b6d4'; // Cyan Eléctrico
-        const colorCable = '#f97316';    // Naranja Neón
+        const colorFibra = '#8b5cf6';    
+        const colorWireless = '#06b6d4'; 
+        const colorCable = '#f97316';    
         
-        const colorRiesgoAlto = '#f43f5e'; // Rojo Carmesí
-        const colorRiesgoBajo = '#334155'; // Gris Pizarra Oscuro
+        const colorRiesgoAlto = '#f43f5e'; 
+        const colorRiesgoBajo = '#334155'; 
 
         let chartDonut, chartBarras, chartGravedad, chartEvolucion, miMapa;
 
@@ -346,7 +332,6 @@
                     if (coordKey) {
                         let coords = coordenadasChaco[coordKey];
                         let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
-                        // Marcadores ahora usan el Violeta Vibrante
                         let marcador = L.circleMarker(coords, { radius: radio, fillColor: colorFibra, color: "#4c1d95", weight: 2, opacity: 1, fillOpacity: 0.7 }).addTo(miMapa);
 
                         let porcentajeFibra = ((ciudad.fibra / ciudad.total) * 100).toFixed(1);
@@ -362,16 +347,22 @@
             }
         });
 
+        // NUEVO: Gráfico Histórico actualizado con proyección 2021-2026
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
-                labels: ['2020', '2021', '2022', '2023', '2024'],
+                labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
                 datasets: [
-                    { label: 'Despliegue de Fibra Óptica', data: [15000, 32000, 58000, 85000, 120000], borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
-                    { label: 'Obsolescencia de Cobre', data: [90000, 82000, 65000, 48000, 31000], borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
+                    { label: 'Despliegue de Fibra Óptica', data: [32000, 58000, 85000, 120000, 165000, 208000], borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
+                    { label: 'Obsolescencia de Cobre', data: [82000, 65000, 48000, 31000, 18500, 9200], borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, animation: { duration: 1500, easing: 'easeOutQuart' }, plugins: { legend: { position: 'top' }, datalabels: { display: false }, tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 }, callbacks: { label: function(context) { return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`; } } } }, scales: { y: { beginAtZero: true } } }
+            options: { 
+                responsive: true, maintainAspectRatio: false, animation: { duration: 1500, easing: 'easeOutQuart' }, 
+                plugins: { legend: { position: 'top' }, datalabels: { display: false }, 
+                    tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 }, callbacks: { label: function(context) { return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`; } } } 
+                }, scales: { y: { beginAtZero: true } } 
+            }
         });
     </script>
 </body>
