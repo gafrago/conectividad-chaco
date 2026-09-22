@@ -27,27 +27,46 @@
         
         @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
+        /* Splash Screen con Fondo Animado */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(-45deg, #020617, #1e1b4b, #312e81, #0f172a);
-            background-size: 400% 400%; animation: gradientFlow 12s ease infinite;
+            background: linear-gradient(-45deg, #020617, #111827, #1e1b4b, #0f172a);
+            background-size: 400% 400%; animation: gradientFlow 15s ease infinite;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
             color: white; z-index: 9999; text-align: center; transition: opacity 0.8s ease, visibility 0.8s ease;
-            padding: 50px 20px; box-sizing: border-box;
+            padding: 50px 20px; box-sizing: border-box; overflow: hidden;
         }
-        
-        .certamen-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 25px; border-radius: 50px; font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #bae6fd; backdrop-filter: blur(5px); margin-bottom: auto; margin-top: 20px; }
+
+        /* EFECTO ARTERIAS DE CRISTAL (FIBRA ÓPTICA) */
+        .arteries-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .fiber-pulse {
+            position: absolute; width: 250px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-fibra), #ffffff, var(--color-wireless), transparent);
+            box-shadow: 0 0 15px var(--color-fibra), 0 0 30px var(--color-wireless);
+            border-radius: 50%; opacity: 0; animation: pulseAnimation linear infinite;
+        }
+        @keyframes pulseAnimation {
+            0% { transform: translate(-100vw, 100vh) rotate(35deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(100vw, -100vh) rotate(35deg); opacity: 0; }
+        }
+
+        /* Aseguramos que el contenido esté por encima de las arterias */
+        .splash-content, .certamen-badge, .organizers-footer { z-index: 1; position: relative; }
+
+        .certamen-badge { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 10px 25px; border-radius: 50px; font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #bae6fd; backdrop-filter: blur(8px); margin-bottom: auto; margin-top: 20px; }
         .splash-content { margin: auto; }
-        #splash-screen h1 { font-size: 4.5rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        #splash-screen h2 { font-size: 1.8rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; }
-        #splash-screen p { font-size: 1.2rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 40px auto; line-height: 1.6; }
-        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; }
-        .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(255,255,255,0.2); }
+        #splash-screen h1 { font-size: 4.5rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #splash-screen h2 { font-size: 1.8rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        #splash-screen p { font-size: 1.2rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 40px auto; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s; }
+        .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
 
         .organizers-footer { margin-top: auto; padding-top: 40px; }
         .organizers-footer p { font-size: 0.8rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px !important; }
         .logos-container { display: flex; align-items: center; justify-content: center; gap: 30px; }
-        .logo-gobierno { text-align: left; line-height: 1.1; border-left: 3px solid #8b5cf6; padding-left: 15px; }
+        .logo-gobierno { text-align: left; line-height: 1.1; border-left: 3px solid var(--color-fibra); padding-left: 15px; }
         .logo-gobierno .tit { font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
         .logo-gobierno .sub { font-size: 0.8rem; color: #cbd5e1; text-transform: uppercase; }
         .logo-udesa { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; color: white; text-align: left; line-height: 1.1; }
@@ -93,13 +112,25 @@
 <body>
 
     <div id="splash-screen">
+        
+        <!-- EFECTO DE ARTERIAS ÓPTICAS -->
+        <div class="arteries-container">
+            <div class="fiber-pulse" style="top: 10%; left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
+            <div class="fiber-pulse" style="top: 30%; left: 40%; animation-duration: 5s; animation-delay: 1.5s;"></div>
+            <div class="fiber-pulse" style="top: 60%; left: 0%; animation-duration: 3.5s; animation-delay: 2.2s;"></div>
+            <div class="fiber-pulse" style="top: 80%; left: 60%; animation-duration: 6s; animation-delay: 0.5s;"></div>
+            <div class="fiber-pulse" style="top: -10%; left: 20%; animation-duration: 4.5s; animation-delay: 3s;"></div>
+        </div>
+
         <div class="certamen-badge">🏆 Certamen Nacional "Contar con Datos"</div>
+        
         <div class="splash-content">
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
             <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
         </div>
+        
         <div class="organizers-footer">
             <p>Convocatoria Organizada Por</p>
             <div class="logos-container">
@@ -347,7 +378,6 @@
             }
         });
 
-        // NUEVO: Gráfico Histórico actualizado con proyección 2021-2026
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
