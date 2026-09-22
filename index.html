@@ -51,18 +51,7 @@
 
         .organizers-footer { margin-top: auto; padding-top: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .organizers-footer > p { font-size: 0.85rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        
-        .logos-container { 
-            background: #ffffff; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
-            width: 95%; 
-            max-width: 900px; 
-        }
+        .logos-container { background: #ffffff; padding: 10px 20px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 95%; max-width: 900px; }
 
         #app-principal { display: none; opacity: 0; transition: opacity 1s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -79,6 +68,12 @@
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        
+        /* Estilo del Filtro Cruzado */
+        .filter-bar { background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; }
+        .filter-bar select { padding: 10px 15px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 1rem; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; cursor: pointer; outline: none; font-weight: 600; }
+        .filter-bar select:focus { border-color: var(--color-fibra); }
+
         .grid-2 { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 850px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
         .grid-uneven { display: grid; grid-template-columns: 1fr; gap: 30px; }
@@ -105,7 +100,6 @@
 <body>
 
     <div id="splash-screen">
-        
         <div class="arteries-container">
             <div class="fiber-pulse" style="top: 10%; left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
             <div class="fiber-pulse" style="top: 30%; left: 40%; animation-duration: 5s; animation-delay: 1.5s;"></div>
@@ -127,7 +121,6 @@
         
         <div class="organizers-footer">
             <p>Organizan y Avalan</p>
-            <!-- RECUADRO CON IMAGEN EXPANDIDA -->
             <div class="logos-container">
                 <img src="logos-institucionales.png?v=5" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="width: 100%; height: auto; object-fit: contain; display: block; margin: 0 auto;">
             </div>
@@ -148,13 +141,28 @@
         </nav>
 
         <div class="container">
+            
+            <!-- BARRA DE FILTRO CRUZADO GLOBAL -->
+            <div class="filter-bar">
+                <div>
+                    <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
+                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona una localidad para aislar su topología de red en tiempo real.</span>
+                </div>
+                <div>
+                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()">
+                        <option value="TODAS">🌐 Provincia del Chaco (Global)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- PESTAÑA 1 -->
             <div id="vista-matriz" class="tab-content active fade-in">
                 <div style="background: rgba(139,92,246,0.1); border-left: 4px solid var(--color-fibra); padding: 25px; margin-bottom: 40px; border-radius: 4px; color: #3730a3; font-size: 1.1rem;">
-                    <strong>Resumen Técnico:</strong> Desglose en tiempo real de los soportes físicos de enlace. Permite identificar la proporción de conexiones modernas frente a tecnologías de transición.
+                    <strong>Resumen Técnico:</strong> Desglose dinámico de los soportes físicos de enlace. Permite identificar la proporción de conexiones modernas frente a tecnologías de transición por nodo seleccionado.
                 </div>
                 <div class="grid-2">
                     <div class="card">
-                        <h3>Topología Provincial</h3>
+                        <h3>Topología Provincial / Local</h3>
                         <div class="chart-wrapper"><canvas id="graficoDonut"></canvas></div>
                     </div>
                     <div class="card">
@@ -164,6 +172,7 @@
                 </div>
             </div>
 
+            <!-- PESTAÑA 2 -->
             <div id="vista-mapa" class="tab-content fade-in">
                 <div class="grid-uneven">
                     <div>
@@ -183,6 +192,7 @@
                 </div>
             </div>
 
+            <!-- PESTAÑA 3 -->
             <div id="vista-evolucion" class="tab-content fade-in">
                 <div class="card">
                     <h3>Tendencia de Migración de Red (2021-2026)</h3>
@@ -216,6 +226,9 @@
         const colorRiesgoBajo = '#334155'; 
 
         let chartDonut, chartBarras, chartGravedad, chartEvolucion, miMapa;
+        let datosCrudosGlobales = [];
+        let ciudadesGlobales = {};
+        let marcadoresMapa = [];
 
         function iniciarApp() {
             const splash = document.getElementById('splash-screen');
@@ -230,6 +243,7 @@
                 app.style.opacity = '1';
                 if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
                 if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
+                if(miMapa) { miMapa.invalidateSize(); }
             }, 800);
         }
 
@@ -258,21 +272,56 @@
         Papa.parse("enacom.csv", {
             download: true, header: true, skipEmptyLines: true,
             complete: function(results) {
-                const datos = results.data;
-                let totalFibra = 0, totalWireless = 0, totalCable = 0;
-                let fibraMetro = 0, fibraInterior = 0;
-                let ciudades = {};
+                datosCrudosGlobales = results.data;
+                procesarDatosYConstruirTablero("TODAS");
+                poblarSelectorCiudades();
+            }
+        });
 
-                datos.forEach(fila => {
-                    let provincia = fila['Provincia']; let tecnologia = fila['Tecnologia'];
-                    if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
-                        let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
-                        let localidad = (fila['Localidad'] || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+        function poblarSelectorCiudades() {
+            const select = document.getElementById('filtroLocalidad');
+            let nombresCiudades = Object.keys(ciudadesGlobales).sort();
+            nombresCiudades.forEach(ciudad => {
+                let opt = document.createElement('option');
+                opt.value = ciudad;
+                opt.innerText = ciudad;
+                select.appendChild(opt);
+            });
+        }
 
-                        if (!isNaN(cantidad)) {
-                            let tech = tecnologia.toUpperCase();
-                            let isFibra = tech.includes('FIBRA'); let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
+        function aplicarFiltroCruzado() {
+            let ciudadSeleccionada = document.getElementById('filtroLocalidad').value;
+            procesarDatosYConstruirTablero(ciudadSeleccionada);
+        }
 
+        function procesarDatosYConstruirTablero(filtroCiudad) {
+            let totalFibra = 0, totalWireless = 0, totalCable = 0;
+            let fibraMetro = 0, fibraInterior = 0;
+            let ciudades = {};
+
+            datosCrudosGlobales.forEach(fila => {
+                let provincia = fila['Provincia']; 
+                let tecnologia = fila['Tecnologia'];
+                
+                if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
+                    let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
+                    let localidad = (fila['Localidad'] || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+
+                    if (!isNaN(cantidad)) {
+                        let tech = tecnologia.toUpperCase();
+                        let isFibra = tech.includes('FIBRA'); 
+                        let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); 
+                        let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
+
+                        // Registrar en el diccionario global de ciudades (para el selector)
+                        if (!ciudades[localidad]) ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
+                        ciudades[localidad].total += cantidad;
+                        if (isFibra) ciudades[localidad].fibra += cantidad;
+                        if (isWireless) ciudades[localidad].wireless += cantidad;
+                        if (isCable) ciudades[localidad].cable += cantidad;
+
+                        // Aplicar filtro cruzado si el usuario eligió una ciudad específica
+                        if (filtroCiudad === "TODAS" || localidad === filtroCiudad) {
                             if (isFibra) {
                                 totalFibra += cantidad;
                                 if (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS') || localidad.includes('FONTANA') || localidad.includes('VILELAS')) fibraMetro += cantidad;
@@ -280,35 +329,52 @@
                             }
                             else if (isWireless) totalWireless += cantidad;
                             else if (isCable) totalCable += cantidad;
-
-                            if (!ciudades[localidad]) ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
-                            ciudades[localidad].total += cantidad;
-                            if (isFibra) ciudades[localidad].fibra += cantidad;
-                            if (isWireless) ciudades[localidad].wireless += cantidad;
-                            if (isCable) ciudades[localidad].cable += cantidad;
                         }
                     }
-                });
+                }
+            });
 
-                let rankingBarras = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] })).sort((a, b) => b.total - a.total).slice(0, 8); 
-                let todasLasCiudades = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] }));
+            if (Object.keys(ciudadesGlobales).length === 0) {
+                ciudadesGlobales = ciudades; // Guardar referencia inicial
+            }
 
-                const animacionComun = { duration: 1500, easing: 'easeOutQuart' };
+            let rankingBarras = Object.keys(ciudades)
+                .map(nombre => ({ nombre: nombre, ...ciudades[nombre] }))
+                .sort((a, b) => b.total - a.total)
+                .slice(0, 8); 
 
+            let todasLasCiudades = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] }));
+
+            const animacionComun = { duration: 1000, easing: 'easeOutQuart' };
+
+            // 1. Gráfico Anillo (Topología)
+            if (chartDonut) {
+                chartDonut.data.datasets[0].data = [totalFibra, totalWireless, totalCable];
+                chartDonut.update();
+            } else {
                 chartDonut = new Chart(document.getElementById('graficoDonut').getContext('2d'), {
                     type: 'doughnut',
                     data: { labels: ['Fibra Óptica', 'Red Wireless', 'Cobre / Cable'], datasets: [{ data: [totalFibra, totalWireless, totalCable], backgroundColor: [colorFibra, colorWireless, colorCable], borderWidth: 0 }] },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '70%', animation: animacionComun,
                         plugins: { 
                             legend: { position: 'bottom' },
-                            datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => ((value * 100 / ctx.chart._metasets[ctx.datasetIndex].total).toFixed(1) + "%") },
+                            datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => { let sum = ctx.chart._metasets[ctx.datasetIndex].total; return sum > 0 ? ((value * 100 / sum).toFixed(1) + "%") : "0%"; } },
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
-                                callbacks: { label: function(context) { let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Conexiones activas: ${valor.toLocaleString('es-AR')}`, ` Representa el ${((valor/total)*100).toFixed(1)}% de la matriz provincial` ]; } }
+                                callbacks: { label: function(context) { let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Conexiones activas: ${valor.toLocaleString('es-AR')}`, ` Representa el ${total > 0 ? ((valor/total)*100).toFixed(1) : 0}% del segmento` ]; } }
                             }
                         } 
                     }
                 });
+            }
 
+            // 2. Gráfico Barras (Nodos Críticos)
+            if (chartBarras) {
+                chartBarras.data.labels = rankingBarras.map(c => c.nombre);
+                chartBarras.data.datasets[0].data = rankingBarras.map(c => c.fibra);
+                chartBarras.data.datasets[1].data = rankingBarras.map(c => c.wireless);
+                chartBarras.data.datasets[2].data = rankingBarras.map(c => c.cable);
+                chartBarras.update();
+            } else {
                 chartBarras = new Chart(document.getElementById('graficoBarras').getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -324,51 +390,71 @@
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
                                 callbacks: {
                                     title: function(context) { return `Nodo Operativo: ${context[0].label}`; },
-                                    label: function(context) { let tech = context.dataset.label; let valor = context.raw; let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0); return [ ` ${tech}: ${valor.toLocaleString('es-AR')} enlaces`, ` Abarca el ${((valor / totalCiudad) * 100).toFixed(1)}% de la red de esta ciudad` ]; }
+                                    label: function(context) { let tech = context.dataset.label; let valor = context.raw; let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0); return [ ` ${tech}: ${valor.toLocaleString('es-AR')} enlaces`, ` Abarca el ${totalCiudad > 0 ? ((valor / totalCiudad) * 100).toFixed(1) : 0}% de la red de esta ciudad` ]; }
                                 }
                             }
                         },
                         scales: { x: { stacked: true }, y: { stacked: true } }
                     }
                 });
+            }
 
+            // 3. Gráfico Gravedad (Resiliencia)
+            if (chartGravedad) {
+                chartGravedad.data.datasets[0].data = [fibraMetro, fibraInterior];
+                chartGravedad.update();
+            } else {
                 chartGravedad = new Chart(document.getElementById('graficoGravedad').getContext('2d'), {
                     type: 'pie',
                     data: { labels: ['Gran Resistencia', 'Resto del Interior'], datasets: [{ data: [fibraMetro, fibraInterior], backgroundColor: [colorRiesgoAlto, colorRiesgoBajo], borderWidth: 0 }] },
                     options: { responsive: true, maintainAspectRatio: false, animation: animacionComun,
                         plugins: { 
                             legend: { position: 'bottom' },
-                            datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => ((value * 100 / ctx.chart._metasets[ctx.datasetIndex].total).toFixed(1) + "%") },
+                            datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => { let sum = ctx.chart._metasets[ctx.datasetIndex].total; return sum > 0 ? ((value * 100 / sum).toFixed(1) + "%") : "0%"; } },
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
-                                callbacks: { label: function(context) { let label = context.label; let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Zona: ${label}`, ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`, ` Impacto: ${((valor/total)*100).toFixed(1)}% de la red provincial acaparada aquí` ]; } }
+                                callbacks: { label: function(context) { let label = context.label; let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Zona: ${label}`, ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`, ` Impacto: ${total > 0 ? ((valor/total)*100).toFixed(1) : 0}% de la red` ]; } }
                             }
                         } 
                     }
                 });
+            }
 
+            // 4. MAPA LEAFLET
+            if (!miMapa) {
                 miMapa = L.map('mapa').setView([-26.8, -60.0], 7); 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miMapa);
-
-                todasLasCiudades.forEach(ciudad => {
-                    let coordKey = Object.keys(coordenadasChaco).find(key => ciudad.nombre.includes(key));
-                    if (coordKey) {
-                        let coords = coordenadasChaco[coordKey];
-                        let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
-                        let marcador = L.circleMarker(coords, { radius: radio, fillColor: colorFibra, color: "#4c1d95", weight: 2, opacity: 1, fillOpacity: 0.7 }).addTo(miMapa);
-
-                        let porcentajeFibra = ((ciudad.fibra / ciudad.total) * 100).toFixed(1);
-                        let popupHTML = `
-                            <h4>Nodo: ${ciudad.nombre}</h4>
-                            <p><strong>Carga Total:</strong> ${ciudad.total.toLocaleString('es-AR')} conexiones</p>
-                            <p><strong>Óptica:</strong> ${ciudad.fibra.toLocaleString('es-AR')} (${porcentajeFibra}%)</p>
-                            <p><strong>Wireless:</strong> ${ciudad.wireless.toLocaleString('es-AR')}</p>
-                        `;
-                        marcador.bindPopup(popupHTML);
-                    }
-                });
             }
-        });
 
+            // Limpiar marcadores anteriores del mapa
+            marcadoresMapa.forEach(m => miMapa.removeLayer(m));
+            marcadoresMapa = [];
+
+            todasLasCiudades.forEach(ciudad => {
+                let coordKey = Object.keys(coordenadasChaco).find(key => ciudad.nombre.includes(key));
+                if (coordKey) {
+                    let coords = coordenadasChaco[coordKey];
+                    let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
+                    
+                    // Destacar visualmente si está seleccionada en el filtro
+                    let colorMarcador = (filtroCiudad === "TODAS" || ciudad.nombre.includes(filtroCiudad)) ? colorFibra : '#94a3b8';
+                    let opacidadMarcador = (filtroCiudad === "TODAS" || ciudad.nombre.includes(filtroCiudad)) ? 0.8 : 0.3;
+
+                    let marcador = L.circleMarker(coords, { radius: radio, fillColor: colorMarcador, color: "#1e3a8a", weight: 2, opacity: 1, fillOpacity: opacidadMarcador }).addTo(miMapa);
+
+                    let porcentajeFibra = ciudad.total > 0 ? ((ciudad.fibra / ciudad.total) * 100).toFixed(1) : 0;
+                    let popupHTML = `
+                        <h4>Nodo: ${ciudad.nombre}</h4>
+                        <p><strong>Carga Total:</strong> ${ciudad.total.toLocaleString('es-AR')} conexiones</p>
+                        <p><strong>Óptica:</strong> ${ciudad.fibra.toLocaleString('es-AR')} (${porcentajeFibra}%)</p>
+                        <p><strong>Wireless:</strong> ${ciudad.wireless.toLocaleString('es-AR')}</p>
+                    `;
+                    marcador.bindPopup(popupHTML);
+                    marcadoresMapa.push(marcador);
+                }
+            });
+        }
+
+        // Gráfico Histórico
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
