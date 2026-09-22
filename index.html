@@ -69,8 +69,8 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Estilo del Filtro Cruzado */
-        .filter-bar { background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; }
+        /* Barra de Filtro Dinámica */
+        .filter-bar { background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
         .filter-bar select { padding: 10px 15px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 1rem; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; cursor: pointer; outline: none; font-weight: 600; }
         .filter-bar select:focus { border-color: var(--color-fibra); }
 
@@ -142,8 +142,8 @@
 
         <div class="container">
             
-            <!-- BARRA DE FILTRO CRUZADO GLOBAL -->
-            <div class="filter-bar">
+            <!-- BARRA DE FILTRO CRUZADO GLOBAL (Se ocultará automáticamente en la pestaña 3) -->
+            <div id="barraFiltroContainer" class="filter-bar">
                 <div>
                     <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
                     <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona una localidad para aislar su topología de red en tiempo real.</span>
@@ -195,14 +195,14 @@
             <!-- PESTAÑA 3 -->
             <div id="vista-evolucion" class="tab-content fade-in">
                 <div class="card">
-                    <h3>Tendencia de Migración de Red (2021-2026)</h3>
+                    <h3>Tendencia de Migración de Red (2021-2026) - Visión Macro Provincial</h3>
                     <div class="grid-2" style="align-items: center; margin-top: 30px;">
                         <div class="chart-wrapper"><canvas id="graficoEvolucion"></canvas></div>
                         <div style="padding-left: 20px;">
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
-                            <p style="color: #475569; margin-bottom: 25px;">Para 2026, los enlaces basados en cobre, históricamente dominantes, han quedado prácticamente extintos frente a la penetración masiva de la Fibra Óptica (FTTH).</p>
+                            <p style="color: #475569; margin-bottom: 25px;">Para 2026, los enlaces basados en cobre, históricamente dominantes, han quedado prácticamente extintos frente a la penetración masiva de la Fibra Óptica (FTTH) a nivel sistémico.</p>
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
-                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales.</p>
+                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales de la provincia.</p>
                         </div>
                     </div>
                 </div>
@@ -252,6 +252,14 @@
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(idPestana).classList.add('active');
             boton.classList.add('active');
+
+            // OCULTAR O MOSTRAR LA BARRA DE FILTRO SEGÚN LA PESTAÑA
+            const barraFiltro = document.getElementById('barraFiltroContainer');
+            if (idPestana === 'vista-evolucion') {
+                barraFiltro.style.display = 'none'; // Se oculta en la tercera pestaña para evitar confusiones
+            } else {
+                barraFiltro.style.display = 'flex'; // Visible en Matriz y Mapa
+            }
 
             setTimeout(() => {
                 if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
@@ -313,14 +321,12 @@
                         let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); 
                         let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
 
-                        // Registrar en el diccionario global de ciudades (para el selector)
                         if (!ciudades[localidad]) ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
                         ciudades[localidad].total += cantidad;
                         if (isFibra) ciudades[localidad].fibra += cantidad;
                         if (isWireless) ciudades[localidad].wireless += cantidad;
                         if (isCable) ciudades[localidad].cable += cantidad;
 
-                        // Aplicar filtro cruzado si el usuario eligió una ciudad específica
                         if (filtroCiudad === "TODAS" || localidad === filtroCiudad) {
                             if (isFibra) {
                                 totalFibra += cantidad;
@@ -335,7 +341,7 @@
             });
 
             if (Object.keys(ciudadesGlobales).length === 0) {
-                ciudadesGlobales = ciudades; // Guardar referencia inicial
+                ciudadesGlobales = ciudades;
             }
 
             let rankingBarras = Object.keys(ciudades)
@@ -347,7 +353,6 @@
 
             const animacionComun = { duration: 1000, easing: 'easeOutQuart' };
 
-            // 1. Gráfico Anillo (Topología)
             if (chartDonut) {
                 chartDonut.data.datasets[0].data = [totalFibra, totalWireless, totalCable];
                 chartDonut.update();
@@ -367,7 +372,6 @@
                 });
             }
 
-            // 2. Gráfico Barras (Nodos Críticos)
             if (chartBarras) {
                 chartBarras.data.labels = rankingBarras.map(c => c.nombre);
                 chartBarras.data.datasets[0].data = rankingBarras.map(c => c.fibra);
@@ -399,7 +403,6 @@
                 });
             }
 
-            // 3. Gráfico Gravedad (Resiliencia)
             if (chartGravedad) {
                 chartGravedad.data.datasets[0].data = [fibraMetro, fibraInterior];
                 chartGravedad.update();
@@ -419,13 +422,11 @@
                 });
             }
 
-            // 4. MAPA LEAFLET
             if (!miMapa) {
                 miMapa = L.map('mapa').setView([-26.8, -60.0], 7); 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miMapa);
             }
 
-            // Limpiar marcadores anteriores del mapa
             marcadoresMapa.forEach(m => miMapa.removeLayer(m));
             marcadoresMapa = [];
 
@@ -435,7 +436,6 @@
                     let coords = coordenadasChaco[coordKey];
                     let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
                     
-                    // Destacar visualmente si está seleccionada en el filtro
                     let colorMarcador = (filtroCiudad === "TODAS" || ciudad.nombre.includes(filtroCiudad)) ? colorFibra : '#94a3b8';
                     let opacidadMarcador = (filtroCiudad === "TODAS" || ciudad.nombre.includes(filtroCiudad)) ? 0.8 : 0.3;
 
@@ -454,7 +454,6 @@
             });
         }
 
-        // Gráfico Histórico
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
