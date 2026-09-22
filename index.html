@@ -53,16 +53,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        .resilience-panel {
-            background: #fff1f2;
-            border-left: 4px solid #e11d48;
-            padding: 25px;
-            margin-bottom: 40px;
-            border-radius: 0 12px 12px 0;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-        .resilience-panel h4 { color: #be123c; margin-top: 0; margin-bottom: 15px; font-size: 1.25rem; }
-
         .dashboard { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 40px; }
         @media (min-width: 850px) { .dashboard { grid-template-columns: 1fr 1.5fr; } }
         
@@ -76,6 +66,33 @@
         .card:hover { transform: translateY(-3px); }
         .card h3 { margin-top: 0; font-size: 1.3rem; color: var(--text-main); border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
         
+        /* Estilos del nuevo panel de resiliencia de dos columnas */
+        .resilience-panel {
+            background: #fff1f2;
+            border-left: 4px solid #e11d48;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .resilience-panel h4 { color: #be123c; margin-top: 0; margin-bottom: 20px; font-size: 1.35rem; }
+        
+        .resilience-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) { 
+            .resilience-grid { grid-template-columns: 1.8fr 1fr; align-items: center; } 
+        }
+        
+        .chart-resilience-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
         .analysis-section {
             background: white;
             padding: 40px;
@@ -110,45 +127,44 @@
             <strong>El Centro de Gravedad Digital:</strong> La matriz tecnológica define la capacidad operativa de una provincia. Este tablero expone la brecha entre la concentración de Fibra Óptica (alta capacidad y baja latencia) en el área metropolitana, y la dependencia de enlaces Inalámbricos en el interior provincial.
         </div>
 
-        <!-- Panel de Gráficos Actuales -->
         <div class="dashboard fade-in" style="animation-delay: 0.4s; opacity: 0;">
             <div class="card">
                 <h3>Proporción Tecnológica Provincial</h3>
                 <canvas id="graficoDonut"></canvas>
-                <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin-top: 15px;">
-                    <em>Desglose porcentual en tiempo real del soporte físico de red.</em>
-                </p>
             </div>
             
             <div class="card">
                 <h3>Composición de Red: Nodos Críticos</h3>
                 <canvas id="graficoBarras"></canvas>
-                <p style="text-align: center; font-size: 0.85rem; color: #64748b; margin-top: 15px;">
-                    <em>Distribución volumétrica por tecnología en las principales localidades.</em>
-                </p>
             </div>
         </div>
 
-        <!-- Panel de Resiliencia Operativa -->
+        <!-- Panel de Resiliencia Operativa Actualizado -->
         <div class="resilience-panel fade-in" style="animation-delay: 0.5s; opacity: 0;">
-            <h4>⚠️ Índice de Resiliencia Operativa: Vulnerabilidad del Nodo Central</h4>
-            <p style="margin-bottom: 10px;">El análisis topológico revela que el <strong>Gran Resistencia (Resistencia + Barranqueras)</strong> actúa como el centro de gravedad absoluto de la red de alta capacidad. Al concentrar el mayor volumen de terminales ópticas, este núcleo metropolitano representa un punto de fallo táctico crítico.</p>
-            <p style="margin: 0;"><strong>Evaluación de Contingencia:</strong> Ante una disrupción física del anillo troncal metropolitano, la marcada dependencia del interior provincial sobre enlaces de radiofrecuencia (Wireless) limitaría severamente la capacidad de absorber el tráfico derivado. Esto degradaría las capacidades de comando, control y administración pública, evidenciando la necesidad estratégica de desplegar rutas de fibra redundantes hacia los nodos periféricos.</p>
+            <h4>⚠️ Índice de Resiliencia: Vulnerabilidad del Nodo Central</h4>
+            
+            <div class="resilience-grid">
+                <div class="resilience-text">
+                    <p style="margin-bottom: 15px;">El análisis topológico revela que el <strong>Gran Resistencia (Resistencia + Barranqueras)</strong> actúa como el centro de gravedad absoluto de la red de alta capacidad. Al concentrar casi la totalidad de las terminales ópticas de la provincia, este núcleo metropolitano representa un punto de fallo táctico crítico.</p>
+                    <p style="margin: 0;"><strong>Evaluación de Contingencia:</strong> Ante una disrupción física del anillo troncal metropolitano (corte o contingencia energética), la marcada dependencia del interior sobre enlaces de radiofrecuencia (Wireless) limitaría severamente la capacidad de absorber el tráfico derivado. Esto degradaría las operaciones de comando, control y administración pública, evidenciando la necesidad estratégica de desplegar rutas ópticas redundantes.</p>
+                </div>
+                
+                <div class="chart-resilience-container">
+                    <h5 style="text-align: center; margin-top: 0; margin-bottom: 10px; color: #0f172a; font-size: 0.95rem;">Concentración de Fibra Óptica</h5>
+                    <canvas id="graficoGravedad"></canvas>
+                </div>
+            </div>
         </div>
 
-        <!-- Sección de Análisis Estratégico e Histórico -->
         <div class="analysis-section fade-in" style="animation-delay: 0.6s; opacity: 0;">
             <h3 style="font-size: 1.8rem; margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">Evaluación de la Evolución de Red</h3>
-            
             <div class="analysis-grid">
                 <div class="chart-container">
                     <canvas id="graficoEvolucion"></canvas>
                 </div>
-
                 <div class="analysis-text">
                     <h4>La Transición de Medios Físicos (5 Años)</h4>
                     <p>Como se evidencia en la tendencia macro, la matriz provincial experimentó un reemplazo táctico acelerado. Los enlaces asimétricos basados en cobre (línea roja), históricamente dominantes, están en franco declive frente a la penetración de la <strong>FTTH (Fibra Óptica)</strong>.</p>
-                    
                     <h4>Proyección y Estabilidad</h4>
                     <p>La migración hacia soportes ópticos aísla a la red de vulnerabilidades electromagnéticas y climáticas. La consecuencia estratégica de esta proyección es la viabilidad para sostener operaciones críticas ininterrumpidas y erradicar los cuellos de botella de latencia operativa.</p>
                 </div>
@@ -171,6 +187,11 @@
             complete: function(results) {
                 const datos = results.data;
                 let totalFibra = 0, totalWireless = 0, totalCable = 0;
+                
+                // Nuevas variables para medir la concentración táctica
+                let fibraMetropolitana = 0;
+                let fibraInterior = 0;
+
                 let ciudades = {};
 
                 datos.forEach(fila => {
@@ -179,7 +200,7 @@
                     
                     if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
                         let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
-                        let localidad = fila['Localidad'];
+                        let localidad = (fila['Localidad'] || '').toUpperCase();
 
                         if (!isNaN(cantidad)) {
                             let tech = tecnologia.toUpperCase();
@@ -187,7 +208,15 @@
                             let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO'));
                             let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
 
-                            if (isFibra) totalFibra += cantidad;
+                            if (isFibra) {
+                                totalFibra += cantidad;
+                                // Calcular el peso del Gran Resistencia
+                                if (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS')) {
+                                    fibraMetropolitana += cantidad;
+                                } else {
+                                    fibraInterior += cantidad;
+                                }
+                            }
                             else if (isWireless) totalWireless += cantidad;
                             else if (isCable) totalCable += cantidad;
 
@@ -207,6 +236,7 @@
                     .sort((a, b) => b.total - a.total)
                     .slice(0, 8); 
 
+                // 1. Gráfico Donut Principal
                 new Chart(document.getElementById('graficoDonut').getContext('2d'), {
                     type: 'doughnut',
                     data: {
@@ -214,8 +244,7 @@
                         datasets: [{
                             data: [totalFibra, totalWireless, totalCable],
                             backgroundColor: ['#10b981', '#3b82f6', '#f43f5e'],
-                            borderWidth: 0,
-                            hoverOffset: 10
+                            borderWidth: 0, hoverOffset: 10
                         }]
                     },
                     options: { 
@@ -230,6 +259,7 @@
                     }
                 });
 
+                // 2. Gráfico Barras Apiladas
                 new Chart(document.getElementById('graficoBarras').getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -245,17 +275,14 @@
                         plugins: { 
                             legend: { position: 'top' }, 
                             datalabels: { display: false },
-                            // Configuración avanzada de Tooltip
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
                                         let label = context.dataset.label || '';
                                         let valor = context.raw;
-                                        let index = context.dataIndex;
-                                        // Suma total de conexiones solo para esta localidad
-                                        let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[index], 0);
+                                        let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0);
                                         let porcentaje = ((valor / totalCiudad) * 100).toFixed(1);
-                                        return ` ${label}: ${valor.toLocaleString('es-AR')} (${porcentaje}% de la infraestructura local)`;
+                                        return ` ${label}: ${valor.toLocaleString('es-AR')} (${porcentaje}% de la red local)`;
                                     }
                                 }
                             }
@@ -263,35 +290,44 @@
                         scales: { x: { stacked: true }, y: { stacked: true } }
                     }
                 });
+
+                // 3. NUEVO: Gráfico de Centro de Gravedad (Vulnerabilidad)
+                new Chart(document.getElementById('graficoGravedad').getContext('2d'), {
+                    type: 'pie', // Tipo Pie para mayor impacto de "porción"
+                    data: {
+                        labels: ['Gran Resistencia', 'Resto del Interior'],
+                        datasets: [{
+                            data: [fibraMetropolitana, fibraInterior],
+                            backgroundColor: ['#e11d48', '#fecdd3'], // Rojo intenso vs Rosa pálido
+                            borderWidth: 0, hoverOffset: 5
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        plugins: { 
+                            legend: { position: 'bottom', labels: { font: { size: 11 } } },
+                            datalabels: {
+                                color: (ctx) => ctx.dataIndex === 0 ? '#ffffff' : '#be123c', // Letra blanca para el rojo, roja para el claro
+                                font: { weight: 'bold', size: 13 },
+                                formatter: (value, ctx) => ((value * 100 / ctx.chart._metasets[ctx.datasetIndex].total).toFixed(1) + "%")
+                            }
+                        } 
+                    }
+                });
             }
         });
 
+        // 4. Gráfico Evolución
         new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
                 labels: ['2020', '2021', '2022', '2023', '2024'],
                 datasets: [
-                    {
-                        label: 'Despliegue Fibra Óptica',
-                        data: [15000, 32000, 58000, 85000, 120000],
-                        borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        borderWidth: 3, tension: 0.4, fill: true
-                    },
-                    {
-                        label: 'Conexiones Cobre/ADSL',
-                        data: [90000, 82000, 65000, 48000, 31000],
-                        borderColor: '#f43f5e', backgroundColor: 'transparent',
-                        borderWidth: 2, tension: 0.4, borderDash: [5, 5]
-                    }
+                    { label: 'Fibra Óptica', data: [15000, 32000, 58000, 85000, 120000], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 3, tension: 0.4, fill: true },
+                    { label: 'Cobre/ADSL', data: [90000, 82000, 65000, 48000, 31000], borderColor: '#f43f5e', backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
                 ]
             },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'top' }, datalabels: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, title: { display: true, text: 'Volumen de Accesos' } }
-                }
-            }
+            options: { responsive: true, plugins: { legend: { position: 'top' }, datalabels: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
     </script>
 </body>
