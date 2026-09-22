@@ -57,11 +57,11 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        .navbar { background-color: var(--nav-bg); padding: 0 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
-        .nav-brand { color: white; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+        .navbar { background-color: var(--nav-bg); padding: 0 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; }
+        .nav-brand { color: white; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; padding: 15px 0; }
         .nav-brand span { color: var(--color-fibra); }
-        .nav-links { display: flex; }
-        .nav-btn { background: transparent; color: #94a3b8; border: none; padding: 22px 25px; font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 4px solid transparent; transition: all 0.3s; }
+        .nav-links { display: flex; flex-wrap: wrap; }
+        .nav-btn { background: transparent; color: #94a3b8; border: none; padding: 22px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border-bottom: 4px solid transparent; transition: all 0.3s; }
         .nav-btn:hover { color: white; }
         .nav-btn.active { color: white; border-bottom: 4px solid var(--color-fibra); background: rgba(255,255,255,0.03); }
 
@@ -69,7 +69,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Barra de Filtro Dinámica */
         .filter-bar { background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
         .filter-bar select { padding: 10px 15px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 1rem; font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; cursor: pointer; outline: none; font-weight: 600; }
         .filter-bar select:focus { border-color: var(--color-fibra); }
@@ -136,13 +135,14 @@
             <div class="nav-links">
                 <button class="nav-btn active" onclick="abrirPestana('vista-matriz', this)">Matriz Operativa</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
+                <button class="nav-btn" onclick="abrirPestana('vista-comparativa', this)">Comparativa Regional</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
             </div>
         </nav>
 
         <div class="container">
             
-            <!-- BARRA DE FILTRO CRUZADO GLOBAL (Se ocultará automáticamente en la pestaña 3) -->
+            <!-- BARRA DE FILTRO CRUZADO GLOBAL -->
             <div id="barraFiltroContainer" class="filter-bar">
                 <div>
                     <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
@@ -192,7 +192,31 @@
                 </div>
             </div>
 
-            <!-- PESTAÑA 3 -->
+            <!-- PESTAÑA 3: NUEVO MÓDULO DE COMPARATIVA REGIONAL (BENCHMARK) -->
+            <div id="vista-comparativa" class="tab-content fade-in">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Benchmark: Capital vs. Interior</h3>
+                        <div class="chart-wrapper"><canvas id="graficoBenchmark"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <h3>Análisis de Brecha Tecnológica</h3>
+                        <p style="color: #475569; font-size: 0.98rem; margin-bottom: 20px;">
+                            Este módulo contrasta el desempeño logístico entre el <strong>Gran Resistencia</strong> (núcleo metropolitano) y el <strong>Resto del Interior Provincial</strong>.
+                        </p>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border-left: 4px solid var(--color-wireless); margin-bottom: 15px;">
+                            <strong style="color: #0f172a; display: block; margin-bottom: 5px;">📡 Concentración de Conectividad</strong>
+                            <span style="color: #475569; font-size: 0.92rem;">La infraestructura de fibra óptica FTTH presenta una asimetría estructural, concentrando la mayor densidad de puertos en el área metropolitana en detrimento de los nodos departamentales alejados.</span>
+                        </div>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border-left: 4px solid var(--color-cobre);">
+                            <strong style="color: #0f172a; display: block; margin-bottom: 5px;">⚡ Dependencia Alternativa</strong>
+                            <span style="color: #475569; font-size: 0.92rem;">El interior provincial muestra una mayor resiliencia relativa en enlaces inalámbricos de última milla para compensar la falta de despliegue troncal de fibra directa.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA 4 -->
             <div id="vista-evolucion" class="tab-content fade-in">
                 <div class="card">
                     <h3>Tendencia de Migración de Red (2021-2026) - Visión Macro Provincial</h3>
@@ -225,7 +249,7 @@
         const colorRiesgoAlto = '#f43f5e'; 
         const colorRiesgoBajo = '#334155'; 
 
-        let chartDonut, chartBarras, chartGravedad, chartEvolucion, miMapa;
+        let chartDonut, chartBarras, chartGravedad, chartBenchmark, chartEvolucion, miMapa;
         let datosCrudosGlobales = [];
         let ciudadesGlobales = {};
         let marcadoresMapa = [];
@@ -243,6 +267,7 @@
                 app.style.opacity = '1';
                 if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
                 if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
+                if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update(); }
                 if(miMapa) { miMapa.invalidateSize(); }
             }, 800);
         }
@@ -253,18 +278,18 @@
             document.getElementById(idPestana).classList.add('active');
             boton.classList.add('active');
 
-            // OCULTAR O MOSTRAR LA BARRA DE FILTRO SEGÚN LA PESTAÑA
             const barraFiltro = document.getElementById('barraFiltroContainer');
-            if (idPestana === 'vista-evolucion') {
-                barraFiltro.style.display = 'none'; // Se oculta en la tercera pestaña para evitar confusiones
+            if (idPestana === 'vista-evolucion' || idPestana === 'vista-comparativa') {
+                barraFiltro.style.display = 'none'; 
             } else {
-                barraFiltro.style.display = 'flex'; // Visible en Matriz y Mapa
+                barraFiltro.style.display = 'flex'; 
             }
 
             setTimeout(() => {
                 if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
                 if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
                 if(chartGravedad) { chartGravedad.resize(); chartGravedad.update(); }
+                if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update(); }
                 if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update(); }
                 if (idPestana === 'vista-mapa' && miMapa) { miMapa.invalidateSize(); }
             }, 150); 
@@ -305,6 +330,7 @@
         function procesarDatosYConstruirTablero(filtroCiudad) {
             let totalFibra = 0, totalWireless = 0, totalCable = 0;
             let fibraMetro = 0, fibraInterior = 0;
+            let wirelessMetro = 0, wirelessInterior = 0;
             let ciudades = {};
 
             datosCrudosGlobales.forEach(fila => {
@@ -321,6 +347,17 @@
                         let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); 
                         let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
 
+                        let esMetro = (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS') || localidad.includes('FONTANA') || localidad.includes('VILELAS'));
+
+                        if (isFibra) {
+                            if (esMetro) fibraMetro += cantidad;
+                            else fibraInterior += cantidad;
+                        }
+                        if (isWireless) {
+                            if (esMetro) wirelessMetro += cantidad;
+                            else wirelessInterior += cantidad;
+                        }
+
                         if (!ciudades[localidad]) ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
                         ciudades[localidad].total += cantidad;
                         if (isFibra) ciudades[localidad].fibra += cantidad;
@@ -328,11 +365,7 @@
                         if (isCable) ciudades[localidad].cable += cantidad;
 
                         if (filtroCiudad === "TODAS" || localidad === filtroCiudad) {
-                            if (isFibra) {
-                                totalFibra += cantidad;
-                                if (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS') || localidad.includes('FONTANA') || localidad.includes('VILELAS')) fibraMetro += cantidad;
-                                else fibraInterior += cantidad;
-                            }
+                            if (isFibra) totalFibra += cantidad;
                             else if (isWireless) totalWireless += cantidad;
                             else if (isCable) totalCable += cantidad;
                         }
@@ -418,6 +451,30 @@
                                 callbacks: { label: function(context) { let label = context.label; let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Zona: ${label}`, ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`, ` Impacto: ${total > 0 ? ((valor/total)*100).toFixed(1) : 0}% de la red` ]; } }
                             }
                         } 
+                    }
+                });
+            }
+
+            // Gráfico Benchmark (Capital vs Interior)
+            if (chartBenchmark) {
+                chartBenchmark.data.datasets[0].data = [fibraMetro, fibraInterior];
+                chartBenchmark.data.datasets[1].data = [wirelessMetro, wirelessInterior];
+                chartBenchmark.update();
+            } else {
+                chartBenchmark = new Chart(document.getElementById('graficoBenchmark').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Gran Resistencia (Metro)', 'Resto del Interior'],
+                        datasets: [
+                            { label: 'Fibra Óptica (FTTH)', data: [fibraMetro, fibraInterior], backgroundColor: colorFibra },
+                            { label: 'Redes Wireless', data: [wirelessMetro, wirelessInterior], backgroundColor: colorWireless }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, animation: animacionComun,
+                        plugins: { legend: { position: 'top' }, datalabels: { display: false },
+                            tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 } }
+                        },
+                        scales: { y: { beginAtZero: true } }
                     }
                 });
             }
