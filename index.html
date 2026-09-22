@@ -72,6 +72,10 @@
         .alert-panel { background: #fff1f2; border-left: 5px solid #e11d48; padding: 30px; border-radius: 0 12px 12px 0; animation: latido 2.5s infinite; }
         .alert-panel h4 { color: #be123c; margin-top: 0; font-size: 1.3rem; margin-bottom: 15px; }
 
+        /* Contenedores de Gráficos fijados para evitar colapso */
+        .chart-wrapper { position: relative; height: 350px; width: 100%; }
+        .chart-wrapper-sm { position: relative; height: 300px; width: 100%; }
+
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid #e2e8f0; }
     </style>
 </head>
@@ -103,11 +107,11 @@
                 <div class="grid-2">
                     <div class="card">
                         <h3>Topología Provincial</h3>
-                        <div style="position: relative; height:350px;"><canvas id="graficoDonut"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoDonut"></canvas></div>
                     </div>
                     <div class="card">
                         <h3>Composición por Nodos Críticos</h3>
-                        <div style="position: relative; height:350px;"><canvas id="graficoBarras"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoBarras"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -123,7 +127,7 @@
                         </div>
                         <div class="card" style="padding: 25px;">
                             <h3 style="font-size: 1.1rem; text-align: center;">Concentración de Red Óptica</h3>
-                            <div style="position: relative; height:300px;"><canvas id="graficoGravedad"></canvas></div>
+                            <div class="chart-wrapper-sm"><canvas id="graficoGravedad"></canvas></div>
                         </div>
                     </div>
                     <div class="card" style="padding: 15px;">
@@ -137,7 +141,7 @@
                 <div class="card">
                     <h3>Tendencia de Migración de Red (5 Años)</h3>
                     <div class="grid-2" style="align-items: center; margin-top: 30px;">
-                        <div style="position: relative; height:350px;"><canvas id="graficoEvolucion"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoEvolucion"></canvas></div>
                         <div style="padding-left: 20px;">
                             <h4 style="color: #3b82f6; font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Acelerada</h4>
                             <p style="color: #475569; margin-bottom: 25px;">Los enlaces basados en cobre, históricamente dominantes pero vulnerables, están en declive frente a la penetración de la Fibra Óptica (FTTH).</p>
@@ -158,7 +162,6 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // Variables globales para redimensionar los gráficos
         let chartDonut, chartBarras, chartGravedad, chartEvolucion, miMapa;
 
         function iniciarApp() {
@@ -173,9 +176,10 @@
                 app.style.display = 'block';
                 void app.offsetWidth;
                 app.style.opacity = '1';
-                // Forzar redimensionamiento al abrir
-                if(chartDonut) chartDonut.resize();
-                if(chartBarras) chartBarras.resize();
+                
+                // Forzar dibujo inicial
+                if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
+                if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
             }, 800);
         }
 
@@ -186,20 +190,19 @@
             document.getElementById(idPestana).classList.add('active');
             boton.classList.add('active');
 
-            // SOLUCIÓN AL BUG DEL GRÁFICO INVISIBLE: Obligamos a recalcular el tamaño al abrir la pestaña
+            // Timeout ligeramente mayor para asegurar que el navegador ya pintó el contenedor visible
             setTimeout(() => {
-                if(chartDonut) chartDonut.resize();
-                if(chartBarras) chartBarras.resize();
-                if(chartGravedad) chartGravedad.resize();
-                if(chartEvolucion) chartEvolucion.resize();
+                if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
+                if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
+                if(chartGravedad) { chartGravedad.resize(); chartGravedad.update(); }
+                if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update(); }
                 
                 if (idPestana === 'vista-mapa' && miMapa) {
                     miMapa.invalidateSize();
                 }
-            }, 50);
+            }, 150); 
         }
 
-        // Diccionario de coordenadas con nombres clave más cortos para coincidir mejor
         const coordenadasChaco = {
             "RESISTENCIA": [-27.4514, -58.9867],
             "BARRANQUERAS": [-27.4833, -58.9333],
@@ -234,8 +237,6 @@
                     
                     if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
                         let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
-                        
-                        // SOLUCIÓN AL BUG DE LAS CIUDADES: Eliminamos tildes (acentos) para que coincidan siempre
                         let localidad = (fila['Localidad'] || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 
                         if (!isNaN(cantidad)) {
@@ -265,18 +266,15 @@
                     }
                 });
 
-                // Top 8 SOLO para el gráfico de barras
                 let rankingBarras = Object.keys(ciudades)
                     .map(nombre => ({ nombre: nombre, ...ciudades[nombre] }))
                     .sort((a, b) => b.total - a.total)
                     .slice(0, 8); 
 
-                // TODAS las ciudades procesadas para dibujar en el mapa
                 let todasLasCiudades = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] }));
 
                 const animacionComun = { duration: 1500, easing: 'easeOutQuart' };
 
-                // 1. Gráfico Anillo
                 chartDonut = new Chart(document.getElementById('graficoDonut').getContext('2d'), {
                     type: 'doughnut',
                     data: { labels: ['Fibra Óptica', 'Wireless', 'Cobre/Cable'], datasets: [{ data: [totalFibra, totalWireless, totalCable], backgroundColor: ['#10b981', '#3b82f6', '#f43f5e'], borderWidth: 0 }] },
@@ -297,7 +295,6 @@
                     }
                 });
 
-                // 2. Gráfico Barras
                 chartBarras = new Chart(document.getElementById('graficoBarras').getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -324,7 +321,6 @@
                     }
                 });
 
-                // 3. Gráfico Gravedad (NUEVO TOOLTIP MULTILINEA)
                 chartGravedad = new Chart(document.getElementById('graficoGravedad').getContext('2d'), {
                     type: 'pie',
                     data: { labels: ['Gran Resistencia', 'Resto del Interior'], datasets: [{ data: [fibraMetro, fibraInterior], backgroundColor: ['#e11d48', '#fecdd3'], borderWidth: 0 }] },
@@ -335,14 +331,8 @@
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
                                 callbacks: {
                                     label: function(context) {
-                                        let label = context.label;
-                                        let valor = context.raw;
-                                        let total = context.chart._metasets[context.datasetIndex].total;
-                                        return [
-                                            ` Zona: ${label}`,
-                                            ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`,
-                                            ` Impacto: ${((valor/total)*100).toFixed(1)}% de la red provincial acaparada aquí`
-                                        ];
+                                        let label = context.label; let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total;
+                                        return [ ` Zona: ${label}`, ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`, ` Impacto: ${((valor/total)*100).toFixed(1)}% de la red provincial acaparada aquí` ];
                                     }
                                 }
                             }
@@ -350,17 +340,13 @@
                     }
                 });
 
-                // 4. MAPA LEAFLET 
                 miMapa = L.map('mapa').setView([-26.8, -60.0], 7); 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(miMapa);
 
-                // Dibujar TODAS las ciudades que coincidan, no solo 8.
                 todasLasCiudades.forEach(ciudad => {
-                    // Buscar si la ciudad leída del CSV contiene alguna de las claves de nuestro diccionario
                     let coordKey = Object.keys(coordenadasChaco).find(key => ciudad.nombre.includes(key));
-                    
                     if (coordKey) {
                         let coords = coordenadasChaco[coordKey];
                         let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
@@ -391,7 +377,24 @@
                     { label: 'Obsolescencia de Cobre', data: [90000, 82000, 65000, 48000, 31000], borderColor: '#f43f5e', backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, animation: animacionComun, plugins: { legend: { position: 'top' }, datalabels: { display: false } }, scales: { y: { beginAtZero: true } } }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                animation: { duration: 1500, easing: 'easeOutQuart' }, 
+                plugins: { 
+                    legend: { position: 'top' }, 
+                    datalabels: { display: false },
+                    tooltip: {
+                        padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`;
+                            }
+                        }
+                    }
+                }, 
+                scales: { y: { beginAtZero: true } } 
+            }
         });
     </script>
 </body>
