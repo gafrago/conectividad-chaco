@@ -4,89 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matriz Estratégica TIC - Chaco</title>
-    <!-- Importamos tipografía profesional -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin para mostrar porcentajes dentro del gráfico -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         :root {
-            --bg-color: #f8fafc;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent: #2563eb;
         }
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-main);
             margin: 0; padding: 0;
-            line-height: 1.6;
+            line-height: 1.7;
         }
         .hero {
             background-color: #0f172a;
             color: white;
-            padding: 80px 20px;
+            padding: 90px 20px 60px 20px;
             text-align: center;
+            border-bottom: 5px solid var(--accent);
         }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
-        .hero p { color: #94a3b8; max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 15px; letter-spacing: -1px; font-weight: 700; }
+        .hero p { color: #cbd5e1; max-width: 650px; margin: 0 auto; font-size: 1.15rem; }
         
-        .container { max-width: 1000px; margin: -40px auto 40px auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: -30px auto 40px auto; padding: 0 20px; }
         
-        .story-text { max-width: 700px; margin: 60px auto; text-align: center; font-size: 1.1rem; color: var(--text-muted); }
-        
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
+        .insight-box {
+            background: rgba(37, 99, 235, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.05rem;
+            color: #1e3a8a;
         }
-        @media (min-width: 768px) { .dashboard { grid-template-columns: 1fr 1fr; } }
+
+        .dashboard { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 40px; }
+        @media (min-width: 850px) { .dashboard { grid-template-columns: 1fr 1.5fr; } }
         
         .card {
             background: var(--card-bg);
             padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-        .card h3 { margin-top: 0; font-size: 1.2rem; color: var(--text-main); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        .card h3 { margin-top: 0; font-size: 1.3rem; color: var(--text-main); border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
         
-        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; }
+        .analysis-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        @media (min-width: 768px) { .analysis-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .analysis-card h4 { color: var(--accent); margin-bottom: 10px; font-size: 1.2rem; }
+        
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e2e8f0; margin-top: 40px; }
     </style>
 </head>
 <body>
 
     <div class="hero">
-        <h1>Conectividad y Territorio</h1>
-        <p>Análisis del despliegue de infraestructura de telecomunicaciones en la provincia del Chaco, basado en datos abiertos del ENACOM.</p>
+        <h1>Matriz Estratégica TIC - Chaco</h1>
+        <p>Análisis territorial de la infraestructura de telecomunicaciones y resiliencia de red. Evolución, contraste actual y proyección de la matriz de enlaces.</p>
     </div>
 
     <div class="container">
         
-        <div class="story-text">
-            <p>La matriz tecnológica de una provincia define su capacidad de proyección. Este tablero interactivo desglosa las tecnologías de enlace fijo, permitiendo identificar la proporción de conexiones modernas (Fibra Óptica) frente a tecnologías de transición y su concentración en los principales núcleos urbanos.</p>
+        <div class="insight-box">
+            <strong>El Centro de Gravedad Digital:</strong> La matriz tecnológica define la capacidad operativa y económica de una provincia. Este tablero expone la brecha entre la concentración de Fibra Óptica (alta capacidad y baja latencia) en el área metropolitana, y la dependencia de enlaces Inalámbricos en el interior provincial.
         </div>
 
+        <!-- Panel de Gráficos -->
         <div class="dashboard">
-            <!-- Tarjeta 1: Gráfico Macro -->
             <div class="card">
                 <h3>Proporción Tecnológica Provincial</h3>
                 <canvas id="graficoDonut"></canvas>
+                <p style="text-align: center; font-size: 0.9rem; color: #64748b; margin-top: 15px;">
+                    <em>Desglose porcentual del tipo de soporte físico de los enlaces activos en la región.</em>
+                </p>
             </div>
             
-            <!-- Tarjeta 2: Gráfico Micro -->
             <div class="card">
-                <h3>Top 5 Localidades (Volumen Total)</h3>
+                <h3>Composición de Red: Top 10 Localidades</h3>
                 <canvas id="graficoBarras"></canvas>
+                <p style="text-align: center; font-size: 0.9rem; color: #64748b; margin-top: 15px;">
+                    <em>Distribución de tecnologías (Fibra, Wireless, Cable) por volumen en nodos críticos.</em>
+                </p>
+            </div>
+        </div>
+
+        <!-- Sección de Análisis Estratégico -->
+        <div class="analysis-section">
+            <h3 style="font-size: 1.8rem; margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px;">Evaluación de la Evolución de Red</h3>
+            
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h4>Retrospectiva: El escenario hace 5 años</h4>
+                    <p>Históricamente, la matriz provincial dependía de enlaces asimétricos basados en cobre (ADSL/Cablemódem) y un despliegue incipiente de radioenlaces de baja capacidad. La Fibra Óptica estaba restringida casi exclusivamente al anillo troncal (backbone) nacional, limitando severamente la capacidad de transmisión en el último kilómetro y generando latencias prohibitivas para sistemas de gestión en tiempo real.</p>
+                </div>
+                
+                <div class="analysis-card">
+                    <h4>Proyección Futura y Consecuencias</h4>
+                    <p><strong>Ventajas de la migración FTTH (Fiber to the Home):</strong> La transición total hacia la fibra permite independizar la red de interferencias electromagnéticas o climáticas (vulnerabilidad clásica del Wireless). Esto garantiza resiliencia para infraestructuras críticas, telemedicina y modernización del Estado.</p>
+                    <p><strong>Riesgo de inacción:</strong> Si no se acelera el tendido hacia el interior provincial, se consolidará un "cuello de botella táctico", generando un aislamiento digital que limitará el desarrollo económico y la capacidad de despliegue de sistemas complejos fuera del eje Resistencia-Barranqueras-Sáenz Peña.</p>
+                </div>
             </div>
         </div>
     </div>
 
     <footer>
         Fuente de datos: Ente Nacional de Comunicaciones (ENACOM).<br>
-        Desarrollado para la categoría Exploración Interactiva.
+        Desarrollado para la categoría Exploración Interactiva mediante procesamiento de CSV en tiempo real.
     </footer>
 
     <script>
+        // Registrar el plugin de etiquetas
+        Chart.register(ChartDataLabels);
+
         Papa.parse("enacom.csv", {
             download: true,
             header: true,
@@ -94,12 +144,10 @@
             complete: function(results) {
                 const datos = results.data;
                 
-                // Variables para el Gráfico 1 (Donut)
                 let totalFibra = 0, totalWireless = 0, totalCable = 0;
-                
-                // Objeto para el Gráfico 2 (Barras por ciudad)
                 let ciudades = {};
 
+                // Procesamiento de datos
                 datos.forEach(fila => {
                     let provincia = fila['Provincia'];
                     let tecnologia = fila['Tecnologia'];
@@ -109,26 +157,35 @@
                         let localidad = fila['Localidad'];
 
                         if (!isNaN(cantidad)) {
-                            // Sumatoria para el Donut
                             let tech = tecnologia.toUpperCase();
-                            if (tech.includes('FIBRA')) totalFibra += cantidad;
-                            else if (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')) totalWireless += cantidad;
-                            else if (tech.includes('CABLE')) totalCable += cantidad;
+                            let isFibra = tech.includes('FIBRA');
+                            let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO'));
+                            let isCable = tech.includes('CABLE');
 
-                            // Agrupación para Ranking de Ciudades
-                            if (!ciudades[localidad]) ciudades[localidad] = 0;
-                            ciudades[localidad] += cantidad;
+                            // Totales Macro
+                            if (isFibra) totalFibra += cantidad;
+                            else if (isWireless) totalWireless += cantidad;
+                            else if (isCable) totalCable += cantidad;
+
+                            // Agrupación Micro por ciudad
+                            if (!ciudades[localidad]) {
+                                ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
+                            }
+                            ciudades[localidad].total += cantidad;
+                            if (isFibra) ciudades[localidad].fibra += cantidad;
+                            if (isWireless) ciudades[localidad].wireless += cantidad;
+                            if (isCable) ciudades[localidad].cable += cantidad;
                         }
                     }
                 });
 
-                // Procesamos el Top 5 de ciudades
+                // Top 10 ciudades
                 let ranking = Object.keys(ciudades)
-                    .map(nombre => ({ nombre: nombre, total: ciudades[nombre] }))
+                    .map(nombre => ({ nombre: nombre, ...ciudades[nombre] }))
                     .sort((a, b) => b.total - a.total)
-                    .slice(0, 5);
+                    .slice(0, 10);
 
-                // Renderizar Gráfico 1 (Donut)
+                // Gráfico 1: Anillo con Porcentajes
                 new Chart(document.getElementById('graficoDonut').getContext('2d'), {
                     type: 'doughnut',
                     data: {
@@ -139,25 +196,57 @@
                             borderWidth: 0
                         }]
                     },
-                    options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                    options: { 
+                        responsive: true, 
+                        cutout: '65%',
+                        plugins: { 
+                            legend: { position: 'bottom' },
+                            datalabels: {
+                                color: '#ffffff',
+                                font: { weight: 'bold', size: 14 },
+                                formatter: (value, ctx) => {
+                                    let sum = ctx.chart._metasets[ctx.datasetIndex].total;
+                                    let percentage = (value * 100 / sum).toFixed(1) + "%";
+                                    return percentage;
+                                }
+                            }
+                        } 
+                    }
                 });
 
-                // Renderizar Gráfico 2 (Barras)
+                // Gráfico 2: Barras Apiladas por Ciudad y Tecnología
                 new Chart(document.getElementById('graficoBarras').getContext('2d'), {
                     type: 'bar',
                     data: {
                         labels: ranking.map(c => c.nombre),
-                        datasets: [{
-                            label: 'Total de Conexiones',
-                            data: ranking.map(c => c.total),
-                            backgroundColor: '#6366f1',
-                            borderRadius: 6
-                        }]
+                        datasets: [
+                            {
+                                label: 'Fibra Óptica',
+                                data: ranking.map(c => c.fibra),
+                                backgroundColor: '#10b981',
+                            },
+                            {
+                                label: 'Wireless',
+                                data: ranking.map(c => c.wireless),
+                                backgroundColor: '#3b82f6',
+                            },
+                            {
+                                label: 'Cablemódem',
+                                data: ranking.map(c => c.cable),
+                                backgroundColor: '#f43f5e',
+                            }
+                        ]
                     },
                     options: { 
                         responsive: true, 
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, grid: { display: false } } }
+                        plugins: { 
+                            legend: { position: 'top' },
+                            datalabels: { display: false } // Ocultamos los números adentro de las barras para no saturar
+                        },
+                        scales: { 
+                            x: { stacked: true },
+                            y: { stacked: true, beginAtZero: true }
+                        }
                     }
                 });
             }
