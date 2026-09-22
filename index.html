@@ -50,10 +50,21 @@
         .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s; }
         .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
 
-        /* Estructura de Logos Oficiales (Imágenes) */
-        .organizers-footer { margin-top: auto; padding-top: 30px; width: 100%; max-width: 1000px; }
-        .organizers-footer > p { font-size: 0.75rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; }
-        .logos-container { background: #ffffff; padding: 15px 30px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        /* Estructura de Logos Oficiales Rediseñada (Más grande) */
+        .organizers-footer { margin-top: auto; padding-top: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .organizers-footer > p { font-size: 0.85rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
+        .logos-container { 
+            background: #ffffff; 
+            padding: 20px 40px; 
+            border-radius: 12px; 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            width: 90%; 
+            max-width: 850px; /* Permite que el recuadro blanco crezca mucho más */
+        }
 
         #app-principal { display: none; opacity: 0; transition: opacity 1s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -97,6 +108,7 @@
 
     <div id="splash-screen">
         
+        <!-- EFECTO ARTERIAS DE FIBRA ÓPTICA -->
         <div class="arteries-container">
             <div class="fiber-pulse" style="top: 10%; left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
             <div class="fiber-pulse" style="top: 30%; left: 40%; animation-duration: 5s; animation-delay: 1.5s;"></div>
@@ -105,9 +117,9 @@
             <div class="fiber-pulse" style="top: -10%; left: 20%; animation-duration: 4.5s; animation-delay: 3s;"></div>
         </div>
 
-        <!-- LOGO DEL CERTAMEN (IMAGEN ORIGINAL) -->
-        <div style="margin-top: 20px; margin-bottom: auto; z-index: 1;">
-            <img src="unnamed.jpg" alt="Concurso Contar con Datos 2026" style="height: 100px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
+        <!-- LOGO DEL CERTAMEN (Aumentado) -->
+        <div style="margin-top: 25px; margin-bottom: auto; z-index: 1;">
+            <img src="unnamed.jpg" alt="Concurso Contar con Datos 2026" style="height: 120px; width: auto; max-width: 90vw; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         </div>
         
         <div class="splash-content">
@@ -117,11 +129,11 @@
             <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
         </div>
         
-        <!-- LOGOS DE INSTITUCIONES ORGANIZADORAS CON PARÁMETRO ANTICACHÉ ?v=3 -->
+        <!-- LOGOS DE INSTITUCIONES (Expandidos al ancho del recuadro) -->
         <div class="organizers-footer">
             <p>Organizan y Avalan</p>
             <div class="logos-container">
-                <img src="logos-institucionales.png?v=3" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="height: 55px; max-width: 100%; object-fit: contain; display: block;">
+                <img src="logos-institucionales.png?v=4" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="width: 100%; height: auto; max-height: 130px; object-fit: contain; display: block; margin: 0 auto;">
             </div>
         </div>
     </div>
@@ -192,7 +204,7 @@
         </div>
 
         <footer>
-            Proyecto desarrollado para el Certamen Nacional "Contar con Datos". Categoría Exploración Interactiva.<br>
+            Proyecto desarrollado para el Certamen Nacional "Contar con Datos" 2026. Categoría Exploración Interactiva.<br>
             Fuente de datos: Ente Nacional de Comunicaciones (ENACOM). Actualizado a 2026.
         </footer>
     </div>
