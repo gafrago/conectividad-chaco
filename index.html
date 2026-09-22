@@ -34,16 +34,23 @@
 
                 datos.forEach(fila => {
                     let provincia = fila['Provincia'];
+                    let tecnologia = fila['Tecnologia'];
                     
-                    if (provincia && provincia.toUpperCase().includes('CHACO')) {
-                        // Limpiamos los puntos de los miles antes de sumar
-                        let fibra = parseInt((fila['Fibra óptica'] || '0').replace(/\./g, ''));
-                        let wireless = parseInt((fila['Wireless'] || '0').replace(/\./g, ''));
-                        let cable = parseInt((fila['Cablemódem'] || '0').replace(/\./g, ''));
+                    if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
+                        // Limpiamos los puntos de los miles y convertimos a número
+                        let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
                         
-                        if (!isNaN(fibra)) totalFibra += fibra;
-                        if (!isNaN(wireless)) totalWireless += wireless;
-                        if (!isNaN(cable)) totalCable += cable;
+                        if (!isNaN(cantidad)) {
+                            let tech = tecnologia.toUpperCase();
+                            // Clasificamos según la palabra clave en la columna Tecnologia
+                            if (tech.includes('FIBRA')) {
+                                totalFibra += cantidad;
+                            } else if (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')) {
+                                totalWireless += cantidad;
+                            } else if (tech.includes('CABLE')) {
+                                totalCable += cantidad;
+                            }
+                        }
                     }
                 });
 
