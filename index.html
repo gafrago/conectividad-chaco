@@ -3,23 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Despliegue de Infraestructura TIC - Chaco</title>
+    <title>Matriz Estratégica TIC - Chaco</title>
+    <!-- Importamos tipografía profesional -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9; }
-        .chart-container { width: 90%; max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; }
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main);
+            margin: 0; padding: 0;
+            line-height: 1.6;
+        }
+        .hero {
+            background-color: #0f172a;
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
+        .hero p { color: #94a3b8; max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+        
+        .container { max-width: 1000px; margin: -40px auto 40px auto; padding: 0 20px; }
+        
+        .story-text { max-width: 700px; margin: 60px auto; text-align: center; font-size: 1.1rem; color: var(--text-muted); }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) { .dashboard { grid-template-columns: 1fr 1fr; } }
+        
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+        .card h3 { margin-top: 0; font-size: 1.2rem; color: var(--text-main); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <h1>Matriz de Conectividad Provincial (Chaco)</h1>
-    <p>Distribución de accesos a internet fijo por tipo de tecnología de enlace.</p>
-    
-    <div class="chart-container">
-        <canvas id="miGrafico"></canvas>
+    <div class="hero">
+        <h1>Conectividad y Territorio</h1>
+        <p>Análisis del despliegue de infraestructura de telecomunicaciones en la provincia del Chaco, basado en datos abiertos del ENACOM.</p>
     </div>
+
+    <div class="container">
+        
+        <div class="story-text">
+            <p>La matriz tecnológica de una provincia define su capacidad de proyección. Este tablero interactivo desglosa las tecnologías de enlace fijo, permitiendo identificar la proporción de conexiones modernas (Fibra Óptica) frente a tecnologías de transición y su concentración en los principales núcleos urbanos.</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- Tarjeta 1: Gráfico Macro -->
+            <div class="card">
+                <h3>Proporción Tecnológica Provincial</h3>
+                <canvas id="graficoDonut"></canvas>
+            </div>
+            
+            <!-- Tarjeta 2: Gráfico Micro -->
+            <div class="card">
+                <h3>Top 5 Localidades (Volumen Total)</h3>
+                <canvas id="graficoBarras"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Fuente de datos: Ente Nacional de Comunicaciones (ENACOM).<br>
+        Desarrollado para la categoría Exploración Interactiva.
+    </footer>
 
     <script>
         Papa.parse("enacom.csv", {
@@ -28,61 +93,71 @@
             skipEmptyLines: true,
             complete: function(results) {
                 const datos = results.data;
-                let totalFibra = 0;
-                let totalWireless = 0;
-                let totalCable = 0;
+                
+                // Variables para el Gráfico 1 (Donut)
+                let totalFibra = 0, totalWireless = 0, totalCable = 0;
+                
+                // Objeto para el Gráfico 2 (Barras por ciudad)
+                let ciudades = {};
 
                 datos.forEach(fila => {
                     let provincia = fila['Provincia'];
                     let tecnologia = fila['Tecnologia'];
                     
                     if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
-                        // Limpiamos los puntos de los miles y convertimos a número
                         let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
-                        
+                        let localidad = fila['Localidad'];
+
                         if (!isNaN(cantidad)) {
+                            // Sumatoria para el Donut
                             let tech = tecnologia.toUpperCase();
-                            // Clasificamos según la palabra clave en la columna Tecnologia
-                            if (tech.includes('FIBRA')) {
-                                totalFibra += cantidad;
-                            } else if (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')) {
-                                totalWireless += cantidad;
-                            } else if (tech.includes('CABLE')) {
-                                totalCable += cantidad;
-                            }
+                            if (tech.includes('FIBRA')) totalFibra += cantidad;
+                            else if (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')) totalWireless += cantidad;
+                            else if (tech.includes('CABLE')) totalCable += cantidad;
+
+                            // Agrupación para Ranking de Ciudades
+                            if (!ciudades[localidad]) ciudades[localidad] = 0;
+                            ciudades[localidad] += cantidad;
                         }
                     }
                 });
 
-                const ctx = document.getElementById('miGrafico').getContext('2d');
-                new Chart(ctx, {
+                // Procesamos el Top 5 de ciudades
+                let ranking = Object.keys(ciudades)
+                    .map(nombre => ({ nombre: nombre, total: ciudades[nombre] }))
+                    .sort((a, b) => b.total - a.total)
+                    .slice(0, 5);
+
+                // Renderizar Gráfico 1 (Donut)
+                new Chart(document.getElementById('graficoDonut').getContext('2d'), {
                     type: 'doughnut',
                     data: {
-                        labels: ['Fibra Óptica', 'Enlaces Inalámbricos (Wireless)', 'Cablemódem'],
+                        labels: ['Fibra Óptica', 'Wireless', 'Cablemódem'],
                         datasets: [{
                             data: [totalFibra, totalWireless, totalCable],
-                            backgroundColor: [
-                                'rgba(46, 204, 113, 0.8)', // Verde (Fibra)
-                                'rgba(52, 152, 219, 0.8)', // Azul (Wireless)
-                                'rgba(231, 76, 60, 0.8)'   // Rojo (Cable)
-                            ],
-                            borderColor: '#ffffff',
-                            borderWidth: 2
+                            backgroundColor: ['#10b981', '#3b82f6', '#f43f5e'],
+                            borderWidth: 0
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'bottom' },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let valor = context.raw;
-                                        return ' ' + valor.toLocaleString('es-AR') + ' conexiones activas';
-                                    }
-                                }
-                            }
-                        }
+                    options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+                });
+
+                // Renderizar Gráfico 2 (Barras)
+                new Chart(document.getElementById('graficoBarras').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ranking.map(c => c.nombre),
+                        datasets: [{
+                            label: 'Total de Conexiones',
+                            data: ranking.map(c => c.total),
+                            backgroundColor: '#6366f1',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, grid: { display: false } } }
                     }
                 });
             }
