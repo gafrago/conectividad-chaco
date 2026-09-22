@@ -18,8 +18,12 @@
             --bg-color: #f4f7f9;
             --card-bg: #ffffff;
             --text-main: #0f172a;
-            --accent: #3b82f6;
-            --nav-bg: #0f172a;
+            --nav-bg: #020617; /* Negro azulado ultra moderno */
+            
+            /* Nueva Paleta de Alto Impacto */
+            --color-fibra: #8b5cf6; /* Violeta Vibrante */
+            --color-wireless: #06b6d4; /* Cyan Eléctrico */
+            --color-cobre: #f97316; /* Naranja Neón */
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; line-height: 1.7; overflow-x: hidden; }
         
@@ -28,68 +32,60 @@
         /* Splash Screen Premium */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #2563eb, #020617);
+            background: linear-gradient(-45deg, #020617, #1e1b4b, #312e81, #0f172a);
             background-size: 400% 400%; animation: gradientFlow 12s ease infinite;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
             color: white; z-index: 9999; text-align: center; transition: opacity 0.8s ease, visibility 0.8s ease;
             padding: 50px 20px; box-sizing: border-box;
         }
         
-        .certamen-badge {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 25px; border-radius: 50px;
-            font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #bae6fd; backdrop-filter: blur(5px);
-            margin-bottom: auto; margin-top: 20px;
-        }
-
+        .certamen-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 25px; border-radius: 50px; font-size: 0.95rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #bae6fd; backdrop-filter: blur(5px); margin-bottom: auto; margin-top: 20px; }
         .splash-content { margin: auto; }
         #splash-screen h1 { font-size: 4.5rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        #splash-screen h2 { font-size: 1.8rem; font-weight: 300; color: #7dd3fc; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; }
+        #splash-screen h2 { font-size: 1.8rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; }
         #splash-screen p { font-size: 1.2rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 40px auto; line-height: 1.6; }
-        
-        .btn-iniciar { background: white; color: #1e3a8a; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; }
+        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; }
         .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 35px rgba(255,255,255,0.2); }
 
-        /* Logos Institucionales (Tipográficos) */
         .organizers-footer { margin-top: auto; padding-top: 40px; }
         .organizers-footer p { font-size: 0.8rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px !important; }
         .logos-container { display: flex; align-items: center; justify-content: center; gap: 30px; }
-        .logo-gobierno { text-align: left; line-height: 1.1; border-left: 3px solid #38bdf8; padding-left: 15px; }
+        .logo-gobierno { text-align: left; line-height: 1.1; border-left: 3px solid #8b5cf6; padding-left: 15px; }
         .logo-gobierno .tit { font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
         .logo-gobierno .sub { font-size: 0.8rem; color: #cbd5e1; text-transform: uppercase; }
         .logo-udesa { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; color: white; text-align: left; line-height: 1.1; }
 
         #app-principal { display: none; opacity: 0; transition: opacity 1s ease; }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Navegación */
-        .navbar { background-color: var(--nav-bg); padding: 0 20px; display: flex; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 1000; }
-        .nav-btn { background: transparent; color: #94a3b8; border: none; padding: 22px 35px; font-size: 1.05rem; font-weight: 600; cursor: pointer; border-bottom: 4px solid transparent; transition: all 0.3s; }
+        /* Navegación rediseñada con Título Persistente */
+        .navbar { background-color: var(--nav-bg); padding: 0 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
+        .nav-brand { color: white; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+        .nav-brand span { color: var(--color-fibra); }
+        .nav-links { display: flex; }
+        .nav-btn { background: transparent; color: #94a3b8; border: none; padding: 22px 25px; font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 4px solid transparent; transition: all 0.3s; }
         .nav-btn:hover { color: white; }
-        .nav-btn.active { color: white; border-bottom: 4px solid #38bdf8; background: rgba(255,255,255,0.05); }
+        .nav-btn.active { color: white; border-bottom: 4px solid var(--color-fibra); background: rgba(255,255,255,0.03); }
 
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
         .grid-2 { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 850px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
         .grid-uneven { display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 900px) { .grid-uneven { grid-template-columns: 1.2fr 2fr; } }
         
-        .card { background: var(--card-bg); padding: 35px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); margin-bottom: 30px; transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .card { background: var(--card-bg); padding: 35px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); margin-bottom: 30px; transition: transform 0.4s ease, box-shadow 0.4s ease; border: 1px solid #f1f5f9; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); }
         .card h3 { margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px; color: #1e293b; }
 
-        /* Mapa y Paneles */
         #mapa { height: 550px; border-radius: 12px; border: 2px solid #e2e8f0; z-index: 1; }
-        .leaflet-popup-content h4 { margin: 0 0 8px 0; color: var(--accent); font-size: 1.1rem; }
+        .leaflet-popup-content h4 { margin: 0 0 8px 0; color: var(--color-fibra); font-size: 1.1rem; }
         .leaflet-popup-content p { margin: 0 0 5px 0; font-size: 0.95rem; }
         
-        @keyframes latido { 0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(225, 29, 72, 0); } 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); } }
-        .alert-panel { background: #fff1f2; border-left: 5px solid #e11d48; padding: 30px; border-radius: 0 12px 12px 0; animation: latido 2.5s infinite; }
+        @keyframes latido { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(244, 63, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); } }
+        .alert-panel { background: #fff1f2; border-left: 5px solid #f43f5e; padding: 30px; border-radius: 0 12px 12px 0; animation: latido 2.5s infinite; }
         .alert-panel h4 { color: #be123c; margin-top: 0; font-size: 1.3rem; margin-bottom: 15px; }
 
         .chart-wrapper { position: relative; height: 350px; width: 100%; }
@@ -100,20 +96,15 @@
 </head>
 <body>
 
-    <!-- PANTALLA DE INICIO (SPLASH SCREEN INSTITUCIONAL) -->
+    <!-- PANTALLA DE INICIO (SPLASH SCREEN) -->
     <div id="splash-screen">
-        
-        <div class="certamen-badge">
-            🏆 Certamen Nacional "Contar con Datos" 
-        </div>
-
+        <div class="certamen-badge">🏆 Certamen Nacional "Contar con Datos"</div>
         <div class="splash-content">
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
             <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
         </div>
-
         <div class="organizers-footer">
             <p>Convocatoria Organizada Por</p>
             <div class="logos-container">
@@ -122,27 +113,31 @@
                     <div class="sub">de Ministros de la Nación</div>
                 </div>
                 <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.2);"></div>
-                <div class="logo-udesa">
-                    Universidad de<br>San Andrés
-                </div>
+                <div class="logo-udesa">Universidad de<br>San Andrés</div>
             </div>
         </div>
-
     </div>
 
     <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-principal">
+        
+        <!-- NAVEGACIÓN REDISEÑADA CON TÍTULO -->
         <nav class="navbar">
-            <button class="nav-btn active" onclick="abrirPestana('vista-matriz', this)">Matriz Operativa</button>
-            <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
-            <button class="nav-btn" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
+            <div class="nav-brand">
+                <span>✦</span> Arterias de Cristal
+            </div>
+            <div class="nav-links">
+                <button class="nav-btn active" onclick="abrirPestana('vista-matriz', this)">Matriz Operativa</button>
+                <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
+                <button class="nav-btn" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
+            </div>
         </nav>
 
         <div class="container">
             
             <!-- PESTAÑA 1 -->
             <div id="vista-matriz" class="tab-content active fade-in">
-                <div style="background: rgba(59,130,246,0.1); border-left: 4px solid #3b82f6; padding: 25px; margin-bottom: 40px; border-radius: 4px; color: #1e3a8a; font-size: 1.1rem;">
+                <div style="background: rgba(139,92,246,0.1); border-left: 4px solid var(--color-fibra); padding: 25px; margin-bottom: 40px; border-radius: 4px; color: #3730a3; font-size: 1.1rem;">
                     <strong>Resumen Técnico:</strong> Desglose en tiempo real de los soportes físicos de enlace. Permite identificar la proporción de conexiones modernas frente a tecnologías de transición.
                 </div>
                 <div class="grid-2">
@@ -163,7 +158,7 @@
                     <div>
                         <div class="alert-panel" style="margin-bottom: 30px;">
                             <h4>⚠️ Vulnerabilidad del Nodo Central</h4>
-                            <p style="margin-bottom: 15px; font-size: 1rem; color: #881337;">El análisis revela que el <strong>Gran Resistencia</strong> actúa como centro de gravedad absoluto, representando un punto de fallo táctico.</p>
+                            <p style="margin-bottom: 15px; font-size: 1rem; color: #881337;">El análisis revela que el <strong>Gran Resistencia</strong> actúa como centro de gravedad absoluto, representando un punto de fallo táctico crítico.</p>
                             <p style="margin: 0; font-size: 1rem; color: #881337;"><strong>Contingencia:</strong> Una disrupción troncal aislaría al interior provincial, degradando las operaciones por su dependencia del sistema Wireless.</p>
                         </div>
                         <div class="card" style="padding: 25px;">
@@ -184,9 +179,9 @@
                     <div class="grid-2" style="align-items: center; margin-top: 30px;">
                         <div class="chart-wrapper"><canvas id="graficoEvolucion"></canvas></div>
                         <div style="padding-left: 20px;">
-                            <h4 style="color: #3b82f6; font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Acelerada</h4>
+                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Acelerada</h4>
                             <p style="color: #475569; margin-bottom: 25px;">Los enlaces basados en cobre, históricamente dominantes pero vulnerables, están en declive frente a la penetración de la Fibra Óptica (FTTH).</p>
-                            <h4 style="color: #3b82f6; font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
+                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
                             <p style="color: #475569;">La migración total hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando la continuidad de las operaciones críticas.</p>
                         </div>
                     </div>
@@ -204,12 +199,19 @@
     <script>
         Chart.register(ChartDataLabels);
 
+        // --- PALETA DE COLORES IMPACTANTE ---
+        const colorFibra = '#8b5cf6';    // Violeta vibrante
+        const colorWireless = '#06b6d4'; // Cyan Eléctrico
+        const colorCable = '#f97316';    // Naranja Neón
+        
+        const colorRiesgoAlto = '#f43f5e'; // Rojo Carmesí
+        const colorRiesgoBajo = '#334155'; // Gris Pizarra Oscuro
+
         let chartDonut, chartBarras, chartGravedad, chartEvolucion, miMapa;
 
         function iniciarApp() {
             const splash = document.getElementById('splash-screen');
             const app = document.getElementById('app-principal');
-            
             splash.style.opacity = '0';
             splash.style.visibility = 'hidden';
             
@@ -218,7 +220,6 @@
                 app.style.display = 'block';
                 void app.offsetWidth;
                 app.style.opacity = '1';
-                
                 if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
                 if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
             }, 800);
@@ -227,7 +228,6 @@
         function abrirPestana(idPestana, boton) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(idPestana).classList.add('active');
             boton.classList.add('active');
 
@@ -236,35 +236,19 @@
                 if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
                 if(chartGravedad) { chartGravedad.resize(); chartGravedad.update(); }
                 if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update(); }
-                
-                if (idPestana === 'vista-mapa' && miMapa) {
-                    miMapa.invalidateSize();
-                }
+                if (idPestana === 'vista-mapa' && miMapa) { miMapa.invalidateSize(); }
             }, 150); 
         }
 
         const coordenadasChaco = {
-            "RESISTENCIA": [-27.4514, -58.9867],
-            "BARRANQUERAS": [-27.4833, -58.9333],
-            "FONTANA": [-27.4181, -59.0244],
-            "VILELAS": [-27.5208, -58.9383],
-            "SAENZ PEÑA": [-26.7811, -60.4388],
-            "ANGELA": [-27.5738, -60.7153],
-            "CASTELLI": [-25.9464, -60.6186],
-            "CHARATA": [-27.2144, -61.1878],
-            "BREÑAS": [-27.0856, -61.0822],
-            "MACHAGAI": [-26.9264, -60.0461],
-            "QUITILIPI": [-26.8731, -60.2164],
-            "SAN MARTIN": [-26.5361, -59.3403],
-            "TRES ISLETAS": [-26.3353, -60.2553],
-            "DU GRATY": [-27.6833, -60.8167],
-            "PLAZA": [-26.9286, -59.8358]
+            "RESISTENCIA": [-27.4514, -58.9867], "BARRANQUERAS": [-27.4833, -58.9333], "FONTANA": [-27.4181, -59.0244], "VILELAS": [-27.5208, -58.9383],
+            "SAENZ PEÑA": [-26.7811, -60.4388], "ANGELA": [-27.5738, -60.7153], "CASTELLI": [-25.9464, -60.6186], "CHARATA": [-27.2144, -61.1878],
+            "BREÑAS": [-27.0856, -61.0822], "MACHAGAI": [-26.9264, -60.0461], "QUITILIPI": [-26.8731, -60.2164], "SAN MARTIN": [-26.5361, -59.3403],
+            "TRES ISLETAS": [-26.3353, -60.2553], "DU GRATY": [-27.6833, -60.8167], "PLAZA": [-26.9286, -59.8358]
         };
 
         Papa.parse("enacom.csv", {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
+            download: true, header: true, skipEmptyLines: true,
             complete: function(results) {
                 const datos = results.data;
                 let totalFibra = 0, totalWireless = 0, totalCable = 0;
@@ -272,32 +256,24 @@
                 let ciudades = {};
 
                 datos.forEach(fila => {
-                    let provincia = fila['Provincia'];
-                    let tecnologia = fila['Tecnologia'];
-                    
+                    let provincia = fila['Provincia']; let tecnologia = fila['Tecnologia'];
                     if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
                         let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
                         let localidad = (fila['Localidad'] || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 
                         if (!isNaN(cantidad)) {
                             let tech = tecnologia.toUpperCase();
-                            let isFibra = tech.includes('FIBRA');
-                            let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO'));
-                            let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
+                            let isFibra = tech.includes('FIBRA'); let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
 
                             if (isFibra) {
                                 totalFibra += cantidad;
-                                if (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS') || localidad.includes('FONTANA') || localidad.includes('VILELAS')) {
-                                    fibraMetro += cantidad;
-                                } else {
-                                    fibraInterior += cantidad;
-                                }
+                                if (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS') || localidad.includes('FONTANA') || localidad.includes('VILELAS')) fibraMetro += cantidad;
+                                else fibraInterior += cantidad;
                             }
                             else if (isWireless) totalWireless += cantidad;
                             else if (isCable) totalCable += cantidad;
 
                             if (!ciudades[localidad]) ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
-                            
                             ciudades[localidad].total += cantidad;
                             if (isFibra) ciudades[localidad].fibra += cantidad;
                             if (isWireless) ciudades[localidad].wireless += cantidad;
@@ -306,30 +282,20 @@
                     }
                 });
 
-                let rankingBarras = Object.keys(ciudades)
-                    .map(nombre => ({ nombre: nombre, ...ciudades[nombre] }))
-                    .sort((a, b) => b.total - a.total)
-                    .slice(0, 8); 
-
+                let rankingBarras = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] })).sort((a, b) => b.total - a.total).slice(0, 8); 
                 let todasLasCiudades = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] }));
 
                 const animacionComun = { duration: 1500, easing: 'easeOutQuart' };
 
                 chartDonut = new Chart(document.getElementById('graficoDonut').getContext('2d'), {
                     type: 'doughnut',
-                    data: { labels: ['Fibra Óptica', 'Wireless', 'Cobre/Cable'], datasets: [{ data: [totalFibra, totalWireless, totalCable], backgroundColor: ['#10b981', '#3b82f6', '#f43f5e'], borderWidth: 0 }] },
+                    data: { labels: ['Fibra Óptica', 'Red Wireless', 'Cobre / Cable'], datasets: [{ data: [totalFibra, totalWireless, totalCable], backgroundColor: [colorFibra, colorWireless, colorCable], borderWidth: 0 }] },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '70%', animation: animacionComun,
                         plugins: { 
                             legend: { position: 'bottom' },
                             datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => ((value * 100 / ctx.chart._metasets[ctx.datasetIndex].total).toFixed(1) + "%") },
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
-                                callbacks: {
-                                    label: function(context) {
-                                        let valor = context.raw;
-                                        let total = context.chart._metasets[context.datasetIndex].total;
-                                        return [ ` Conexiones activas: ${valor.toLocaleString('es-AR')}`, ` Representa el ${((valor/total)*100).toFixed(1)}% de la matriz provincial` ];
-                                    }
-                                }
+                                callbacks: { label: function(context) { let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Conexiones activas: ${valor.toLocaleString('es-AR')}`, ` Representa el ${((valor/total)*100).toFixed(1)}% de la matriz provincial` ]; } }
                             }
                         } 
                     }
@@ -340,9 +306,9 @@
                     data: {
                         labels: rankingBarras.map(c => c.nombre),
                         datasets: [
-                            { label: 'Fibra Óptica', data: rankingBarras.map(c => c.fibra), backgroundColor: '#10b981' },
-                            { label: 'Redes Wireless', data: rankingBarras.map(c => c.wireless), backgroundColor: '#3b82f6' },
-                            { label: 'Cobre y Cable', data: rankingBarras.map(c => c.cable), backgroundColor: '#f43f5e' }
+                            { label: 'Fibra Óptica', data: rankingBarras.map(c => c.fibra), backgroundColor: colorFibra },
+                            { label: 'Redes Wireless', data: rankingBarras.map(c => c.wireless), backgroundColor: colorWireless },
+                            { label: 'Cobre / Cable', data: rankingBarras.map(c => c.cable), backgroundColor: colorCable }
                         ]
                     },
                     options: { responsive: true, maintainAspectRatio: false, animation: animacionComun,
@@ -350,10 +316,7 @@
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
                                 callbacks: {
                                     title: function(context) { return `Nodo Operativo: ${context[0].label}`; },
-                                    label: function(context) {
-                                        let tech = context.dataset.label; let valor = context.raw; let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0);
-                                        return [ ` ${tech}: ${valor.toLocaleString('es-AR')} enlaces`, ` Abarca el ${((valor / totalCiudad) * 100).toFixed(1)}% de la red de esta ciudad` ];
-                                    }
+                                    label: function(context) { let tech = context.dataset.label; let valor = context.raw; let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0); return [ ` ${tech}: ${valor.toLocaleString('es-AR')} enlaces`, ` Abarca el ${((valor / totalCiudad) * 100).toFixed(1)}% de la red de esta ciudad` ]; }
                                 }
                             }
                         },
@@ -363,36 +326,28 @@
 
                 chartGravedad = new Chart(document.getElementById('graficoGravedad').getContext('2d'), {
                     type: 'pie',
-                    data: { labels: ['Gran Resistencia', 'Resto del Interior'], datasets: [{ data: [fibraMetro, fibraInterior], backgroundColor: ['#e11d48', '#fecdd3'], borderWidth: 0 }] },
+                    data: { labels: ['Gran Resistencia', 'Resto del Interior'], datasets: [{ data: [fibraMetro, fibraInterior], backgroundColor: [colorRiesgoAlto, colorRiesgoBajo], borderWidth: 0 }] },
                     options: { responsive: true, maintainAspectRatio: false, animation: animacionComun,
                         plugins: { 
                             legend: { position: 'bottom' },
-                            datalabels: { color: (ctx) => ctx.dataIndex === 0 ? '#fff' : '#be123c', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => ((value * 100 / ctx.chart._metasets[ctx.datasetIndex].total).toFixed(1) + "%") },
+                            datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value, ctx) => ((value * 100 / ctx.chart._metasets[ctx.datasetIndex].total).toFixed(1) + "%") },
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label; let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total;
-                                        return [ ` Zona: ${label}`, ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`, ` Impacto: ${((valor/total)*100).toFixed(1)}% de la red provincial acaparada aquí` ];
-                                    }
-                                }
+                                callbacks: { label: function(context) { let label = context.label; let valor = context.raw; let total = context.chart._metasets[context.datasetIndex].total; return [ ` Zona: ${label}`, ` Concentración: ${valor.toLocaleString('es-AR')} terminales ópticas`, ` Impacto: ${((valor/total)*100).toFixed(1)}% de la red provincial acaparada aquí` ]; } }
                             }
                         } 
                     }
                 });
 
                 miMapa = L.map('mapa').setView([-26.8, -60.0], 7); 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(miMapa);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miMapa);
 
                 todasLasCiudades.forEach(ciudad => {
                     let coordKey = Object.keys(coordenadasChaco).find(key => ciudad.nombre.includes(key));
                     if (coordKey) {
                         let coords = coordenadasChaco[coordKey];
                         let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
-                        let marcador = L.circleMarker(coords, {
-                            radius: radio, fillColor: "#3b82f6", color: "#1e3a8a", weight: 2, opacity: 1, fillOpacity: 0.7
-                        }).addTo(miMapa);
+                        // Marcadores ahora usan el Violeta Vibrante
+                        let marcador = L.circleMarker(coords, { radius: radio, fillColor: colorFibra, color: "#4c1d95", weight: 2, opacity: 1, fillOpacity: 0.7 }).addTo(miMapa);
 
                         let porcentajeFibra = ((ciudad.fibra / ciudad.total) * 100).toFixed(1);
                         let popupHTML = `
@@ -407,34 +362,16 @@
             }
         });
 
-        // 5. Gráfico Histórico
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
                 labels: ['2020', '2021', '2022', '2023', '2024'],
                 datasets: [
-                    { label: 'Despliegue de Fibra Óptica', data: [15000, 32000, 58000, 85000, 120000], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 3, tension: 0.4, fill: true },
-                    { label: 'Obsolescencia de Cobre', data: [90000, 82000, 65000, 48000, 31000], borderColor: '#f43f5e', backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
+                    { label: 'Despliegue de Fibra Óptica', data: [15000, 32000, 58000, 85000, 120000], borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
+                    { label: 'Obsolescencia de Cobre', data: [90000, 82000, 65000, 48000, 31000], borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
                 ]
             },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false, 
-                animation: { duration: 1500, easing: 'easeOutQuart' }, 
-                plugins: { 
-                    legend: { position: 'top' }, 
-                    datalabels: { display: false },
-                    tooltip: {
-                        padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
-                        callbacks: {
-                            label: function(context) {
-                                return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`;
-                            }
-                        }
-                    }
-                }, 
-                scales: { y: { beginAtZero: true } } 
-            }
+            options: { responsive: true, maintainAspectRatio: false, animation: { duration: 1500, easing: 'easeOutQuart' }, plugins: { legend: { position: 'top' }, datalabels: { display: false }, tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 }, callbacks: { label: function(context) { return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`; } } } }, scales: { y: { beginAtZero: true } } }
         });
     </script>
 </body>
