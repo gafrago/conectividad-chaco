@@ -192,7 +192,7 @@
                 </div>
             </div>
 
-            <!-- PESTAÑA 3: NUEVO MÓDULO DE COMPARATIVA REGIONAL (BENCHMARK) -->
+            <!-- PESTAÑA 3: COMPARATIVA REGIONAL CON TOOLTIPS EXPANDIDOS -->
             <div id="vista-comparativa" class="tab-content fade-in">
                 <div class="grid-2">
                     <div class="card">
@@ -455,7 +455,7 @@
                 });
             }
 
-            // Gráfico Benchmark (Capital vs Interior)
+            // Gráfico Benchmark (Capital vs Interior) con Tooltips Detallados
             if (chartBenchmark) {
                 chartBenchmark.data.datasets[0].data = [fibraMetro, fibraInterior];
                 chartBenchmark.data.datasets[1].data = [wirelessMetro, wirelessInterior];
@@ -471,8 +471,30 @@
                         ]
                     },
                     options: { responsive: true, maintainAspectRatio: false, animation: animacionComun,
-                        plugins: { legend: { position: 'top' }, datalabels: { display: false },
-                            tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 } }
+                        plugins: { 
+                            legend: { position: 'top' }, 
+                            datalabels: { display: false },
+                            tooltip: { 
+                                padding: 15, 
+                                titleFont: { size: 14 }, 
+                                bodyFont: { size: 13 },
+                                callbacks: {
+                                    title: function(context) {
+                                        return `Región analizada: ${context[0].label}`;
+                                    },
+                                    label: function(context) {
+                                        let tecnologia = context.dataset.label;
+                                        let valor = context.raw;
+                                        let totalZona = context.chart.data.datasets.reduce((sum, dataset) => sum + dataset.data[context.dataIndex], 0);
+                                        let porcentaje = totalZona > 0 ? ((valor / totalZona) * 100).toFixed(1) : 0;
+                                        return [
+                                            ` Tecnología: ${tecnologia}`,
+                                            ` Accesos activos: ${valor.toLocaleString('es-AR')}`,
+                                            ` Participación en la zona: ${porcentaje}% del total regional`
+                                        ];
+                                    }
+                                }
+                            }
                         },
                         scales: { y: { beginAtZero: true } }
                     }
