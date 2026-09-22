@@ -27,7 +27,6 @@
         
         @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* Splash Screen con Fondo Animado */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(-45deg, #020617, #111827, #1e1b4b, #0f172a);
@@ -50,20 +49,19 @@
         .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s; }
         .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
 
-        /* Estructura de Logos Oficiales Rediseñada (Más grande) */
         .organizers-footer { margin-top: auto; padding-top: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .organizers-footer > p { font-size: 0.85rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         
         .logos-container { 
             background: #ffffff; 
-            padding: 20px 40px; 
+            padding: 10px 20px; 
             border-radius: 12px; 
             display: flex; 
             justify-content: center;
             align-items: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
-            width: 90%; 
-            max-width: 850px; /* Permite que el recuadro blanco crezca mucho más */
+            width: 95%; 
+            max-width: 900px; 
         }
 
         #app-principal { display: none; opacity: 0; transition: opacity 1s ease; }
@@ -108,7 +106,6 @@
 
     <div id="splash-screen">
         
-        <!-- EFECTO ARTERIAS DE FIBRA ÓPTICA -->
         <div class="arteries-container">
             <div class="fiber-pulse" style="top: 10%; left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
             <div class="fiber-pulse" style="top: 30%; left: 40%; animation-duration: 5s; animation-delay: 1.5s;"></div>
@@ -117,7 +114,6 @@
             <div class="fiber-pulse" style="top: -10%; left: 20%; animation-duration: 4.5s; animation-delay: 3s;"></div>
         </div>
 
-        <!-- LOGO DEL CERTAMEN (Aumentado) -->
         <div style="margin-top: 25px; margin-bottom: auto; z-index: 1;">
             <img src="unnamed.jpg" alt="Concurso Contar con Datos 2026" style="height: 120px; width: auto; max-width: 90vw; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         </div>
@@ -129,11 +125,11 @@
             <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
         </div>
         
-        <!-- LOGOS DE INSTITUCIONES (Expandidos al ancho del recuadro) -->
         <div class="organizers-footer">
             <p>Organizan y Avalan</p>
+            <!-- RECUADRO CON IMAGEN EXPANDIDA -->
             <div class="logos-container">
-                <img src="logos-institucionales.png?v=4" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="width: 100%; height: auto; max-height: 130px; object-fit: contain; display: block; margin: 0 auto;">
+                <img src="logos-institucionales.png?v=5" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="width: 100%; height: auto; object-fit: contain; display: block; margin: 0 auto;">
             </div>
         </div>
     </div>
