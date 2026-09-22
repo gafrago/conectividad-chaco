@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arterias de Cristal - Matriz Estratégica TIC Chaco</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -43,10 +43,6 @@
 
         .splash-content, .certamen-badge, .organizers-footer { z-index: 1; position: relative; }
 
-        /* Estilo del Logo del Certamen */
-        .certamen-badge { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 12px 30px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.5px; color: #ffffff; backdrop-filter: blur(8px); margin-bottom: auto; margin-top: 10px; }
-        .logo-certamen-svg { width: 28px; height: 28px; }
-
         .splash-content { margin: auto; }
         #splash-screen h1 { font-size: 4.2rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #splash-screen h2 { font-size: 1.7rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
@@ -54,24 +50,10 @@
         .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s; }
         .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
 
-        /* Estructura de Logos Institucionales (Gobierno + UdeSA + DSLab) */
-        .organizers-footer { margin-top: auto; padding-top: 30px; width: 100%; max-width: 1200px; }
-        .logos-container { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; background: rgba(2, 6, 23, 0.5); padding: 20px 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-        
-        .logo-item { display: flex; align-items: center; gap: 15px; text-align: left; opacity: 0.95; transition: opacity 0.3s; }
-        .logo-item:hover { opacity: 1; }
-        
-        /* Tipografías Oficiales */
-        .gov-text-container { border-left: 2px solid rgba(255,255,255,0.3); padding-left: 15px; }
-        .gov-tit { font-size: 0.9rem; font-weight: 700; color: white; letter-spacing: -0.2px; line-height: 1.2; text-transform: uppercase; }
-        .gov-sub { font-size: 0.75rem; color: #cbd5e1; line-height: 1.2; }
-        
-        .udesa-tit { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: white; line-height: 1.1; }
-        
-        .dslab-tit { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 900; color: white; letter-spacing: 1px; line-height: 1.1; }
-        .dslab-sub { font-size: 0.7rem; color: var(--color-wireless); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
-        
-        .divider-v { width: 1px; height: 45px; background: rgba(255,255,255,0.15); }
+        /* Estructura de Logos Oficiales (Imágenes) */
+        .organizers-footer { margin-top: auto; padding-top: 30px; width: 100%; max-width: 1000px; }
+        .organizers-footer > p { font-size: 0.75rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; }
+        .logos-container { background: #ffffff; padding: 15px 30px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 
         #app-principal { display: none; opacity: 0; transition: opacity 1s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -123,14 +105,9 @@
             <div class="fiber-pulse" style="top: -10%; left: 20%; animation-duration: 4.5s; animation-delay: 3s;"></div>
         </div>
 
-        <!-- LOGO DEL CERTAMEN (Diseño Geométrico Magenta/Amarillo/Azul) -->
-        <div class="certamen-badge">
-            <svg class="logo-certamen-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L21 7V17L12 12V2Z" fill="#D946EF"/> <!-- Panel Magenta -->
-                <path d="M12 22L3 17V7L12 12V22Z" fill="#FDE047"/> <!-- Panel Amarillo -->
-                <path d="M3 7L12 2V12L3 17V7Z" fill="#1E3A8A"/> <!-- Panel Azul Oscuro -->
-            </svg>
-            Concurso Contar con Datos 2026
+        <!-- LOGO DEL CERTAMEN (IMAGEN ORIGINAL) -->
+        <div style="margin-top: 20px; margin-bottom: auto; z-index: 1;">
+            <img src="unnamed.jpg" alt="Concurso Contar con Datos 2026" style="height: 100px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
         </div>
         
         <div class="splash-content">
@@ -140,48 +117,11 @@
             <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
         </div>
         
-        <!-- LOGOS DE INSTITUCIONES ORGANIZADORAS (Base de la pantalla) -->
+        <!-- LOGOS DE INSTITUCIONES ORGANIZADORAS (IMAGEN ORIGINAL DEL PDF) -->
         <div class="organizers-footer">
+            <p>Organizan y Avalan</p>
             <div class="logos-container">
-                
-                <!-- 1. Secretaría de Innovación, Ciencia y Tecnología -->
-                <div class="logo-item">
-                    <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                        <path d="M2 17l10 5 10-5"></path>
-                        <path d="M2 12l10 5 10-5"></path>
-                    </svg>
-                    <div class="gov-text-container">
-                        <div class="gov-tit">Secretaría de Innovación,<br>Ciencia y Tecnología</div>
-                        <div class="gov-sub">Jefatura de Gabinete de Ministros</div>
-                    </div>
-                </div>
-
-                <div class="divider-v"></div>
-
-                <!-- 2. Universidad de San Andrés -->
-                <div class="logo-item">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
-                    </svg>
-                    <div class="udesa-tit">
-                        Universidad de<br>San Andrés
-                    </div>
-                </div>
-
-                <div class="divider-v"></div>
-
-                <!-- 3. Data Science Lab -->
-                <div class="logo-item">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--color-wireless)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="4 14 10 14 12 20 16 4 18 14 20 14"></polyline>
-                    </svg>
-                    <div>
-                        <div class="dslab-tit">DATA SCIENCE LAB</div>
-                        <div class="dslab-sub">Análisis de Datos</div>
-                    </div>
-                </div>
-
+                <img src="logos-institucionales.png" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="height: 55px; max-width: 100%; object-fit: contain; display: block;">
             </div>
         </div>
     </div>
