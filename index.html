@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="https://unpkg.com/topojson-client@3"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arterias de Cristal - Matriz Estratégica TIC Chaco</title>
@@ -697,7 +698,7 @@
                 });
             }
 
-            if (!miMapa) {
+          if (!miMapa) {
                 miMapa = L.map('mapa').setView([-26.8, -60.0], 7); 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miMapa);
             }
@@ -726,8 +727,7 @@
                     marcador.bindPopup(popupHTML);
                     marcadoresMapa.push(marcador);
                 }
-            });
-        }
+            });        }
 
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
