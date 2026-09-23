@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arterias de Cristal - Matriz Estratégica TIC Chaco</title>
@@ -246,11 +246,11 @@
                             <p style="margin-bottom: 15px; font-size: 1rem; color: #881337;">El análisis revela que el <strong>Gran Resistencia</strong> actúa como centro de gravedad absoluto, representando un punto de fallo táctico crítico.</p>
                             <p style="margin: 0; font-size: 1rem; color: #881337;"><strong>Contingencia:</strong> Una disrupción troncal aislaría al interior provincial, degradando las operaciones por su dependencia del sistema Wireless.</p>
                         </div>
-<div class="alert-panel" style="margin-bottom: 30px; background: #f0fdf4; border-left-color: #22c55e; animation: none;">
-    <h4 style="color: #166534;">🛰️ Zonas Oscuras Terrestres (El Impenetrable)</h4>
-    <p style="margin-bottom: 15px; font-size: 1rem; color: #14532d;">El mapa evidencia un extenso vacío de infraestructura troncal en el noroeste provincial. Estas zonas de baja densidad demográfica carecen de viabilidad para el tendido físico.</p>
-    <p style="margin: 0; font-size: 1rem; color: #14532d;"><strong>Despliegue Táctico:</strong> La conectividad en este sector depende casi íntegramente de <strong>enlaces satelitales</strong> (agrupados en la categoría "Otros"), siendo constelaciones LEO (ej. Starlink) y redes GEO (ARSAT) la única garantía de enlace para operaciones productivas e instituciones públicas.</p>
-</div>
+                        <div class="alert-panel" style="margin-bottom: 30px; background: #f0fdf4; border-left-color: #22c55e; animation: none;">
+                            <h4 style="color: #166534;">🛰️ Zonas Oscuras Terrestres (El Impenetrable)</h4>
+                            <p style="margin-bottom: 15px; font-size: 1rem; color: #14532d;">El mapa evidencia un extenso vacío de infraestructura troncal en el noroeste provincial. Estas zonas de baja densidad demográfica carecen de viabilidad para el tendido físico.</p>
+                            <p style="margin: 0; font-size: 1rem; color: #14532d;"><strong>Despliegue Táctico:</strong> La conectividad en este sector depende casi íntegramente de <strong>enlaces satelitales</strong> (agrupados en la categoría "Otros"), siendo constelaciones LEO (ej. Starlink) y redes GEO (ARSAT) la única garantía de enlace para operaciones productivas e instituciones públicas.</p>
+                        </div>
                         <div class="card" style="padding: 25px;">
                             <h3 style="font-size: 1.1rem; text-align: center;">Concentración de Red Óptica</h3>
                             <div class="chart-wrapper-sm"><canvas id="graficoGravedad"></canvas></div>
@@ -296,14 +296,14 @@
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
                             <p style="color: #475569; margin-bottom: 25px;">Entre el 4T-2021 y el 2T-2026, la Fibra Óptica pasó de representar el 26% al 72% de los enlaces cobre+fibra en la provincia, mientras el cobre (ADSL/Cablemódem) cayó de 98.693 a 49.286 accesos. El cobre no desapareció, pero dejó de ser la tecnología dominante en apenas cuatro años y medio.</p>
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
-                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales de la provincia.</p>
+                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuity ininterrumpida para las operaciones actuales de la provincia.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card" id="metodologia">
+        <div class="card" id="metodologia" style="max-width: 1200px; margin: 0 auto;">
             <h3>Metodología y fuentes</h3>
 
             <p style="color: #475569; margin-bottom: 15px;">
@@ -340,10 +340,9 @@
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
-                <strong>Geolocalización:</strong> el mapa interactivo muestra coordenadas para 15 localidades de la
-                provincia (las de mayor cantidad de accesos). El resto de las localidades del dataset se incluye en
-                los totales y rankings, pero no tiene representación geográfica en el mapa por no contar con
-                coordenadas cargadas en esta versión.
+                <strong>Geolocalización:</strong> el mapa interactivo se ha modificado para utilizar una capa TopoJSON
+                oficial, sombreando cada departamento según la densidad de su fibra óptica (Coropletas) mediante una
+                agrupación espacial de los datos.
             </p>
 
             <p style="color: #475569; margin-bottom: 0;">
@@ -376,7 +375,6 @@
         let chartDonut, chartBarras, chartGravedad, chartBenchmark, chartEvolucion, miMapa;
         let datosCrudosGlobales = [];
         let ciudadesGlobales = {};
-        let marcadoresMapa = [];
 
         function iniciarApp() {
             const splash = document.getElementById('splash-screen');
@@ -475,13 +473,6 @@
                 
             }, 150);
         }
-
-        const coordenadasChaco = {
-            "RESISTENCIA": [-27.4514, -58.9867], "BARRANQUERAS": [-27.4833, -58.9333], "FONTANA": [-27.4181, -59.0244], "VILELAS": [-27.5208, -58.9383],
-            "SAENZ PEÑA": [-26.7811, -60.4388], "ANGELA": [-27.5738, -60.7153], "CASTELLI": [-25.9464, -60.6186], "CHARATA": [-27.2144, -61.1878],
-            "BREÑAS": [-27.0856, -61.0822], "MACHAGAI": [-26.9264, -60.0461], "QUITILIPI": [-26.8731, -60.2164], "SAN MARTIN": [-26.5361, -59.3403],
-            "TRES ISLETAS": [-26.3353, -60.2553], "DU GRATY": [-27.6833, -60.8167], "PLAZA": [-26.9286, -59.8358]
-        };
 
         Papa.parse("enacom.csv", {
             download: true, header: true, skipEmptyLines: true,
@@ -698,36 +689,113 @@
                 });
             }
 
-          if (!miMapa) {
-                miMapa = L.map('mapa').setView([-26.8, -60.0], 7); 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(miMapa);
+            /* NUEVA LÓGICA DEL MAPA DE COROPLETAS (TOPOJSON) */
+
+            const mapaDepartamentos = {
+                "RESISTENCIA": "SAN FERNANDO", "BARRANQUERAS": "SAN FERNANDO", "FONTANA": "SAN FERNANDO", "VILELAS": "SAN FERNANDO",
+                "SAENZ PEÑA": "COMANDANTE FERNANDEZ", "ANGELA": "MAYOR LUIS J. FONTANA", "CASTELLI": "GENERAL GUEMES", 
+                "CHARATA": "CHACABUCO", "BREÑAS": "9 DE JULIO", "MACHAGAI": "25 DE MAYO", "QUITILIPI": "QUITILIPI", 
+                "SAN MARTIN": "LIBERTADOR GENERAL SAN MARTIN", "TRES ISLETAS": "MAIPU", "DU GRATY": "MAYOR LUIS J. FONTANA", 
+                "PLAZA": "PRESIDENCIA DE LA PLAZA"
+            };
+
+            let datosPorDepartamento = {};
+            todasLasCiudades.forEach(ciudad => {
+                let deptoKey = Object.keys(mapaDepartamentos).find(key => ciudad.nombre.includes(key));
+                if (deptoKey) {
+                    let nombreDepto = mapaDepartamentos[deptoKey];
+                    if (!datosPorDepartamento[nombreDepto]) {
+                        datosPorDepartamento[nombreDepto] = { total: 0, fibra: 0, wireless: 0 };
+                    }
+                    datosPorDepartamento[nombreDepto].total += ciudad.total;
+                    datosPorDepartamento[nombreDepto].fibra += ciudad.fibra;
+                    datosPorDepartamento[nombreDepto].wireless += ciudad.wireless;
+                }
+            });
+
+            if (!miMapa) {
+                miMapa = L.map('mapa', { zoomControl: false }).setView([-26.5, -60.0], 7); 
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { 
+                    attribution: '&copy; OpenStreetMap contributors &copy; CARTO' 
+                }).addTo(miMapa);
+                L.control.zoom({ position: 'topright' }).addTo(miMapa);
             }
 
-            marcadoresMapa.forEach(m => miMapa.removeLayer(m));
-            marcadoresMapa = [];
+            if (window.capaGeoJSON) { miMapa.removeLayer(window.capaGeoJSON); }
 
-            todasLasCiudades.forEach(ciudad => {
-                let coordKey = Object.keys(coordenadasChaco).find(key => ciudad.nombre.includes(key));
-                if (coordKey) {
-                    let coords = coordenadasChaco[coordKey];
-                    let radio = Math.min(Math.max(ciudad.total / 1000, 8), 30); 
-                    
-                    let colorMarcador = (filtroCiudad === "TODAS" || ciudad.nombre.includes(filtroCiudad)) ? colorFibra : '#94a3b8';
-                    let opacidadMarcador = (filtroCiudad === "TODAS" || ciudad.nombre.includes(filtroCiudad)) ? 0.8 : 0.3;
+            function obtenerColorCoropleta(densidad) {
+                return densidad > 50000 ? '#4c1d95' :  
+                       densidad > 15000 ? '#6d28d9' :  
+                       densidad > 5000  ? '#8b5cf6' :  
+                       densidad > 1000  ? '#c4b5fd' :  
+                       densidad > 0     ? '#ede9fe' :  
+                                          '#f1f5f9';   
+            }
 
-                    let marcador = L.circleMarker(coords, { radius: radio, fillColor: colorMarcador, color: "#1e3a8a", weight: 2, opacity: 1, fillOpacity: opacidadMarcador }).addTo(miMapa);
+            fetch('chaco.json')
+                .then(respuesta => {
+                    if (!respuesta.ok) {
+                        throw new Error('Error de red al intentar cargar chaco.json');
+                    }
+                    return respuesta.json();
+                })
+                .then(topodata => {
+                    let geojsonData = topojson.feature(topodata, topodata.objects['departamentos-chaco']);
 
-                    let porcentajeFibra = ciudad.total > 0 ? ((ciudad.fibra / ciudad.total) * 100).toFixed(1) : 0;
-                    let popupHTML = `
-                        <h4>Nodo: ${ciudad.nombre}</h4>
-                        <p><strong>Carga Total:</strong> ${ciudad.total.toLocaleString('es-AR')} conexiones</p>
-                        <p><strong>Óptica:</strong> ${ciudad.fibra.toLocaleString('es-AR')} (${porcentajeFibra}%)</p>
-                        <p><strong>Wireless:</strong> ${ciudad.wireless.toLocaleString('es-AR')}</p>
-                    `;
-                    marcador.bindPopup(popupHTML);
-                    marcadoresMapa.push(marcador);
-                }
-            });        }
+                    window.capaGeoJSON = L.geoJson(geojsonData, {
+                        style: function(feature) {
+                            let nombre = feature.properties.departamento;
+                            let infoDepto = datosPorDepartamento[nombre] || { fibra: 0 };
+                            
+                            let opacidad = (filtroCiudad === "TODAS" || (mapaDepartamentos[filtroCiudad] === nombre || nombre.includes(filtroCiudad))) ? 0.85 : 0.15;
+
+                            return {
+                                fillColor: obtenerColorCoropleta(infoDepto.fibra),
+                                weight: 1.5,
+                                color: '#ffffff',
+                                fillOpacity: opacidad
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            let nombre = feature.properties.departamento;
+                            let infoDepto = datosPorDepartamento[nombre];
+
+                            if (infoDepto) {
+                                let pctFibra = infoDepto.total > 0 ? ((infoDepto.fibra / infoDepto.total) * 100).toFixed(1) : 0;
+                                let popupHTML = `
+                                    <div style="font-family:'Inter', sans-serif;">
+                                        <h4 style="margin:0 0 5px 0; color:#4c1d95; font-size:1.1rem; border-bottom:1px solid #e2e8f0; padding-bottom:5px;">Dpto. ${nombre}</h4>
+                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Accesos Totales:</strong> ${infoDepto.total.toLocaleString('es-AR')}</p>
+                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Fibra Óptica (FTTH):</strong> ${infoDepto.fibra.toLocaleString('es-AR')} <span style="color:#6d28d9; font-weight:bold;">(${pctFibra}%)</span></p>
+                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Wireless:</strong> ${infoDepto.wireless.toLocaleString('es-AR')}</p>
+                                    </div>
+                                `;
+                                layer.bindPopup(popupHTML);
+
+                                layer.on({
+                                    mouseover: function(e) {
+                                        let capa = e.target;
+                                        capa.setStyle({ weight: 3, color: '#0ea5e9', fillOpacity: 1 });
+                                        capa.bringToFront();
+                                    },
+                                    mouseout: function(e) {
+                                        window.capaGeoJSON.resetStyle(e.target);
+                                    }
+                                });
+                            } else {
+                                layer.bindPopup(`
+                                    <div style="font-family:'Inter', sans-serif;">
+                                        <h4 style="margin:0 0 5px 0; color:#64748b; font-size:1.1rem;">Dpto. ${nombre}</h4>
+                                        <p style="margin:0; font-size:0.9rem; color:#f43f5e;"><strong>⚠️ Zona Oscura Troncal</strong></p>
+                                        <p style="margin:5px 0 0 0; font-size:0.85rem; color:#475569;">Conectividad dependiente de enlaces Wireless o Satelitales rurales.</p>
+                                    </div>
+                                `);
+                            }
+                        }
+                    }).addTo(miMapa);
+                })
+                .catch(error => console.error('Error cargando la cartografía:', error));
+        }
 
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
