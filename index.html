@@ -67,6 +67,19 @@
         .nav-btn:hover { color: white; }
         .nav-btn.active { color: white; border-bottom: 4px solid var(--color-fibra); background: rgba(255,255,255,0.03); }
         
+        /* ACCESIBILIDAD: Navegación por teclado */
+        :focus {
+            outline: 3px solid #38bdf8;
+            outline-offset: 3px;
+        }
+        :focus:not(:focus-visible) {
+            outline: none;
+        }
+        .nav-btn:focus-visible, .btn-iniciar:focus-visible, select:focus-visible {
+            background-color: rgba(56,189,248,0.15);
+            border-radius: 8px;
+        }
+
         /* ESTILOS DE LOS BOTONES ESPECIALES */
         .nav-btn-home { color: #cbd5e1 !important; border: 1px solid rgba(203,213,225,0.2); border-radius: 8px; padding: 8px 15px !important; margin-right: 15px; }
         .nav-btn-home:hover { background: rgba(255,255,255,0.1); color: white !important; }
@@ -114,6 +127,41 @@
         .chart-wrapper-sm { position: relative; height: 300px; width: 100%; }
 
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid #e2e8f0; }
+
+        /* ACCESIBILIDAD: Modo de Alto Contraste Automático */
+        @media (prefers-contrast: more) {
+            :root {
+                --bg-color: #ffffff;
+                --text-main: #000000;
+                --card-bg: #ffffff;
+                --color-fibra: #4c1d95; 
+                --color-wireless: #0f766e; 
+                --color-cobre: #9a3412; 
+            }
+            body {
+                background-color: white;
+                color: black;
+            }
+            p, span, h1, h2, h3, h4, strong {
+                color: #000000 !important;
+            }
+            .card, .kpi-card, .filter-bar, .alert-panel {
+                border: 2px solid #000000 !important;
+                box-shadow: none !important;
+                background-color: #ffffff !important;
+            }
+            .nav-btn {
+                color: #ffffff;
+                font-weight: 900;
+                border: 1px solid #ffffff;
+                margin: 2px;
+            }
+            .nav-btn.active {
+                background: #ffffff;
+                color: #000000;
+                border: 3px solid #000000;
+            }
+        }
 
         @media print {
             .navbar, .filter-bar, .btn-iniciar, #splash-screen, footer, .nav-btn-export, .nav-btn-home { display: none !important; }
@@ -166,9 +214,7 @@
                 <span>✦</span> Arterias de Cristal
             </div>
             <div class="nav-links">
-                <!-- NUEVO BOTÓN DE INICIO -->
                 <button class="nav-btn nav-btn-home" onclick="volverInicio()">🏠 Inicio</button>
-                
                 <button class="nav-btn active" onclick="abrirPestana('vista-matriz', this)">Matriz Operativa</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-comparativa', this)">Comparativa Regional</button>
@@ -191,7 +237,8 @@
                     <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona una localidad para aislar su topología de red en tiempo real.</span>
                 </div>
                 <div>
-                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()">
+                    <!-- ACCESIBILIDAD: Aria Label -->
+                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Seleccionar localidad para filtrar datos del tablero">
                         <option value="TODAS">🌐 Provincia del Chaco (Global)</option>
                     </select>
                 </div>
@@ -228,11 +275,12 @@
                 <div class="grid-2">
                     <div class="card">
                         <h3>Topología Provincial / Local</h3>
-                        <div class="chart-wrapper"><canvas id="graficoDonut"></canvas></div>
+                        <!-- ACCESIBILIDAD: Aria Label y Rol -->
+                        <div class="chart-wrapper"><canvas id="graficoDonut" role="img" aria-label="Gráfico de dona comparando la proporción total de accesos por Fibra Óptica, Red Wireless y Cobre en la provincia."></canvas></div>
                     </div>
                     <div class="card">
                         <h3>Composición por Nodos Críticos</h3>
-                        <div class="chart-wrapper"><canvas id="graficoBarras"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoBarras" role="img" aria-label="Gráfico de barras mostrando el ranking de los 8 nodos críticos de la provincia y su composición tecnológica."></canvas></div>
                     </div>
                 </div>
             </div>
@@ -253,7 +301,7 @@
                         </div>
                         <div class="card" style="padding: 25px;">
                             <h3 style="font-size: 1.1rem; text-align: center;">Concentración de Red Óptica</h3>
-                            <div class="chart-wrapper-sm"><canvas id="graficoGravedad"></canvas></div>
+                            <div class="chart-wrapper-sm"><canvas id="graficoGravedad" role="img" aria-label="Gráfico circular evidenciando la concentración masiva de enlaces de Fibra Óptica en el Gran Resistencia versus el resto del interior."></canvas></div>
                         </div>
                     </div>
                     <div class="card" style="padding: 15px;">
@@ -267,7 +315,7 @@
                 <div class="grid-2">
                     <div class="card">
                         <h3>Benchmark: Capital vs. Interior</h3>
-                        <div class="chart-wrapper"><canvas id="graficoBenchmark"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoBenchmark" role="img" aria-label="Gráfico de barras comparativo de infraestructura óptica y wireless entre la zona metropolitana y el interior."></canvas></div>
                     </div>
                     <div class="card">
                         <h3>Análisis de Brecha Tecnológica</h3>
@@ -291,12 +339,12 @@
                 <div class="card">
                     <h3>Tendencia de Migración de Red (2021-2026) - Visión Macro Provincial</h3>
                     <div class="grid-2" style="align-items: center; margin-top: 30px;">
-                        <div class="chart-wrapper"><canvas id="graficoEvolucion"></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoEvolucion" role="img" aria-label="Gráfico de líneas histórico desde 2021 a 2026 mostrando el crecimiento de la fibra óptica y el declive del cobre."></canvas></div>
                         <div style="padding-left: 20px;">
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
                             <p style="color: #475569; margin-bottom: 25px;">Entre el 4T-2021 y el 2T-2026, la Fibra Óptica pasó de representar el 26% al 72% de los enlaces cobre+fibra en la provincia, mientras el cobre (ADSL/Cablemódem) cayó de 98.693 a 49.286 accesos. El cobre no desapareció, pero dejó de ser la tecnología dominante en apenas cuatro años y medio.</p>
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
-                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuity ininterrumpida para las operaciones actuales de la provincia.</p>
+                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales de la provincia.</p>
                         </div>
                     </div>
                 </div>
@@ -394,19 +442,18 @@
             }, 800);
         }
 
-        /* NUEVA FUNCIÓN PARA VOLVER AL INICIO */
         function volverInicio() {
             const splash = document.getElementById('splash-screen');
             const app = document.getElementById('app-principal');
             
-            app.style.opacity = '0'; // Desvanece la app principal
+            app.style.opacity = '0'; 
             
             setTimeout(() => {
                 app.style.display = 'none';
-                splash.style.display = 'flex'; // Vuelve a montar el splash en el diseño
-                void splash.offsetWidth; // Fuerza al navegador a reconocer el cambio
+                splash.style.display = 'flex'; 
+                void splash.offsetWidth; 
                 splash.style.visibility = 'visible';
-                splash.style.opacity = '1'; // Ilumina el splash nuevamente
+                splash.style.opacity = '1'; 
             }, 800);
         }
 
@@ -689,8 +736,6 @@
                 });
             }
 
-            /* NUEVA LÓGICA DEL MAPA DE COROPLETAS (TOPOJSON) */
-
             const mapaDepartamentos = {
                 "RESISTENCIA": "SAN FERNANDO", "BARRANQUERAS": "SAN FERNANDO", "FONTANA": "SAN FERNANDO", "VILELAS": "SAN FERNANDO",
                 "SAENZ PEÑA": "COMANDANTE FERNANDEZ", "ANGELA": "MAYOR LUIS J. FONTANA", "CASTELLI": "GENERAL GUEMES", 
@@ -715,6 +760,7 @@
 
            if (!miMapa) {
                 miMapa = L.map('mapa', { zoomControl: false }).setView([-26.5, -60.0], 7); 
+                /* NUEVO FONDO ESRI SIN MARCA DE AGUA (API KEY) */
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Fondo de mapa &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                     maxZoom: 16
