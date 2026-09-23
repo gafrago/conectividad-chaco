@@ -107,12 +107,15 @@
 
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid #e2e8f0; }
 
-        /* ESTILOS DE IMPRESIÓN / EXPORTACIÓN A PDF */
+        /* ESTILOS DE IMPRESIÓN MEJORADOS */
         @media print {
             .navbar, .filter-bar, .btn-iniciar, #splash-screen, footer, .nav-btn-export { display: none !important; }
             body { background: white; color: black; }
-            .card { box-shadow: none; border: 1px solid #cbd5e1; break-inside: avoid; }
-            .tab-content { display: block !important; opacity: 1 !important; }
+            .card { box-shadow: none; border: 1px solid #cbd5e1; break-inside: avoid; margin-bottom: 20px; }
+            .tab-content { display: block !important; opacity: 1 !important; visibility: visible !important; }
+            .chart-wrapper, .chart-wrapper-sm { width: 100% !important; min-height: 300px !important; }
+            #mapa { min-height: 450px !important; }
+            @page { margin: 1.5cm; size: A4 portrait; }
         }
     </style>
 </head>
@@ -157,14 +160,13 @@
                 <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-comparativa', this)">Comparativa Regional</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
-                <!-- BOTÓN DE EXPORTACIÓN TÁCTICA -->
-                <button class="nav-btn nav-btn-export" onclick="window.print()">🖨️ Exportar / PDF</button>
+                <!-- BOTÓN DE EXPORTACIÓN TÁCTICA QUE LLAMA A LA NUEVA MACRO -->
+                <button class="nav-btn nav-btn-export" onclick="exportarPDF()">🖨️ Exportar / PDF</button>
             </div>
         </nav>
 
         <div class="container">
             
-            <!-- BARRA DE FILTRO CRUZADO GLOBAL -->
             <div id="barraFiltroContainer" class="filter-bar">
                 <div>
                     <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
@@ -177,7 +179,6 @@
                 </div>
             </div>
 
-            <!-- TARJETAS DE INDICADORES CLAVE (KPIs / STAT CARDS) -->
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <h4>Total de Accesos TIC</h4>
@@ -322,7 +323,7 @@
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(idPestana).classList.add('active');
-            boton.classList.add('active');
+            if(boton) boton.classList.add('active');
 
             const barraFiltro = document.getElementById('barraFiltroContainer');
             if (idPestana === 'vista-evolucion' || idPestana === 'vista-comparativa') {
@@ -332,13 +333,46 @@
             }
 
             setTimeout(() => {
-                if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
-                if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
-                if(chartGravedad) { chartGravedad.resize(); chartGravedad.update(); }
-                if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update(); }
-                if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update(); }
-                if (idPestana === 'vista-mapa' && miMapa) { miMapa.invalidateSize(); }
+                if(chartDonut) chartDonut.resize();
+                if(chartBarras) chartBarras.resize();
+                if(chartGravedad) chartGravedad.resize();
+                if(chartBenchmark) chartBenchmark.resize();
+                if(chartEvolucion) chartEvolucion.resize();
+                if(miMapa) miMapa.invalidateSize();
             }, 150); 
+        }
+
+        /* NUEVA FUNCIÓN DE MACRO PARA IMPRESIÓN/PDF CORRECTA */
+        function exportarPDF() {
+            const pestanaActivaOriginal = document.querySelector('.tab-content.active').id;
+            
+            // 1. Mostrar de manera forzosa todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'block';
+                tab.style.opacity = '1';
+                tab.style.visibility = 'visible';
+            });
+
+            // 2. Obligar a todos los canvas a repintarse al 100% de su contenedor
+            if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
+            if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
+            if(chartGravedad) { chartGravedad.resize(); chartGravedad.update(); }
+            if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update(); }
+            if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update(); }
+            if(miMapa) miMapa.invalidateSize();
+
+            // 3. Darle 800 milisegundos al navegador para que dibuje todo el mapa y gráficos, luego imprimir
+            setTimeout(() => {
+                window.print();
+                
+                // 4. Restaurar el estado original
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.style.display = ''; // Permite que la clase CSS vuelva a controlar el diseño
+                });
+                
+                // Reactivar solo la pestaña en la que estábamos
+                abrirPestana(pestanaActivaOriginal, document.querySelector(`.nav-btn[onclick*="${pestanaActivaOriginal}"]`));
+            }, 800);
         }
 
         const coordenadasChaco = {
