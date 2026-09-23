@@ -71,6 +71,8 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
+        .print-only { display: none; }
+
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .kpi-card { background: white; padding: 25px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; position: relative; overflow: hidden; transition: transform 0.3s ease; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
@@ -107,14 +109,23 @@
 
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid #e2e8f0; }
 
-        /* ESTILOS DE IMPRESIÓN MEJORADOS */
+        /* ESTILOS DE IMPRESIÓN RIGUROSOS PARA ASEGURAR TODOS LOS GRÁFICOS */
         @media print {
             .navbar, .filter-bar, .btn-iniciar, #splash-screen, footer, .nav-btn-export { display: none !important; }
             body { background: white; color: black; }
-            .card { box-shadow: none; border: 1px solid #cbd5e1; break-inside: avoid; margin-bottom: 20px; }
+            
+            /* Hacemos visible el título dinámico solo al exportar */
+            .print-only { display: block !important; text-align: center; margin-bottom: 25px; }
+            
+            /* Desarmamos las grillas para que todo se apile verticalmente al 100% */
+            .grid-2, .grid-uneven { display: block !important; }
+            
+            .card { width: 100% !important; box-shadow: none; border: 1px solid #cbd5e1; page-break-inside: avoid; margin-bottom: 30px !important; box-sizing: border-box; }
             .tab-content { display: block !important; opacity: 1 !important; visibility: visible !important; }
+            
             .chart-wrapper, .chart-wrapper-sm { width: 100% !important; min-height: 300px !important; }
             #mapa { min-height: 450px !important; }
+            
             @page { margin: 1.5cm; size: A4 portrait; }
         }
     </style>
@@ -160,12 +171,18 @@
                 <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-comparativa', this)">Comparativa Regional</button>
                 <button class="nav-btn" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
-                <!-- BOTÓN DE EXPORTACIÓN TÁCTICA QUE LLAMA A LA NUEVA MACRO -->
                 <button class="nav-btn nav-btn-export" onclick="exportarPDF()">🖨️ Exportar / PDF</button>
             </div>
         </nav>
 
         <div class="container">
+            
+            <!-- TÍTULO DINÁMICO EXCLUSIVO PARA EL REPORTE PDF -->
+            <div id="printHeader" class="print-only">
+                <h2 style="color: var(--text-main); margin-bottom: 5px;">Arterias de Cristal: Reporte Estratégico TIC</h2>
+                <h3 style="color: var(--color-fibra); margin-top: 0;">Zona Analizada: <span id="tituloFiltroPrint">Provincia del Chaco (Global)</span></h3>
+                <hr style="border: 1px solid #e2e8f0; margin-bottom: 20px;">
+            </div>
             
             <div id="barraFiltroContainer" class="filter-bar">
                 <div>
@@ -342,36 +359,35 @@
             }, 150); 
         }
 
-        /* NUEVA FUNCIÓN DE MACRO PARA IMPRESIÓN/PDF CORRECTA */
+        /* MACRO ACTUALIZADA PARA FORZAR RENDERIZADO SIN ANIMACIONES ANTES DE IMPRIMIR */
         function exportarPDF() {
-            const pestanaActivaOriginal = document.querySelector('.tab-content.active').id;
+            const tabOriginalActiva = document.querySelector('.tab-content.active') ? document.querySelector('.tab-content.active').id : 'vista-matriz';
             
-            // 1. Mostrar de manera forzosa todas las pestañas
+            // 1. Despliega todo el contenido verticalmente para que el PDF lo pueda leer
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.style.display = 'block';
                 tab.style.opacity = '1';
                 tab.style.visibility = 'visible';
             });
 
-            // 2. Obligar a todos los canvas a repintarse al 100% de su contenedor
-            if(chartDonut) { chartDonut.resize(); chartDonut.update(); }
-            if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
-            if(chartGravedad) { chartGravedad.resize(); chartGravedad.update(); }
-            if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update(); }
-            if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update(); }
+            // 2. Fuerzo a Chart.js a redibujar TODO instantáneamente sin animaciones (update('none'))
+            if(chartDonut) { chartDonut.resize(); chartDonut.update('none'); }
+            if(chartBarras) { chartBarras.resize(); chartBarras.update('none'); }
+            if(chartGravedad) { chartGravedad.resize(); chartGravedad.update('none'); }
+            if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update('none'); }
+            if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update('none'); }
             if(miMapa) miMapa.invalidateSize();
 
-            // 3. Darle 800 milisegundos al navegador para que dibuje todo el mapa y gráficos, luego imprimir
+            // 3. Imprime y restaura la interfaz a la normalidad
             setTimeout(() => {
                 window.print();
                 
-                // 4. Restaurar el estado original
                 document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.style.display = ''; // Permite que la clase CSS vuelva a controlar el diseño
+                    tab.style.display = ''; 
                 });
                 
-                // Reactivar solo la pestaña en la que estábamos
-                abrirPestana(pestanaActivaOriginal, document.querySelector(`.nav-btn[onclick*="${pestanaActivaOriginal}"]`));
+                let btnOriginal = document.querySelector(`.nav-btn[onclick*="${tabOriginalActiva}"]`);
+                abrirPestana(tabOriginalActiva, btnOriginal);
             }, 800);
         }
 
@@ -403,7 +419,13 @@
         }
 
         function aplicarFiltroCruzado() {
-            let ciudadSeleccionada = document.getElementById('filtroLocalidad').value;
+            let selector = document.getElementById('filtroLocalidad');
+            let ciudadSeleccionada = selector.value;
+            let textoSeleccionado = selector.options[selector.selectedIndex].text;
+            
+            // ACTUALIZA EL TÍTULO DINÁMICO DEL PDF
+            document.getElementById('tituloFiltroPrint').innerText = textoSeleccionado;
+            
             procesarDatosYConstruirTablero(ciudadSeleccionada);
         }
 
