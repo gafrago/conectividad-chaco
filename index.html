@@ -363,6 +363,10 @@
                 correspondiente al corte <strong>2° Trimestre de 2026</strong>. Es un archivo de descarga
                 directa, filtrado en esta página únicamente por "Provincia = Chaco", sin otro procesamiento adicional.
             </p>
+            
+            <p style="color: #475569; margin-bottom: 15px;">
+                <strong>Tasa de Penetración Demográfica:</strong> Para el cálculo de accesos cada 100 habitantes a nivel departamental interactivo en el mapa, se utilizaron las proyecciones de población basadas en los <strong>Resultados Definitivos del Censo Nacional de Población, Hogares y Viviendas 2022</strong>, publicados oficialmente por el INDEC.
+            </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
                 <strong>Categorización de tecnologías:</strong> ENACOM reporta 8 tecnologías distintas para Chaco.
@@ -551,6 +555,36 @@
         }
 
         function procesarDatosYConstruirTablero(filtroCiudad) {
+            
+            // Población oficial definitiva por departamento (Censo INDEC 2022) para cálculo de penetración
+            const poblacionDepartamentos = {
+                "SAN FERNANDO": 416113,
+                "COMANDANTE FERNANDEZ": 101954,
+                "GENERAL GUEMES": 68525,
+                "LIBERTADOR GENERAL SAN MARTIN": 65627,
+                "MAYOR LUIS J. FONTANA": 59965,
+                "ALMIRANTE BROWN": 37851,
+                "CHACABUCO": 34598,
+                "25 DE MAYO": 32793,
+                "QUITILIPI": 32642,
+                "9 DE JULIO": 30258,
+                "BERMEJO": 28144,
+                "MAIPU": 26407,
+                "INDEPENDENCIA": 21996,
+                "O'HIGGINS": 21579,
+                "12 DE OCTUBRE": 23222,
+                "SARGENTO CABRAL": 18793,
+                "SAN LORENZO": 16062,
+                "GENERAL DONOVAN": 15096,
+                "1° DE MAYO": 14279,
+                "PRESIDENCIA DE LA PLAZA": 13956,
+                "LIBERTAD": 13807,
+                "GENERAL BELGRANO": 12807,
+                "FRAY JUSTO SANTA MARIA DE ORO": 10649,
+                "2 DE ABRIL": 8319,
+                "TAPENAGA": 4059
+            };
+
             let totalFibra = 0, totalWireless = 0, totalCable = 0;
             let fibraMetro = 0, fibraInterior = 0;
             let wirelessMetro = 0, wirelessInterior = 0;
@@ -750,7 +784,9 @@
                 if (deptoKey) {
                     let nombreDepto = mapaDepartamentos[deptoKey];
                     if (!datosPorDepartamento[nombreDepto]) {
-                        datosPorDepartamento[nombreDepto] = { total: 0, fibra: 0, wireless: 0 };
+                        // Incluimos la población de referencia
+                        let pobHabitantes = poblacionDepartamentos[nombreDepto] || 10000;
+                        datosPorDepartamento[nombreDepto] = { total: 0, fibra: 0, wireless: 0, poblacion: pobHabitantes, penetracion: 0 };
                     }
                     datosPorDepartamento[nombreDepto].total += ciudad.total;
                     datosPorDepartamento[nombreDepto].fibra += ciudad.fibra;
@@ -758,9 +794,15 @@
                 }
             });
 
+            // Calcular tasa de penetración final por cada 100 habitantes
+            Object.keys(datosPorDepartamento).forEach(depto => {
+                let d = datosPorDepartamento[depto];
+                d.penetracion = d.poblacion > 0 ? ((d.total / d.poblacion) * 100).toFixed(1) : 0;
+            });
+
            if (!miMapa) {
                 miMapa = L.map('mapa', { zoomControl: false }).setView([-26.5, -60.0], 7); 
-                /* NUEVO FONDO ESRI SIN MARCA DE AGUA (API KEY) */
+                /* FONDO ESRI SIN MARCA DE AGUA (API KEY) */
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Fondo de mapa &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                     maxZoom: 16
@@ -812,6 +854,7 @@
                                 let popupHTML = `
                                     <div style="font-family:'Inter', sans-serif;">
                                         <h4 style="margin:0 0 5px 0; color:#4c1d95; font-size:1.1rem; border-bottom:1px solid #e2e8f0; padding-bottom:5px;">Dpto. ${nombre}</h4>
+                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Tasa de Penetración:</strong> <span style="color:#0284c7; font-weight:bold;">${infoDepto.penetracion} accesos c/100 hab.</span></p>
                                         <p style="margin:5px 0; font-size:0.95rem;"><strong>Accesos Totales:</strong> ${infoDepto.total.toLocaleString('es-AR')}</p>
                                         <p style="margin:5px 0; font-size:0.95rem;"><strong>Fibra Óptica (FTTH):</strong> ${infoDepto.fibra.toLocaleString('es-AR')} <span style="color:#6d28d9; font-weight:bold;">(${pctFibra}%)</span></p>
                                         <p style="margin:5px 0; font-size:0.95rem;"><strong>Wireless:</strong> ${infoDepto.wireless.toLocaleString('es-AR')}</p>
