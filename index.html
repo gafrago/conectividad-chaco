@@ -288,62 +288,72 @@
                         <div class="chart-wrapper"><canvas id="graficoEvolucion"></canvas></div>
                         <div style="padding-left: 20px;">
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
-<p style="color: #475569; margin-bottom: 25px;">Para 2026, los enlaces basados en cobre, históricamente dominantes, han sido relegados a un rol secundario (perdiendo la mitad de su base instalada) frente al crecimiento exponencial de la Fibra Óptica (FTTH) a nivel sistémico.</p>                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
+                            <p style="color: #475569; margin-bottom: 25px;">Entre el 4T-2021 y el 2T-2026, la Fibra Óptica pasó de representar el 26% al 72% de los enlaces cobre+fibra en la provincia, mientras el cobre (ADSL/Cablemódem) cayó de 98.693 a 49.286 accesos. El cobre no desapareció, pero dejó de ser la tecnología dominante en apenas cuatro años y medio.</p>
+                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
                             <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales de la provincia.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-<div class="card" id="metodologia">
-    <h3>Metodología y fuentes</h3>
 
-    <p style="color: #475569; margin-bottom: 15px;">
-        Todos los datos de accesos mostrados en este tablero provienen del dataset
-        <strong>"Internet: Penetración de accesos por tecnología, según provincia, partido y localidad"</strong>,
-        publicado por el <strong>Ente Nacional de Comunicaciones (ENACOM)</strong> en su portal de datos abiertos
-        (datosabiertos.enacom.gob.ar), correspondiente al corte <strong>[COMPLETAR: ej. 3° Trimestre de 2026]</strong>.
-        Es un archivo de descarga directa, sin procesamiento adicional por parte de ENACOM más que la agregación
-        por localidad y tecnología.
-    </p>
+        <div class="card" id="metodologia">
+            <h3>Metodología y fuentes</h3>
 
-    <p style="color: #475569; margin-bottom: 15px;">
-        <strong>Filtrado:</strong> se seleccionaron únicamente los registros donde el campo "Provincia" corresponde a Chaco.
-        No se aplicó ningún otro filtro ni exclusión de localidades.
-    </p>
+            <p style="color: #475569; margin-bottom: 15px;">
+                Todos los datos de accesos mostrados en el tablero principal (KPIs, matriz por tecnología, ranking
+                de localidades y mapa) provienen del dataset <strong>"Internet: Penetración de accesos por tecnología,
+                según provincia, partido y localidad"</strong>, publicado por el <strong>Ente Nacional de Comunicaciones
+                (ENACOM)</strong> en su portal de datos abiertos
+                (<a href="https://datosabiertos.enacom.gob.ar" target="_blank" style="color:inherit;">datosabiertos.enacom.gob.ar</a>),
+                correspondiente al corte <strong>2° Trimestre de 2026</strong>. Es un archivo de descarga
+                directa, filtrado en esta página únicamente por "Provincia = Chaco", sin otro procesamiento adicional.
+            </p>
 
-    <p style="color: #475569; margin-bottom: 15px;">
-        <strong>Categorización de tecnologías:</strong> ENACOM reporta 8 tecnologías distintas para Chaco.
-        Para simplificar la lectura, este tablero las agrupa en tres familias:
-    </p>
-    <ul style="color: #475569; margin-bottom: 15px; padding-left: 20px;">
-        <li><strong>Fibra Óptica:</strong> tecnología "Fibra Óptica" (FTTH).</li>
-        <li><strong>Wireless:</strong> tecnologías "Wireless" e "Inalámbrico".</li>
-        <li><strong>Cobre / transición:</strong> tecnologías "Cablemódem", "ADSL" y "Cobre".</li>
-    </ul>
-    <p style="color: #475569; margin-bottom: 15px;">
-        <strong>Quedan fuera de los indicadores principales (KPIs, gráfico de dona y ranking por tecnología)
-        las tecnologías "Satelital", "Celular", "Dial Up" y "Otros"</strong>, que en conjunto representan
-        aproximadamente el 10% de los accesos totales de la provincia — siendo Satelital la de mayor peso individual
-        dentro de ese grupo. Se excluyeron para mantener el foco del tablero en la migración cobre→fibra, no por
-        considerarlas irrelevantes.
-    </p>
+            <p style="color: #475569; margin-bottom: 15px;">
+                <strong>Categorización de tecnologías:</strong> ENACOM reporta 8 tecnologías distintas para Chaco.
+                Para simplificar la lectura, este tablero las agrupa en tres familias:
+            </p>
+            <ul style="color: #475569; margin-bottom: 15px; padding-left: 20px;">
+                <li><strong>Fibra Óptica:</strong> tecnología "Fibra Óptica" (FTTH).</li>
+                <li><strong>Wireless:</strong> tecnologías "Wireless" e "Inalámbrico".</li>
+                <li><strong>Cobre / transición:</strong> tecnologías "Cablemódem" y "ADSL".</li>
+            </ul>
+            <p style="color: #475569; margin-bottom: 15px;">
+                <strong>Quedan fuera de los indicadores principales (KPIs, gráfico de dona y ranking por tecnología)
+                las tecnologías "Satelital", "Celular", "Dial Up" y "Otros"</strong>, que en conjunto representan
+                aproximadamente el 10% de los accesos totales de la provincia en el corte utilizado — siendo Satelital
+                la de mayor peso individual dentro de ese grupo. Se excluyeron para mantener el foco del tablero en
+                la migración cobre→fibra, no por considerarlas irrelevantes para la conectividad real de Chaco.
+            </p>
 
-    <p style="color: #475569; margin-bottom: 15px;">
-        <strong>Definición de "Gran Resistencia" (Metro):</strong> se agrupan bajo esta categoría las localidades de
-        Resistencia, Barranqueras, Fontana y Vilelas. El resto de las localidades de la provincia se clasifica como "Interior".
-    </p>
+            <p style="color: #475569; margin-bottom: 15px;">
+                <strong>Definición de "Gran Resistencia" (Metro):</strong> se agrupan bajo esta categoría las localidades
+                de Resistencia, Barranqueras, Fontana y Vilelas. El resto de las localidades de la provincia se
+                clasifica como "Interior".
+            </p>
 
-    <p style="color: #475569; margin-bottom: 0;">
-        <strong>Geolocalización:</strong> el mapa interactivo muestra coordenadas para 15 localidades de la provincia
-        (las de mayor cantidad de accesos). El resto de las localidades del dataset se incluye en los totales y rankings,
-        pero no tiene representación geográfica en el mapa por no contar con coordenadas cargadas en esta versión.
-    </p>
-</div>
-        
+            <p style="color: #475569; margin-bottom: 15px;">
+                <strong>Geolocalización:</strong> el mapa interactivo muestra coordenadas para 15 localidades de la
+                provincia (las de mayor cantidad de accesos). El resto de las localidades del dataset se incluye en
+                los totales y rankings, pero no tiene representación geográfica en el mapa por no contar con
+                coordenadas cargadas en esta versión.
+            </p>
+
+            <p style="color: #475569; margin-bottom: 0;">
+                <strong>Serie histórica (gráfico "Tendencia de Migración de Red"):</strong> a diferencia del tablero
+                principal, este gráfico combina seis cortes trimestrales distintos del mismo dataset de ENACOM
+                (datosabiertos.enacom.gob.ar), filtrados y agregados de la misma forma (Provincia = Chaco; Fibra Óptica
+                vs. Cablemódem+ADSL): 4T-2021, 4T-2022, 4T-2023, 4T-2024, 4T-2025 y 2T-2026 — este último es el corte
+                más reciente disponible en el portal al momento de construir el tablero, por lo que el último intervalo
+                de la serie corresponde a solo dos trimestres en lugar de cuatro.
+            </p>
+        </div>
+
         <footer>
             Proyecto desarrollado para el Certamen Nacional "Contar con Datos" 2026. Categoría Exploración Interactiva.<br>
-            Fuente de datos: Ente Nacional de Comunicaciones (ENACOM). Actualizado a 2026.
+            Fuente de datos: Ente Nacional de Comunicaciones (ENACOM), corte 2T-2026, datosabiertos.enacom.gob.ar. Ver detalle completo en
+            <a href="#metodologia" style="color:#64748b;">Metodología y fuentes</a>.
         </footer>
     </div>
 
@@ -717,10 +727,10 @@
         chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
             type: 'line',
             data: {
-                labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
+                labels: ['4T-2021', '4T-2022', '4T-2023', '4T-2024', '4T-2025', '2T-2026'],
                 datasets: [
-                    { label: 'Despliegue de Fibra Óptica', data: [34688, 47285, 62301, 89971, 119255, 128273], borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
-                    { label: 'Obsolescencia de Cobre', data: [98693, 85847, 74277, 62723, 54752, 49286], borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
+                    { label: 'Fibra Óptica', data: [34688, 47285, 62301, 89971, 119255, 128273], borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
+                    { label: 'Cobre y transición (ADSL/Cablemódem)', data: [98693, 85847, 74277, 62723, 54752, 49286], borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
                 ]
             },
             options: { 
