@@ -295,7 +295,52 @@
                 </div>
             </div>
         </div>
+<div class="card" id="metodologia">
+    <h3>Metodología y fuentes</h3>
 
+    <p style="color: #475569; margin-bottom: 15px;">
+        Todos los datos de accesos mostrados en este tablero provienen del dataset
+        <strong>"Internet: Penetración de accesos por tecnología, según provincia, partido y localidad"</strong>,
+        publicado por el <strong>Ente Nacional de Comunicaciones (ENACOM)</strong> en su portal de datos abiertos
+        (datosabiertos.enacom.gob.ar), correspondiente al corte <strong>[COMPLETAR: ej. 3° Trimestre de 2026]</strong>.
+        Es un archivo de descarga directa, sin procesamiento adicional por parte de ENACOM más que la agregación
+        por localidad y tecnología.
+    </p>
+
+    <p style="color: #475569; margin-bottom: 15px;">
+        <strong>Filtrado:</strong> se seleccionaron únicamente los registros donde el campo "Provincia" corresponde a Chaco.
+        No se aplicó ningún otro filtro ni exclusión de localidades.
+    </p>
+
+    <p style="color: #475569; margin-bottom: 15px;">
+        <strong>Categorización de tecnologías:</strong> ENACOM reporta 8 tecnologías distintas para Chaco.
+        Para simplificar la lectura, este tablero las agrupa en tres familias:
+    </p>
+    <ul style="color: #475569; margin-bottom: 15px; padding-left: 20px;">
+        <li><strong>Fibra Óptica:</strong> tecnología "Fibra Óptica" (FTTH).</li>
+        <li><strong>Wireless:</strong> tecnologías "Wireless" e "Inalámbrico".</li>
+        <li><strong>Cobre / transición:</strong> tecnologías "Cablemódem", "ADSL" y "Cobre".</li>
+    </ul>
+    <p style="color: #475569; margin-bottom: 15px;">
+        <strong>Quedan fuera de los indicadores principales (KPIs, gráfico de dona y ranking por tecnología)
+        las tecnologías "Satelital", "Celular", "Dial Up" y "Otros"</strong>, que en conjunto representan
+        aproximadamente el 10% de los accesos totales de la provincia — siendo Satelital la de mayor peso individual
+        dentro de ese grupo. Se excluyeron para mantener el foco del tablero en la migración cobre→fibra, no por
+        considerarlas irrelevantes.
+    </p>
+
+    <p style="color: #475569; margin-bottom: 15px;">
+        <strong>Definición de "Gran Resistencia" (Metro):</strong> se agrupan bajo esta categoría las localidades de
+        Resistencia, Barranqueras, Fontana y Vilelas. El resto de las localidades de la provincia se clasifica como "Interior".
+    </p>
+
+    <p style="color: #475569; margin-bottom: 0;">
+        <strong>Geolocalización:</strong> el mapa interactivo muestra coordenadas para 15 localidades de la provincia
+        (las de mayor cantidad de accesos). El resto de las localidades del dataset se incluye en los totales y rankings,
+        pero no tiene representación geográfica en el mapa por no contar con coordenadas cargadas en esta versión.
+    </p>
+</div>
+        
         <footer>
             Proyecto desarrollado para el Certamen Nacional "Contar con Datos" 2026. Categoría Exploración Interactiva.<br>
             Fuente de datos: Ente Nacional de Comunicaciones (ENACOM). Actualizado a 2026.
