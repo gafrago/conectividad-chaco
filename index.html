@@ -109,21 +109,23 @@
 
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid #e2e8f0; }
 
-        /* ESTILOS DE IMPRESIÓN RIGUROSOS PARA ASEGURAR TODOS LOS GRÁFICOS */
+        /* ESTILOS DE IMPRESIÓN REFORZADOS */
         @media print {
             .navbar, .filter-bar, .btn-iniciar, #splash-screen, footer, .nav-btn-export { display: none !important; }
             body { background: white; color: black; }
             
-            /* Hacemos visible el título dinámico solo al exportar */
             .print-only { display: block !important; text-align: center; margin-bottom: 25px; }
             
-            /* Desarmamos las grillas para que todo se apile verticalmente al 100% */
             .grid-2, .grid-uneven { display: block !important; }
             
             .card { width: 100% !important; box-shadow: none; border: 1px solid #cbd5e1; page-break-inside: avoid; margin-bottom: 30px !important; box-sizing: border-box; }
             .tab-content { display: block !important; opacity: 1 !important; visibility: visible !important; }
             
             .chart-wrapper, .chart-wrapper-sm { width: 100% !important; min-height: 300px !important; }
+            
+            /* OBLIGAMOS A TODOS LOS CANVAS A TENER TAMAÑO */
+            canvas { width: 100% !important; height: 300px !important; max-height: 300px !important; }
+            
             #mapa { min-height: 450px !important; }
             
             @page { margin: 1.5cm; size: A4 portrait; }
@@ -337,9 +339,13 @@
         }
 
         function abrirPestana(idPestana, boton) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(idPestana).classList.add('active');
+            
+            let pestanaDestino = document.getElementById(idPestana);
+            if(pestanaDestino) pestanaDestino.classList.add('active');
             if(boton) boton.classList.add('active');
 
             const barraFiltro = document.getElementById('barraFiltroContainer');
@@ -359,36 +365,49 @@
             }, 150); 
         }
 
-        /* MACRO ACTUALIZADA PARA FORZAR RENDERIZADO SIN ANIMACIONES ANTES DE IMPRIMIR */
+        /* MACRO DE EXPORTACIÓN A PDF CON DOBLE PAUSA */
         function exportarPDF() {
-            const tabOriginalActiva = document.querySelector('.tab-content.active') ? document.querySelector('.tab-content.active').id : 'vista-matriz';
+            // Guardamos dónde estaba parado el usuario
+            let tabActivaDOM = document.querySelector('.tab-content.active');
+            let tabOriginalActiva = tabActivaDOM ? tabActivaDOM.id : 'vista-matriz';
             
-            // 1. Despliega todo el contenido verticalmente para que el PDF lo pueda leer
+            // 1. Desplegamos todo forzosamente para que el PDF lo pueda leer
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.style.display = 'block';
                 tab.style.opacity = '1';
                 tab.style.visibility = 'visible';
+                tab.classList.add('active'); 
             });
 
-            // 2. Fuerzo a Chart.js a redibujar TODO instantáneamente sin animaciones (update('none'))
-            if(chartDonut) { chartDonut.resize(); chartDonut.update('none'); }
-            if(chartBarras) { chartBarras.resize(); chartBarras.update('none'); }
-            if(chartGravedad) { chartGravedad.resize(); chartGravedad.update('none'); }
-            if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update('none'); }
-            if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update('none'); }
-            if(miMapa) miMapa.invalidateSize();
-
-            // 3. Imprime y restaura la interfaz a la normalidad
+            // 2. PRIMERA PAUSA: Darle al navegador 150ms para que le asigne dimensiones físicas a las pestañas ocultas
             setTimeout(() => {
-                window.print();
                 
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.style.display = ''; 
-                });
+                // 3. Ya con las dimensiones reales en pantalla, forzamos a redibujar sin animaciones
+                if(chartDonut) { chartDonut.resize(); chartDonut.update('none'); }
+                if(chartBarras) { chartBarras.resize(); chartBarras.update('none'); }
+                if(chartGravedad) { chartGravedad.resize(); chartGravedad.update('none'); }
+                if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update('none'); }
+                if(chartEvolucion) { chartEvolucion.resize(); chartEvolucion.update('none'); }
+                if(miMapa) miMapa.invalidateSize();
+
+                // 4. SEGUNDA PAUSA: Esperar 800ms a que termine el redibujado para lanzar la impresora
+                setTimeout(() => {
+                    window.print();
+                    
+                    // 5. Tras imprimir, restaurar la interfaz original
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.style.display = ''; 
+                        tab.classList.remove('active');
+                    });
+                    
+                    let btnOriginal = document.querySelector(`.nav-btn[onclick*="${tabOriginalActiva}"]`);
+                    if(!btnOriginal) btnOriginal = document.querySelector('.nav-btn'); // Fallback de seguridad
+                    
+                    abrirPestana(tabOriginalActiva, btnOriginal);
+                    
+                }, 800);
                 
-                let btnOriginal = document.querySelector(`.nav-btn[onclick*="${tabOriginalActiva}"]`);
-                abrirPestana(tabOriginalActiva, btnOriginal);
-            }, 800);
+            }, 150);
         }
 
         const coordenadasChaco = {
