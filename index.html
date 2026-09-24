@@ -191,6 +191,7 @@
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
+            <!-- BOTÓN CON BLOQUEO ASÍNCRONO INICIAL -->
             <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled style="opacity: 0.4; cursor: not-allowed;">Conectando al ENACOM...</button>
         </div>
         
@@ -381,7 +382,7 @@
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
-                <strong>Geolocalización:</strong> el mapa interactivo utiliza una capa TopoJSON oficial, sombreando cada departamento según la densidad absoluta de su infraestructura de fibra óptica (Coropletas) e integrando la tasa de penetración relativa por habitante.
+                <strong>Geolocalización y Visualización de Nodos:</strong> Como el dataset original de ENACOM carece de coordenadas geográficas, el mapa interactivo utiliza una capa TopoJSON oficial para sombrear cada departamento (Coropletas). Adicionalmente, <strong>se inyectó un diccionario espacial propio con las coordenadas de más de 50 localidades de la provincia</strong>. Esto permite superponer marcadores geográficos (nodos luminosos) sobre el mapa, evidenciando visual y matemáticamente el vacío territorial en regiones como El Impenetrable, donde no se registran conexiones troncales.
             </p>
 
             <p style="color: #475569; margin-bottom: 0;">
@@ -405,6 +406,27 @@
         
         const colorRiesgoAlto = '#f43f5e'; 
         const colorRiesgoBajo = '#334155'; 
+
+        // Diccionario inyectado de Coordenadas de las localidades de Chaco
+        const coordenadasLocalidades = {
+            "RESISTENCIA": [-27.4514, -58.9867], "BARRANQUERAS": [-27.4833, -58.9333], "FONTANA": [-27.4167, -59.0333],
+            "PUERTO VILELAS": [-27.5167, -58.9333], "PRESIDENCIA ROQUE SAENZ PEÑA": [-26.7833, -60.4500], "VILLA ANGELA": [-27.5667, -60.7167],
+            "JUAN JOSE CASTELLI": [-25.9500, -60.6167], "CHARATA": [-27.2167, -61.2000], "LAS BREÑAS": [-27.0833, -61.0833],
+            "MACHAGAI": [-26.9167, -60.0500], "QUITILIPI": [-26.8667, -60.2167], "GENERAL JOSE DE SAN MARTIN": [-26.5333, -59.3333],
+            "TRES ISLETAS": [-26.3333, -60.4333], "CORONEL DU GRATY": [-27.6833, -60.9167], "PRESIDENCIA DE LA PLAZA": [-27.0000, -59.8333],
+            "PAMPA DEL INDIO": [-25.9833, -59.9167], "TACO POZO": [-25.6167, -63.2833], "AVIA TERAI": [-26.6833, -60.7333],
+            "CAMPO LARGO": [-26.8000, -60.8000], "CORZUELA": [-26.9500, -60.9667], "HERMOSO CAMPO": [-27.6000, -61.3500],
+            "SAN BERNARDO": [-27.2833, -60.7167], "SANTA SYLVINA": [-27.8333, -61.1333], "MARGARITA BELEN": [-27.2500, -58.9667],
+            "MAKALLE": [-27.2000, -59.2833], "LA LEONESA": [-27.0333, -58.7000], "LAS PALMAS": [-27.0667, -58.6667],
+            "PUERTO TIROL": [-27.3667, -59.0833], "GANCEDO": [-27.4833, -61.6667], "LOS FRENTONES": [-26.4000, -61.4167],
+            "PAMPA DEL INFIERNO": [-26.5000, -61.1667], "CONCEPCION DEL BERMEJO": [-26.6000, -60.9500], "MIRAFLORES": [-25.4833, -61.0167],
+            "EL SAUZALITO": [-24.4167, -61.6667], "MISION NUEVA POMPEYA": [-24.9333, -61.4833], "FUERTE ESPERANZA": [-25.2667, -61.8500],
+            "VILLA RIO BERMEJITO": [-25.6167, -60.2500], "COLONIA ELISA": [-26.9333, -59.5167], "LA EDUVIGIS": [-26.8500, -59.0667],
+            "CAPITAN SOLARI": [-26.8000, -59.5667], "COLONIA BENITEZ": [-27.3333, -58.9500], "ISLA DEL CERRITO": [-27.3000, -58.6167],
+            "BASAIL": [-27.8833, -59.2833], "COTE LAI": [-27.5333, -59.5833], "CHARADAI": [-27.6500, -59.8667], "LA TIGRA": [-27.1000, -60.5833],
+            "LA CLOTILDE": [-27.1833, -60.6333], "ENRIQUE URIEN": [-27.5333, -60.5000], "SAMUHU": [-27.5333, -60.4000], 
+            "VILLA BERTHET": [-27.3167, -60.4167], "CHOROTIS": [-27.9167, -61.4000]
+        };
 
         let chartDonut, chartBarras, chartGravedad, chartBenchmark, chartEvolucion, miMapa;
         let datosCrudosGlobales = [];
@@ -558,7 +580,7 @@
                 procesarDatosYConstruirTablero("TODAS");
                 poblarSelectorDepartamentos();
                 
-                // DESBLOQUEO DE INGRESO
+                // DESBLOQUEO DE INGRESO: El botón se activa solo cuando el CSV está en memoria
                 const btnIngreso = document.getElementById('btn-ingreso');
                 btnIngreso.innerText = "Ingresar al Tablero";
                 btnIngreso.style.opacity = "1";
@@ -605,6 +627,7 @@
             let wirelessMetro = 0, wirelessInterior = 0;
             
             let departamentos = {}; 
+            let datosLocalidades = {}; // Registro individual para los Nodos del mapa
             
             Object.keys(poblacionDepartamentos).forEach(dName => {
                 departamentos[dName] = { nombre: dName, total: 0, fibra: 0, wireless: 0, cable: 0, poblacion: poblacionDepartamentos[dName], penetracion: 0 };
@@ -618,10 +641,14 @@
                 if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia && partido) {
                     let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
                     let nombreDepto = partido.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+                    let locNorm = fila['Localidad'].normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
                     
                     if(nombreDepto === "1O DE MAYO" || nombreDepto === "1 DE MAYO" || nombreDepto === "1º DE MAYO") nombreDepto = "1° DE MAYO";
                     if(nombreDepto === "FRAY J. SANTA MARIA DE ORO") nombreDepto = "FRAY JUSTO SANTA MARIA DE ORO";
                     if(nombreDepto === "MAYOR LUIS J FONTANA") nombreDepto = "MAYOR LUIS J. FONTANA";
+                    
+                    if(locNorm.includes("SAENZ PEÑA")) locNorm = "PRESIDENCIA ROQUE SAENZ PEÑA";
+                    if(locNorm.includes("SAN MARTIN")) locNorm = "GENERAL JOSE DE SAN MARTIN";
 
                     if (!isNaN(cantidad) && departamentos[nombreDepto]) {
                         let tech = tecnologia.toUpperCase();
@@ -640,11 +667,21 @@
                             else wirelessInterior += cantidad;
                         }
 
+                        // Acumuladores del Departamento
                         departamentos[nombreDepto].total += cantidad;
                         if (isFibra) departamentos[nombreDepto].fibra += cantidad;
                         if (isWireless) departamentos[nombreDepto].wireless += cantidad;
                         if (isCable) departamentos[nombreDepto].cable += cantidad;
 
+                        // Acumuladores por Ciudad (Para los nodos del mapa)
+                        if (!datosLocalidades[locNorm]) {
+                            datosLocalidades[locNorm] = { depto: nombreDepto, total: 0, fibra: 0, wireless: 0 };
+                        }
+                        datosLocalidades[locNorm].total += cantidad;
+                        if (isFibra) datosLocalidades[locNorm].fibra += cantidad;
+                        else datosLocalidades[locNorm].wireless += cantidad; // Agrupa todo lo que no es fibra
+
+                        // Sumadores de filtro activo
                         if (filtroDepto === "TODAS" || nombreDepto === filtroDepto) {
                             if (isFibra) totalFibra += cantidad;
                             else if (isWireless) totalWireless += cantidad;
@@ -813,6 +850,7 @@
             }
 
             if (window.capaGeoJSON) { miMapa.removeLayer(window.capaGeoJSON); }
+            if (window.capaNodos) { miMapa.removeLayer(window.capaNodos); } // Limpiar nodos anteriores
 
             function obtenerColorCoropleta(densidad, totalAccesos) {
                 if (totalAccesos === 0) return 'url(#pattern-zona-oscura)'; 
@@ -832,6 +870,7 @@
                 .then(topodata => {
                     let geojsonData = topojson.feature(topodata, topodata.objects['departamentos-chaco']);
 
+                    // 1. Dibujar Coropletas (Departamentos)
                     window.capaGeoJSON = L.geoJson(geojsonData, {
                         style: function(feature) {
                             let nombre = feature.properties.departamento;
@@ -910,6 +949,37 @@
                             }
                         }
                     }).addTo(miMapa);
+
+                    // 2. Dibujar Nodos de las Localidades (Puntos luminosos)
+                    window.capaNodos = L.layerGroup().addTo(miMapa);
+                    
+                    Object.keys(datosLocalidades).forEach(loc => {
+                        let dataLoc = datosLocalidades[loc];
+                        // Solo renderiza si no hay filtro o si la localidad pertenece al depto filtrado
+                        if (filtroDepto === "TODAS" || dataLoc.depto === filtroDepto) {
+                            if (coordenadasLocalidades[loc] && dataLoc.total > 0) {
+                                let tieneFibra = dataLoc.fibra > 0;
+                                let colorNodo = tieneFibra ? '#38bdf8' : '#f59e0b'; // Celeste brillante si hay fibra, Ámbar si es solo cobre/wireless
+                                
+                                L.circleMarker(coordenadasLocalidades[loc], {
+                                    radius: tieneFibra ? 6 : 4,
+                                    fillColor: colorNodo,
+                                    color: '#0f172a',
+                                    weight: 1.5,
+                                    fillOpacity: 0.9
+                                })
+                                .bindPopup(`
+                                    <div style="font-family:'Inter', sans-serif;">
+                                        <strong style="font-size:1.05rem; color:#1e293b;">📍 ${loc}</strong>
+                                        <p style="margin:5px 0 0 0; font-size:0.9rem;">Accesos Totales: <strong>${dataLoc.total.toLocaleString('es-AR')}</strong></p>
+                                        <p style="margin:2px 0 0 0; font-size:0.9rem; color:${tieneFibra ? '#4f46e5' : '#b45309'}">Fibra Óptica: <strong>${dataLoc.fibra.toLocaleString('es-AR')}</strong></p>
+                                    </div>
+                                `)
+                                .addTo(window.capaNodos);
+                            }
+                        }
+                    });
+
                 })
                 .catch(error => console.error('Error cargando la cartografía:', error));
         }
