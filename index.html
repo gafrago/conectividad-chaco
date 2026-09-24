@@ -115,7 +115,7 @@
         .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); }
         .card h3 { margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px; color: #1e293b; }
 
-        #mapa { height: 550px; border-radius: 12px; border: 2px solid #e2e8f0; z-index: 1; }
+        #mapa { height: 550px; border-radius: 12px; border: 2px solid #e2e8f0; z-index: 1; cursor: pointer; }
         .leaflet-popup-content h4 { margin: 0 0 8px 0; color: var(--color-fibra); font-size: 1.1rem; }
         .leaflet-popup-content p { margin: 0 0 5px 0; font-size: 0.95rem; }
         
@@ -130,29 +130,22 @@
 
         /* OPTIMIZACIÓN MÓVIL (Smartphones) */
         @media (max-width: 768px) {
-            /* 1. Achicamos textos gigantes del inicio para que no se corten */
             #splash-screen h1 { font-size: 2.5rem; }
             #splash-screen h2 { font-size: 1.2rem; }
-            
-            /* 2. Menú deslizable táctil (Swipe) */
             .nav-links { 
                 flex-wrap: nowrap; 
                 overflow-x: auto; 
                 padding-bottom: 5px;
-                -webkit-overflow-scrolling: touch; /* Desplazamiento suave en iPhone */
+                -webkit-overflow-scrolling: touch; 
                 gap: 5px;
             }
             .nav-btn { 
-                white-space: nowrap; /* Evita que el texto del botón se rompa en dos líneas */
+                white-space: nowrap; 
                 padding: 12px 15px; 
                 font-size: 0.9rem;
             }
-            
-            /* 3. Optimizamos espacios interiores */
             .container { padding: 0 10px; margin: 20px auto; }
             .card, .kpi-card { padding: 20px; }
-            
-            /* 4. Evitamos que el mapa ocupe el 100% del alto de la pantalla */
             #mapa { height: 400px; }
             .chart-wrapper { height: 300px; }
         }
@@ -263,7 +256,7 @@
             <div id="barraFiltroContainer" class="filter-bar">
                 <div>
                     <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
-                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento para aislar su topología de red en tiempo real.</span>
+                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento (o haz clic en el mapa) para aislar su topología de red en tiempo real.</span>
                 </div>
                 <div>
                     <!-- ACCESIBILIDAD: Aria Label -->
@@ -304,7 +297,6 @@
                 <div class="grid-2">
                     <div class="card">
                         <h3>Topología Provincial / Departamental</h3>
-                        <!-- ACCESIBILIDAD: Aria Label y Rol -->
                         <div class="chart-wrapper"><canvas id="graficoDonut" role="img" aria-label="Gráfico de dona comparando la proporción total de accesos por Fibra Óptica, Red Wireless y Cobre en la provincia."></canvas></div>
                     </div>
                     <div class="card">
@@ -597,6 +589,11 @@
             let wirelessMetro = 0, wirelessInterior = 0;
             
             let departamentos = {}; 
+            
+            // Pre-inicializar para robustez total
+            Object.keys(poblacionDepartamentos).forEach(dName => {
+                departamentos[dName] = { nombre: dName, total: 0, fibra: 0, wireless: 0, cable: 0, poblacion: poblacionDepartamentos[dName], penetracion: 0 };
+            });
 
             datosCrudosGlobales.forEach(fila => {
                 let provincia = fila['Provincia']; 
@@ -605,14 +602,13 @@
                 
                 if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia && partido) {
                     let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
-                    
                     let nombreDepto = partido.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
                     
                     if(nombreDepto === "1O DE MAYO" || nombreDepto === "1 DE MAYO" || nombreDepto === "1º DE MAYO") nombreDepto = "1° DE MAYO";
                     if(nombreDepto === "FRAY J. SANTA MARIA DE ORO") nombreDepto = "FRAY JUSTO SANTA MARIA DE ORO";
                     if(nombreDepto === "MAYOR LUIS J FONTANA") nombreDepto = "MAYOR LUIS J. FONTANA";
 
-                    if (!isNaN(cantidad)) {
+                    if (!isNaN(cantidad) && departamentos[nombreDepto]) {
                         let tech = tecnologia.toUpperCase();
                         let isFibra = tech.includes('FIBRA'); 
                         let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); 
@@ -629,11 +625,6 @@
                             else wirelessInterior += cantidad;
                         }
 
-                        if (!departamentos[nombreDepto]) {
-                            let pobHabitantes = poblacionDepartamentos[nombreDepto] || 10000;
-                            departamentos[nombreDepto] = { nombre: nombreDepto, total: 0, fibra: 0, wireless: 0, cable: 0, poblacion: pobHabitantes, penetracion: 0 };
-                        }
-                        
                         departamentos[nombreDepto].total += cantidad;
                         if (isFibra) departamentos[nombreDepto].fibra += cantidad;
                         if (isWireless) departamentos[nombreDepto].wireless += cantidad;
@@ -787,16 +778,15 @@
                 });
             }
 
-            // INICIALIZACIÓN DEL MAPA TOPOJSON (Optimizado para Móviles)
+            // INICIALIZACIÓN DEL MAPA TOPOJSON (Optimizado para Móviles y Bidireccional)
             if (!miMapa) {
                 miMapa = L.map('mapa', { 
                     zoomControl: false,
-                    scrollWheelZoom: false, // Evita hacer zoom accidental con la rueda del mouse en PC
-                    dragging: !L.Browser.mobile, // Bloquea arrastrar con 1 dedo en celular (evita la trampa de scroll)
-                    tap: !L.Browser.mobile // Evita dobles clics accidentales al tocar popups en pantallas táctiles
+                    scrollWheelZoom: false, 
+                    dragging: !L.Browser.mobile, 
+                    tap: !L.Browser.mobile 
                 }).setView([-26.5, -60.0], 7); 
 
-                // Si es un celular, avisamos cómo interactuar con el mapa
                 if (L.Browser.mobile) {
                     miMapa.once('focus', function() { miMapa.scrollWheelZoom.enable(); });
                 }
@@ -836,8 +826,8 @@
 
                             return {
                                 fillColor: obtenerColorCoropleta(infoDepto.fibra),
-                                weight: 1.5,
-                                color: '#ffffff',
+                                weight: (nombre === filtroDepto) ? 3 : 1.5,
+                                color: (nombre === filtroDepto) ? '#0ea5e9' : '#ffffff',
                                 fillOpacity: opacidad
                             };
                         },
@@ -858,11 +848,18 @@
                                 `;
                                 layer.bindPopup(popupHTML);
 
+                                // SINCRONIZACIÓN BIDIRECCIONAL: Clic en el polígono del mapa
                                 layer.on({
+                                    click: function(e) {
+                                        let select = document.getElementById('filtroLocalidad');
+                                        select.value = nombre;
+                                        document.getElementById('tituloFiltroPrint').innerText = "Dpto. " + nombre;
+                                        procesarDatosYConstruirTablero(nombre);
+                                    },
                                     mouseover: function(e) {
                                         let capa = e.target;
                                         capa.setStyle({ weight: 3, color: '#0ea5e9', fillOpacity: 1 });
-                                        if (!L.Browser.mobile) { capa.bringToFront(); } // Evitar parpadeos raros al tocar en el celular
+                                        if (!L.Browser.mobile) { capa.bringToFront(); }
                                     },
                                     mouseout: function(e) {
                                         window.capaGeoJSON.resetStyle(e.target);
