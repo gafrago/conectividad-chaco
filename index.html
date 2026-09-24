@@ -368,7 +368,7 @@
             </p>
             
             <p style="color: #475569; margin-bottom: 15px;">
-                <strong>Tasa de Penetración Demográfica:</strong> Para el cálculo de accesos cada 100 habitantes a nivel departamental interactivo en el mapa, se utilizaron las proyecciones de población basadas en los <strong>Resultados Definitivos del Censo Nacional de Población, Hogares y Viviendas 2022</strong>, publicados oficialmente por el INDEC.
+                <strong>Tasa de Penetración e Índice de Modernización:</strong> Para el cálculo de accesos totales cada 100 habitantes (Penetración) y accesos de Fibra Óptica cada 100 habitantes (Índice de Modernización) a nivel departamental interactivo en el mapa, se utilizaron las proyecciones de población basadas en los <strong>Resultados Definitivos del Censo Nacional de Población, Hogares y Viviendas 2022</strong>, publicados oficialmente por el INDEC.
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
@@ -786,9 +786,8 @@
 
             if (window.capaGeoJSON) { miMapa.removeLayer(window.capaGeoJSON); }
 
-            // Lógica de color incluyendo el patrón SVG de zona oscura
             function obtenerColorCoropleta(densidad, totalAccesos) {
-                if (totalAccesos === 0) return 'url(#pattern-zona-oscura)'; // Aplica el SVG a las zonas vacías
+                if (totalAccesos === 0) return 'url(#pattern-zona-oscura)'; 
 
                 return densidad > 50000 ? '#4c1d95' :  
                        densidad > 15000 ? '#6d28d9' :  
@@ -823,15 +822,17 @@
                             let nombre = feature.properties.departamento;
                             let infoDepto = departamentos[nombre];
 
-                            // Corrección lógica: Diferenciar departamentos con datos vs. Zona Oscura
                             if (infoDepto && infoDepto.total > 0) {
                                 let pctFibra = infoDepto.total > 0 ? ((infoDepto.fibra / infoDepto.total) * 100).toFixed(1) : 0;
+                                let indiceModernizacion = infoDepto.poblacion > 0 ? ((infoDepto.fibra / infoDepto.poblacion) * 100).toFixed(1) : 0;
+                                
                                 let popupHTML = `
                                     <div style="font-family:'Inter', sans-serif;">
                                         <h4 style="margin:0 0 5px 0; color:#4c1d95; font-size:1.1rem; border-bottom:1px solid #e2e8f0; padding-bottom:5px;">Dpto. ${nombre}</h4>
-                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Tasa de Penetración:</strong> <span style="color:#0284c7; font-weight:bold;">${infoDepto.penetracion} accesos c/100 hab.</span></p>
+                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Penetración General:</strong> <span style="color:#0284c7; font-weight:bold;">${infoDepto.penetracion} accesos c/100 hab.</span></p>
+                                        <p style="margin:5px 0; font-size:0.95rem; background:rgba(139,92,246,0.1); padding:4px; border-radius:4px; border-left: 3px solid #8b5cf6;"><strong>Índice Modernización:</strong> <span style="color:#6d28d9; font-weight:bold;">${indiceModernizacion} fibra c/100 hab.</span></p>
                                         <p style="margin:5px 0; font-size:0.95rem;"><strong>Accesos Totales:</strong> ${infoDepto.total.toLocaleString('es-AR')}</p>
-                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Fibra Óptica (FTTH):</strong> ${infoDepto.fibra.toLocaleString('es-AR')} <span style="color:#6d28d9; font-weight:bold;">(${pctFibra}%)</span></p>
+                                        <p style="margin:5px 0; font-size:0.95rem;"><strong>Fibra Óptica (FTTH):</strong> ${infoDepto.fibra.toLocaleString('es-AR')} <span style="color:#6d28d9; font-weight:bold;">(${pctFibra}% del total)</span></p>
                                         <p style="margin:5px 0; font-size:0.95rem;"><strong>Wireless:</strong> ${infoDepto.wireless.toLocaleString('es-AR')}</p>
                                     </div>
                                 `;
@@ -854,7 +855,6 @@
                                     }
                                 });
                             } else {
-                                // POPUP Y COMPORTAMIENTO PARA ZONA OSCURA (Sin datos troncales)
                                 layer.bindPopup(`
                                     <div style="font-family:'Inter', sans-serif;">
                                         <h4 style="margin:0 0 5px 0; color:#64748b; font-size:1.1rem;">Dpto. ${nombre}</h4>
@@ -872,7 +872,7 @@
                                     },
                                     mouseover: function(e) {
                                         let capa = e.target;
-                                        capa.setStyle({ weight: 3, color: '#f43f5e', fillOpacity: 1 }); // Resalta en rojo por ser zona oscura
+                                        capa.setStyle({ weight: 3, color: '#f43f5e', fillOpacity: 1 }); 
                                         if (!L.Browser.mobile) { capa.bringToFront(); }
                                     },
                                     mouseout: function(e) {
