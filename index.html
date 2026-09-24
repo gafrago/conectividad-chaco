@@ -234,11 +234,11 @@
             <div id="barraFiltroContainer" class="filter-bar">
                 <div>
                     <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
-                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona una localidad para aislar su topología de red en tiempo real.</span>
+                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento para aislar su topología de red en tiempo real.</span>
                 </div>
                 <div>
                     <!-- ACCESIBILIDAD: Aria Label -->
-                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Seleccionar localidad para filtrar datos del tablero">
+                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Seleccionar departamento para filtrar datos del tablero">
                         <option value="TODAS">🌐 Provincia del Chaco (Global)</option>
                     </select>
                 </div>
@@ -274,12 +274,12 @@
                 </div>
                 <div class="grid-2">
                     <div class="card">
-                        <h3>Topología Provincial / Local</h3>
+                        <h3>Topología Provincial / Departamental</h3>
                         <!-- ACCESIBILIDAD: Aria Label y Rol -->
                         <div class="chart-wrapper"><canvas id="graficoDonut" role="img" aria-label="Gráfico de dona comparando la proporción total de accesos por Fibra Óptica, Red Wireless y Cobre en la provincia."></canvas></div>
                     </div>
                     <div class="card">
-                        <h3>Composición por Nodos Críticos</h3>
+                        <h3>Composición por Departamentos Críticos</h3>
                         <div class="chart-wrapper"><canvas id="graficoBarras" role="img" aria-label="Gráfico de barras mostrando el ranking de los 8 nodos críticos de la provincia y su composición tecnológica."></canvas></div>
                     </div>
                 </div>
@@ -291,7 +291,7 @@
                     <div>
                         <div class="alert-panel" style="margin-bottom: 30px;">
                             <h4>⚠️ Vulnerabilidad del Nodo Central</h4>
-                            <p style="margin-bottom: 15px; font-size: 1rem; color: #881337;">El análisis revela que el <strong>Gran Resistencia</strong> actúa como centro de gravedad absoluto, representando un punto de fallo táctico crítico.</p>
+                            <p style="margin-bottom: 15px; font-size: 1rem; color: #881337;">El análisis revela que el <strong>Gran Resistencia (Dpto. San Fernando)</strong> actúa como centro de gravedad absoluto, representando un punto de fallo táctico crítico.</p>
                             <p style="margin: 0; font-size: 1rem; color: #881337;"><strong>Contingencia:</strong> Una disrupción troncal aislaría al interior provincial, degradando las operaciones por su dependencia del sistema Wireless.</p>
                         </div>
                         <div class="alert-panel" style="margin-bottom: 30px; background: #f0fdf4; border-left-color: #22c55e; animation: none;">
@@ -320,7 +320,7 @@
                     <div class="card">
                         <h3>Análisis de Brecha Tecnológica</h3>
                         <p style="color: #475569; font-size: 0.98rem; margin-bottom: 20px;">
-                            Este módulo contrasta el desempeño logístico entre el <strong>Gran Resistencia</strong> (núcleo metropolitano) y el <strong>Resto del Interior Provincial</strong>.
+                            Este módulo contrasta el desempeño logístico entre el <strong>Dpto. San Fernando</strong> (núcleo metropolitano) y el <strong>Resto del Interior Provincial</strong>.
                         </p>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border-left: 4px solid var(--color-wireless); margin-bottom: 15px;">
                             <strong style="color: #0f172a; display: block; margin-bottom: 5px;">📡 Concentración de Conectividad</strong>
@@ -356,12 +356,12 @@
 
             <p style="color: #475569; margin-bottom: 15px;">
                 Todos los datos de accesos mostrados en el tablero principal (KPIs, matriz por tecnología, ranking
-                de localidades y mapa) provienen del dataset <strong>"Internet: Penetración de accesos por tecnología,
+                departamental y mapa) provienen del dataset <strong>"Internet: Penetración de accesos por tecnología,
                 según provincia, partido y localidad"</strong>, publicado por el <strong>Ente Nacional de Comunicaciones
                 (ENACOM)</strong> en su portal de datos abiertos
                 (<a href="https://datosabiertos.enacom.gob.ar" target="_blank" style="color:inherit;">datosabiertos.enacom.gob.ar</a>),
                 correspondiente al corte <strong>2° Trimestre de 2026</strong>. Es un archivo de descarga
-                directa, filtrado en esta página únicamente por "Provincia = Chaco", sin otro procesamiento adicional.
+                directa, filtrado en esta página únicamente por "Provincia = Chaco", agrupando los datos a nivel departamental.
             </p>
             
             <p style="color: #475569; margin-bottom: 15px;">
@@ -386,24 +386,18 @@
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
-                <strong>Definición de "Gran Resistencia" (Metro):</strong> se agrupan bajo esta categoría las localidades
-                de Resistencia, Barranqueras, Fontana y Vilelas. El resto de las localidades de la provincia se
-                clasifica como "Interior".
+                <strong>Definición de "Gran Resistencia" (Metro):</strong> se agrupan bajo esta categoría todos los enlaces reportados dentro del Departamento San Fernando. El resto de los departamentos de la provincia se clasifican como "Interior".
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
-                <strong>Geolocalización:</strong> el mapa interactivo se ha modificado para utilizar una capa TopoJSON
-                oficial, sombreando cada departamento según la densidad de su fibra óptica (Coropletas) mediante una
-                agrupación espacial de los datos.
+                <strong>Geolocalización:</strong> el mapa interactivo utiliza una capa TopoJSON oficial, sombreando cada departamento según la densidad absoluta de su infraestructura de fibra óptica (Coropletas) e integrando la tasa de penetración relativa por habitante.
             </p>
 
             <p style="color: #475569; margin-bottom: 0;">
                 <strong>Serie histórica (gráfico "Tendencia de Migración de Red"):</strong> a diferencia del tablero
                 principal, este gráfico combina seis cortes trimestrales distintos del mismo dataset de ENACOM
                 (datosabiertos.enacom.gob.ar), filtrados y agregados de la misma forma (Provincia = Chaco; Fibra Óptica
-                vs. Cablemódem+ADSL): 4T-2021, 4T-2022, 4T-2023, 4T-2024, 4T-2025 y 2T-2026 — este último es el corte
-                más reciente disponible en el portal al momento de construir el tablero, por lo que el último intervalo
-                de la serie corresponde a solo dos trimestres en lugar de cuatro.
+                vs. Cablemódem+ADSL): 4T-2021, 4T-2022, 4T-2023, 4T-2024, 4T-2025 y 2T-2026.
             </p>
         </div>
 
@@ -525,78 +519,69 @@
             }, 150);
         }
 
+        /* LECTURA Y PIVOTE DE DATOS A DEPARTAMENTOS */
         Papa.parse("enacom.csv", {
             download: true, header: true, skipEmptyLines: true,
             complete: function(results) {
                 datosCrudosGlobales = results.data;
                 procesarDatosYConstruirTablero("TODAS");
-                poblarSelectorCiudades();
+                poblarSelectorDepartamentos();
             }
         });
 
-        function poblarSelectorCiudades() {
+        function poblarSelectorDepartamentos() {
             const select = document.getElementById('filtroLocalidad');
-            let nombresCiudades = Object.keys(ciudadesGlobales).sort();
-            nombresCiudades.forEach(ciudad => {
+            select.innerHTML = '<option value="TODAS">🌐 Provincia del Chaco (Global)</option>';
+            let nombresDeptos = Object.keys(ciudadesGlobales).sort();
+            nombresDeptos.forEach(depto => {
                 let opt = document.createElement('option');
-                opt.value = ciudad;
-                opt.innerText = ciudad;
+                opt.value = depto;
+                opt.innerText = "Dpto. " + depto;
                 select.appendChild(opt);
             });
         }
 
         function aplicarFiltroCruzado() {
             let selector = document.getElementById('filtroLocalidad');
-            let ciudadSeleccionada = selector.value;
+            let deptoSeleccionado = selector.value;
             let textoSeleccionado = selector.options[selector.selectedIndex].text;
             
             document.getElementById('tituloFiltroPrint').innerText = textoSeleccionado;
-            procesarDatosYConstruirTablero(ciudadSeleccionada);
+            procesarDatosYConstruirTablero(deptoSeleccionado);
         }
 
-        function procesarDatosYConstruirTablero(filtroCiudad) {
+        function procesarDatosYConstruirTablero(filtroDepto) {
             
-            // Población oficial definitiva por departamento (Censo INDEC 2022) para cálculo de penetración
+            // Población oficial definitiva (Censo INDEC 2022) para cálculo de penetración
             const poblacionDepartamentos = {
-                "SAN FERNANDO": 416113,
-                "COMANDANTE FERNANDEZ": 101954,
-                "GENERAL GUEMES": 68525,
-                "LIBERTADOR GENERAL SAN MARTIN": 65627,
-                "MAYOR LUIS J. FONTANA": 59965,
-                "ALMIRANTE BROWN": 37851,
-                "CHACABUCO": 34598,
-                "25 DE MAYO": 32793,
-                "QUITILIPI": 32642,
-                "9 DE JULIO": 30258,
-                "BERMEJO": 28144,
-                "MAIPU": 26407,
-                "INDEPENDENCIA": 21996,
-                "O'HIGGINS": 21579,
-                "12 DE OCTUBRE": 23222,
-                "SARGENTO CABRAL": 18793,
-                "SAN LORENZO": 16062,
-                "GENERAL DONOVAN": 15096,
-                "1° DE MAYO": 14279,
-                "PRESIDENCIA DE LA PLAZA": 13956,
-                "LIBERTAD": 13807,
-                "GENERAL BELGRANO": 12807,
-                "FRAY JUSTO SANTA MARIA DE ORO": 10649,
-                "2 DE ABRIL": 8319,
-                "TAPENAGA": 4059
+                "SAN FERNANDO": 416113, "COMANDANTE FERNANDEZ": 101954, "GENERAL GUEMES": 68525, 
+                "LIBERTADOR GENERAL SAN MARTIN": 65627, "MAYOR LUIS J. FONTANA": 59965, "ALMIRANTE BROWN": 37851, 
+                "CHACABUCO": 34598, "25 DE MAYO": 32793, "QUITILIPI": 32642, "9 DE JULIO": 30258, 
+                "BERMEJO": 28144, "MAIPU": 26407, "INDEPENDENCIA": 21996, "O'HIGGINS": 21579, 
+                "12 DE OCTUBRE": 23222, "SARGENTO CABRAL": 18793, "SAN LORENZO": 16062, "GENERAL DONOVAN": 15096, 
+                "1° DE MAYO": 14279, "PRESIDENCIA DE LA PLAZA": 13956, "LIBERTAD": 13807, "GENERAL BELGRANO": 12807, 
+                "FRAY JUSTO SANTA MARIA DE ORO": 10649, "2 DE ABRIL": 8319, "TAPENAGA": 4059
             };
 
             let totalFibra = 0, totalWireless = 0, totalCable = 0;
             let fibraMetro = 0, fibraInterior = 0;
             let wirelessMetro = 0, wirelessInterior = 0;
-            let ciudades = {};
+            
+            let departamentos = {}; 
 
             datosCrudosGlobales.forEach(fila => {
                 let provincia = fila['Provincia']; 
                 let tecnologia = fila['Tecnologia'];
+                let partido = fila['Partido']; 
                 
-                if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia) {
+                if (provincia && provincia.toUpperCase().includes('CHACO') && tecnologia && partido) {
                     let cantidad = parseInt((fila['Accesos'] || '0').replace(/\./g, ''));
-                    let localidad = (fila['Localidad'] || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+                    
+                    let nombreDepto = partido.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+                    
+                    if(nombreDepto === "1O DE MAYO" || nombreDepto === "1 DE MAYO" || nombreDepto === "1º DE MAYO") nombreDepto = "1° DE MAYO";
+                    if(nombreDepto === "FRAY J. SANTA MARIA DE ORO") nombreDepto = "FRAY JUSTO SANTA MARIA DE ORO";
+                    if(nombreDepto === "MAYOR LUIS J FONTANA") nombreDepto = "MAYOR LUIS J. FONTANA";
 
                     if (!isNaN(cantidad)) {
                         let tech = tecnologia.toUpperCase();
@@ -604,7 +589,7 @@
                         let isWireless = (tech.includes('WIRELESS') || tech.includes('INALAMBRICO')); 
                         let isCable = (tech.includes('CABLE') || tech.includes('ADSL') || tech.includes('COBRE'));
 
-                        let esMetro = (localidad.includes('RESISTENCIA') || localidad.includes('BARRANQUERAS') || localidad.includes('FONTANA') || localidad.includes('VILELAS'));
+                        let esMetro = (nombreDepto === 'SAN FERNANDO');
 
                         if (isFibra) {
                             if (esMetro) fibraMetro += cantidad;
@@ -615,13 +600,17 @@
                             else wirelessInterior += cantidad;
                         }
 
-                        if (!ciudades[localidad]) ciudades[localidad] = { total: 0, fibra: 0, wireless: 0, cable: 0 };
-                        ciudades[localidad].total += cantidad;
-                        if (isFibra) ciudades[localidad].fibra += cantidad;
-                        if (isWireless) ciudades[localidad].wireless += cantidad;
-                        if (isCable) ciudades[localidad].cable += cantidad;
+                        if (!departamentos[nombreDepto]) {
+                            let pobHabitantes = poblacionDepartamentos[nombreDepto] || 10000;
+                            departamentos[nombreDepto] = { nombre: nombreDepto, total: 0, fibra: 0, wireless: 0, cable: 0, poblacion: pobHabitantes, penetracion: 0 };
+                        }
+                        
+                        departamentos[nombreDepto].total += cantidad;
+                        if (isFibra) departamentos[nombreDepto].fibra += cantidad;
+                        if (isWireless) departamentos[nombreDepto].wireless += cantidad;
+                        if (isCable) departamentos[nombreDepto].cable += cantidad;
 
-                        if (filtroCiudad === "TODAS" || localidad === filtroCiudad) {
+                        if (filtroDepto === "TODAS" || nombreDepto === filtroDepto) {
                             if (isFibra) totalFibra += cantidad;
                             else if (isWireless) totalWireless += cantidad;
                             else if (isCable) totalCable += cantidad;
@@ -631,7 +620,7 @@
             });
 
             if (Object.keys(ciudadesGlobales).length === 0) {
-                ciudadesGlobales = ciudades;
+                ciudadesGlobales = departamentos; 
             }
 
             let totalGeneral = totalFibra + totalWireless + totalCable;
@@ -642,19 +631,18 @@
             document.getElementById('kpiTotal').innerText = totalGeneral.toLocaleString('es-AR');
             document.getElementById('kpiFibra').innerText = totalFibra.toLocaleString('es-AR');
             document.getElementById('kpiFibraSub').innerText = `${pctFibra}% de la matriz seleccionada`;
-            
             document.getElementById('kpiWireless').innerText = totalWireless.toLocaleString('es-AR');
             document.getElementById('kpiWirelessSub').innerText = `${pctWireless}% de la matriz seleccionada`;
-
             document.getElementById('kpiCobre').innerText = totalCable.toLocaleString('es-AR');
             document.getElementById('kpiCobreSub').innerText = `${pctCobre}% de la matriz seleccionada`;
 
-            let rankingBarras = Object.keys(ciudades)
-                .map(nombre => ({ nombre: nombre, ...ciudades[nombre] }))
+            Object.values(departamentos).forEach(d => {
+                d.penetracion = d.poblacion > 0 ? ((d.total / d.poblacion) * 100).toFixed(1) : 0;
+            });
+
+            let rankingBarras = Object.values(departamentos)
                 .sort((a, b) => b.total - a.total)
                 .slice(0, 8); 
-
-            let todasLasCiudades = Object.keys(ciudades).map(nombre => ({ nombre: nombre, ...ciudades[nombre] }));
 
             const animacionComun = { duration: 1000, easing: 'easeOutQuart' };
 
@@ -698,8 +686,8 @@
                         plugins: { legend: { position: 'top' }, datalabels: { display: false },
                             tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 },
                                 callbacks: {
-                                    title: function(context) { return `Nodo Operativo: ${context[0].label}`; },
-                                    label: function(context) { let tech = context.dataset.label; let valor = context.raw; let totalCiudad = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0); return [ ` ${tech}: ${valor.toLocaleString('es-AR')} enlaces`, ` Abarca el ${totalCiudad > 0 ? ((valor / totalCiudad) * 100).toFixed(1) : 0}% de la red de esta ciudad` ]; }
+                                    title: function(context) { return `Dpto. ${context[0].label}`; },
+                                    label: function(context) { let tech = context.dataset.label; let valor = context.raw; let totalDpto = context.chart.data.datasets.reduce((a, b) => a + b.data[context.dataIndex], 0); return [ ` ${tech}: ${valor.toLocaleString('es-AR')} enlaces`, ` Abarca el ${totalDpto > 0 ? ((valor / totalDpto) * 100).toFixed(1) : 0}% de la red del departamento` ]; }
                                 }
                             }
                         },
@@ -770,39 +758,9 @@
                 });
             }
 
-            const mapaDepartamentos = {
-                "RESISTENCIA": "SAN FERNANDO", "BARRANQUERAS": "SAN FERNANDO", "FONTANA": "SAN FERNANDO", "VILELAS": "SAN FERNANDO",
-                "SAENZ PEÑA": "COMANDANTE FERNANDEZ", "ANGELA": "MAYOR LUIS J. FONTANA", "CASTELLI": "GENERAL GUEMES", 
-                "CHARATA": "CHACABUCO", "BREÑAS": "9 DE JULIO", "MACHAGAI": "25 DE MAYO", "QUITILIPI": "QUITILIPI", 
-                "SAN MARTIN": "LIBERTADOR GENERAL SAN MARTIN", "TRES ISLETAS": "MAIPU", "DU GRATY": "MAYOR LUIS J. FONTANA", 
-                "PLAZA": "PRESIDENCIA DE LA PLAZA"
-            };
-
-            let datosPorDepartamento = {};
-            todasLasCiudades.forEach(ciudad => {
-                let deptoKey = Object.keys(mapaDepartamentos).find(key => ciudad.nombre.includes(key));
-                if (deptoKey) {
-                    let nombreDepto = mapaDepartamentos[deptoKey];
-                    if (!datosPorDepartamento[nombreDepto]) {
-                        // Incluimos la población de referencia
-                        let pobHabitantes = poblacionDepartamentos[nombreDepto] || 10000;
-                        datosPorDepartamento[nombreDepto] = { total: 0, fibra: 0, wireless: 0, poblacion: pobHabitantes, penetracion: 0 };
-                    }
-                    datosPorDepartamento[nombreDepto].total += ciudad.total;
-                    datosPorDepartamento[nombreDepto].fibra += ciudad.fibra;
-                    datosPorDepartamento[nombreDepto].wireless += ciudad.wireless;
-                }
-            });
-
-            // Calcular tasa de penetración final por cada 100 habitantes
-            Object.keys(datosPorDepartamento).forEach(depto => {
-                let d = datosPorDepartamento[depto];
-                d.penetracion = d.poblacion > 0 ? ((d.total / d.poblacion) * 100).toFixed(1) : 0;
-            });
-
-           if (!miMapa) {
+            // INICIALIZACIÓN DEL MAPA TOPOJSON
+            if (!miMapa) {
                 miMapa = L.map('mapa', { zoomControl: false }).setView([-26.5, -60.0], 7); 
-                /* FONDO ESRI SIN MARCA DE AGUA (API KEY) */
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                     attribution: 'Fondo de mapa &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                     maxZoom: 16
@@ -823,9 +781,7 @@
 
             fetch('chaco.json')
                 .then(respuesta => {
-                    if (!respuesta.ok) {
-                        throw new Error('Error de red al intentar cargar chaco.json');
-                    }
+                    if (!respuesta.ok) throw new Error('Error de red al intentar cargar chaco.json');
                     return respuesta.json();
                 })
                 .then(topodata => {
@@ -834,9 +790,9 @@
                     window.capaGeoJSON = L.geoJson(geojsonData, {
                         style: function(feature) {
                             let nombre = feature.properties.departamento;
-                            let infoDepto = datosPorDepartamento[nombre] || { fibra: 0 };
+                            let infoDepto = departamentos[nombre] || { fibra: 0 };
                             
-                            let opacidad = (filtroCiudad === "TODAS" || (mapaDepartamentos[filtroCiudad] === nombre || nombre.includes(filtroCiudad))) ? 0.85 : 0.15;
+                            let opacidad = (filtroDepto === "TODAS" || nombre === filtroDepto) ? 0.85 : 0.15;
 
                             return {
                                 fillColor: obtenerColorCoropleta(infoDepto.fibra),
@@ -847,7 +803,7 @@
                         },
                         onEachFeature: function(feature, layer) {
                             let nombre = feature.properties.departamento;
-                            let infoDepto = datosPorDepartamento[nombre];
+                            let infoDepto = departamentos[nombre];
 
                             if (infoDepto) {
                                 let pctFibra = infoDepto.total > 0 ? ((infoDepto.fibra / infoDepto.total) * 100).toFixed(1) : 0;
