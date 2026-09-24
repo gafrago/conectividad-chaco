@@ -135,18 +135,8 @@
         @media (max-width: 768px) {
             #splash-screen h1 { font-size: 2.5rem; }
             #splash-screen h2 { font-size: 1.2rem; }
-            .nav-links { 
-                flex-wrap: nowrap; 
-                overflow-x: auto; 
-                padding-bottom: 5px;
-                -webkit-overflow-scrolling: touch; 
-                gap: 5px;
-            }
-            .nav-btn { 
-                white-space: nowrap; 
-                padding: 12px 15px; 
-                font-size: 0.9rem;
-            }
+            .nav-links { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; gap: 5px; }
+            .nav-btn { white-space: nowrap; padding: 12px 15px; font-size: 0.9rem; }
             .container { padding: 0 10px; margin: 20px auto; }
             .card, .kpi-card { padding: 20px; }
             #mapa { height: 400px; }
@@ -156,36 +146,14 @@
         /* ACCESIBILIDAD: Modo de Alto Contraste Automático */
         @media (prefers-contrast: more) {
             :root {
-                --bg-color: #ffffff;
-                --text-main: #000000;
-                --card-bg: #ffffff;
-                --color-fibra: #4c1d95; 
-                --color-wireless: #0f766e; 
-                --color-cobre: #9a3412; 
+                --bg-color: #ffffff; --text-main: #000000; --card-bg: #ffffff;
+                --color-fibra: #4c1d95; --color-wireless: #0f766e; --color-cobre: #9a3412; 
             }
-            body {
-                background-color: white;
-                color: black;
-            }
-            p, span, h1, h2, h3, h4, strong {
-                color: #000000 !important;
-            }
-            .card, .kpi-card, .filter-bar, .alert-panel {
-                border: 2px solid #000000 !important;
-                box-shadow: none !important;
-                background-color: #ffffff !important;
-            }
-            .nav-btn {
-                color: #ffffff;
-                font-weight: 900;
-                border: 1px solid #ffffff;
-                margin: 2px;
-            }
-            .nav-btn.active {
-                background: #ffffff;
-                color: #000000;
-                border: 3px solid #000000;
-            }
+            body { background-color: white; color: black; }
+            p, span, h1, h2, h3, h4, strong { color: #000000 !important; }
+            .card, .kpi-card, .filter-bar, .alert-panel { border: 2px solid #000000 !important; box-shadow: none !important; background-color: #ffffff !important; }
+            .nav-btn { color: #ffffff; font-weight: 900; border: 1px solid #ffffff; margin: 2px; }
+            .nav-btn.active { background: #ffffff; color: #000000; border: 3px solid #000000; }
         }
 
         @media print {
@@ -203,6 +171,16 @@
     </style>
 </head>
 <body>
+
+    <!-- TEXTURA SVG PARA ZONAS OSCURAS (Líneas diagonales) -->
+    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <pattern id="pattern-zona-oscura" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="8" height="8" fill="#f8fafc"></rect>
+                <line x1="0" y1="0" x2="0" y2="8" stroke="#cbd5e1" stroke-width="4"></line>
+            </pattern>
+        </defs>
+    </svg>
 
     <div id="splash-screen">
         <div class="arteries-container">
@@ -407,7 +385,7 @@
                 las tecnologías "Satelital", "Celular", "Dial Up" y "Otros"</strong>, que en conjunto representan
                 aproximadamente el 10% de los accesos totales de la provincia en el corte utilizado — siendo Satelital
                 la de mayor peso individual dentro de ese grupo. Se excluyeron para mantener el foco del tablero en
-                la migración cobre→fibra, no por considerarlas irrelevantes para la conectividad real de Chaco.
+                la migración cobre→fibra, no por considerarlas irrelevantes para la conectividad real de Chaco. Las ausencias de datos troncales físicos se grafican mediante texturas (achurados) en el mapa de calor.
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
@@ -808,13 +786,15 @@
 
             if (window.capaGeoJSON) { miMapa.removeLayer(window.capaGeoJSON); }
 
-            function obtenerColorCoropleta(densidad) {
+            // Lógica de color incluyendo el patrón SVG de zona oscura
+            function obtenerColorCoropleta(densidad, totalAccesos) {
+                if (totalAccesos === 0) return 'url(#pattern-zona-oscura)'; // Aplica el SVG a las zonas vacías
+
                 return densidad > 50000 ? '#4c1d95' :  
                        densidad > 15000 ? '#6d28d9' :  
                        densidad > 5000  ? '#8b5cf6' :  
                        densidad > 1000  ? '#c4b5fd' :  
-                       densidad > 0     ? '#ede9fe' :  
-                                          '#f1f5f9';   
+                                          '#ede9fe';   
             }
 
             fetch('chaco.json')
@@ -828,12 +808,12 @@
                     window.capaGeoJSON = L.geoJson(geojsonData, {
                         style: function(feature) {
                             let nombre = feature.properties.departamento;
-                            let infoDepto = departamentos[nombre] || { fibra: 0 };
+                            let infoDepto = departamentos[nombre] || { fibra: 0, total: 0 };
                             
                             let opacidad = (filtroDepto === "TODAS" || nombre === filtroDepto) ? 0.85 : 0.15;
 
                             return {
-                                fillColor: obtenerColorCoropleta(infoDepto.fibra),
+                                fillColor: obtenerColorCoropleta(infoDepto.fibra, infoDepto.total),
                                 weight: (nombre === filtroDepto) ? 3 : 1.5,
                                 color: (nombre === filtroDepto) ? '#0ea5e9' : '#ffffff',
                                 fillOpacity: opacidad
@@ -843,7 +823,8 @@
                             let nombre = feature.properties.departamento;
                             let infoDepto = departamentos[nombre];
 
-                            if (infoDepto) {
+                            // Corrección lógica: Diferenciar departamentos con datos vs. Zona Oscura
+                            if (infoDepto && infoDepto.total > 0) {
                                 let pctFibra = infoDepto.total > 0 ? ((infoDepto.fibra / infoDepto.total) * 100).toFixed(1) : 0;
                                 let popupHTML = `
                                     <div style="font-family:'Inter', sans-serif;">
@@ -873,6 +854,7 @@
                                     }
                                 });
                             } else {
+                                // POPUP Y COMPORTAMIENTO PARA ZONA OSCURA (Sin datos troncales)
                                 layer.bindPopup(`
                                     <div style="font-family:'Inter', sans-serif;">
                                         <h4 style="margin:0 0 5px 0; color:#64748b; font-size:1.1rem;">Dpto. ${nombre}</h4>
@@ -880,6 +862,23 @@
                                         <p style="margin:5px 0 0 0; font-size:0.85rem; color:#475569;">Conectividad dependiente de enlaces Wireless o Satelitales rurales.</p>
                                     </div>
                                 `);
+                                
+                                layer.on({
+                                    click: function(e) {
+                                        let select = document.getElementById('filtroLocalidad');
+                                        select.value = nombre; 
+                                        document.getElementById('tituloFiltroPrint').innerText = "Dpto. " + nombre;
+                                        procesarDatosYConstruirTablero(nombre); 
+                                    },
+                                    mouseover: function(e) {
+                                        let capa = e.target;
+                                        capa.setStyle({ weight: 3, color: '#f43f5e', fillOpacity: 1 }); // Resalta en rojo por ser zona oscura
+                                        if (!L.Browser.mobile) { capa.bringToFront(); }
+                                    },
+                                    mouseout: function(e) {
+                                        window.capaGeoJSON.resetStyle(e.target);
+                                    }
+                                });
                             }
                         }
                     }).addTo(miMapa);
