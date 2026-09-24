@@ -71,17 +71,9 @@
         .nav-btn.active { color: white; border-bottom: 4px solid var(--color-fibra); background: rgba(255,255,255,0.03); }
         
         /* ACCESIBILIDAD: Navegación por teclado */
-        :focus {
-            outline: 3px solid #38bdf8;
-            outline-offset: 3px;
-        }
-        :focus:not(:focus-visible) {
-            outline: none;
-        }
-        .nav-btn:focus-visible, .btn-iniciar:focus-visible, select:focus-visible {
-            background-color: rgba(56,189,248,0.15);
-            border-radius: 8px;
-        }
+        :focus { outline: 3px solid #38bdf8; outline-offset: 3px; }
+        :focus:not(:focus-visible) { outline: none; }
+        .nav-btn:focus-visible, .btn-iniciar:focus-visible, select:focus-visible { background-color: rgba(56,189,248,0.15); border-radius: 8px; }
 
         /* ESTILOS DE LOS BOTONES ESPECIALES */
         .nav-btn-home { color: #cbd5e1 !important; border: 1px solid rgba(203,213,225,0.2); border-radius: 8px; padding: 8px 15px !important; margin-right: 15px; }
@@ -199,7 +191,6 @@
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
-            <!-- BOTÓN CON BLOQUEO ASÍNCRONO INICIAL -->
             <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled style="opacity: 0.4; cursor: not-allowed;">Conectando al ENACOM...</button>
         </div>
         
@@ -300,7 +291,7 @@
                         <div class="alert-panel" style="margin-bottom: 30px; background: #f0fdf4; border-left-color: #22c55e; animation: none;">
                             <h4 style="color: #166534;">🛰️ Zonas Oscuras Terrestres (El Impenetrable)</h4>
                             <p style="margin-bottom: 15px; font-size: 1rem; color: #14532d;">El mapa evidencia un extenso vacío de infraestructura troncal en el noroeste provincial. Estas zonas de baja densidad demográfica carecen de viabilidad para el tendido físico.</p>
-                            <p style="margin: 0; font-size: 1rem; color: #14532d;"><strong>Despliegue Táctico:</strong> La conectividad en este sector depende casi íntegramente de <strong>enlaces satelitales</strong> (agrupados en la categoría "Otros"), siendo constelaciones LEO (ej. Starlink) y redes GEO (ARSAT) la única garantía de enlace para operaciones productivas e instituciones públicas.</p>
+                            <p style="margin: 0; font-size: 1rem; color: #14532d;"><strong>Despliegue Táctico:</strong> La conectividad en este sector depende casi íntegramente de <strong>tecnologías no incluidas en el mix troncal</strong> (Satelital, Celular, Dial Up y Otros), siendo las constelaciones LEO (ej. Starlink) y redes GEO (ARSAT) la principal garantía de enlace para operaciones productivas e instituciones públicas.</p>
                         </div>
                         <div class="card" style="padding: 25px;">
                             <h3 style="font-size: 1.1rem; text-align: center;">Concentración de Red Óptica</h3>
@@ -382,10 +373,7 @@
             </ul>
             <p style="color: #475569; margin-bottom: 15px;">
                 <strong>Quedan fuera de los indicadores principales (KPIs, gráfico de dona y ranking por tecnología)
-                las tecnologías "Satelital", "Celular", "Dial Up" y "Otros"</strong>, que en conjunto representan
-                aproximadamente el 10% de los accesos totales de la provincia en el corte utilizado — siendo Satelital
-                la de mayor peso individual dentro de ese grupo. Se excluyeron para mantener el foco del tablero en
-                la migración cobre→fibra, no por considerarlas irrelevantes para la conectividad real de Chaco. Las ausencias de datos troncales físicos se grafican mediante texturas (achurados) en el mapa de calor.
+                las tecnologías "Satelital", "Celular", "Dial Up" y "Otros"</strong>. Se excluyeron de los gráficos principales para mantener el foco en la migración cobre→fibra. Sin embargo, su impacto táctico sí se evalúa cualitativamente en el panel de Zonas Oscuras, ya que estas tecnologías (especialmente satelital) son el único soporte operativo en las áreas sin despliegue físico de infraestructura, las cuales se grafican en el mapa mediante texturas (achurados diagonales).
             </p>
 
             <p style="color: #475569; margin-bottom: 15px;">
@@ -397,10 +385,7 @@
             </p>
 
             <p style="color: #475569; margin-bottom: 0;">
-                <strong>Serie histórica (gráfico "Tendencia de Migración de Red"):</strong> a diferencia del tablero
-                principal, este gráfico combina seis cortes trimestrales distintos del mismo dataset de ENACOM
-                (datosabiertos.enacom.gob.ar), filtrados y agregados de la misma forma (Provincia = Chaco; Fibra Óptica
-                vs. Cablemódem+ADSL): 4T-2021, 4T-2022, 4T-2023, 4T-2024, 4T-2025 y 2T-2026.
+                <strong>Serie histórica (gráfico "Tendencia de Migración de Red"):</strong> A diferencia del tablero principal, los datos de la serie histórica se consolidaron en un archivo secundario (<code>historico.csv</code>) para su lectura dinámica. Este archivo combina seis cortes trimestrales del dataset de ENACOM (4T-2021 a 2T-2026), filtrados y agregados para visualizar la competencia entre soportes físicos (Fibra vs. Cablemódem+ADSL).
             </p>
         </div>
 
@@ -522,7 +507,50 @@
             }, 150);
         }
 
-        /* LECTURA Y GESTIÓN ASÍNCRONA DE DATOS */
+        /* CARGA DINÁMICA DEL HISTÓRICO (EVOLUCIÓN DE RED) DESDE CSV */
+        function cargarDatosHistoricos() {
+            Papa.parse("historico.csv", {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    let etiquetas = [];
+                    let dataFibra = [];
+                    let dataCobre = [];
+
+                    results.data.forEach(fila => {
+                        etiquetas.push(fila['Periodo']);
+                        dataFibra.push(parseInt(fila['Fibra']) || 0);
+                        dataCobre.push(parseInt(fila['Cobre']) || 0);
+                    });
+
+                    chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: etiquetas,
+                            datasets: [
+                                { label: 'Fibra Óptica', data: dataFibra, borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
+                                { label: 'Cobre y transición (ADSL/Cablemódem)', data: dataCobre, borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
+                            ]
+                        },
+                        options: { 
+                            responsive: true, maintainAspectRatio: false, animation: { duration: 1500, easing: 'easeOutQuart' }, 
+                            plugins: { legend: { position: 'top' }, datalabels: { display: false }, 
+                                tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 }, callbacks: { label: function(context) { return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`; } } } 
+                            }, scales: { y: { beginAtZero: true } } 
+                        }
+                    });
+                },
+                error: function(err) {
+                    console.error("No se pudo cargar historico.csv. Verifica que el archivo exista.", err);
+                }
+            });
+        }
+        
+        // Ejecutamos la carga del gráfico histórico en paralelo
+        cargarDatosHistoricos();
+
+        /* LECTURA Y GESTIÓN ASÍNCRONA DE DATOS PRINCIPALES */
         Papa.parse("enacom.csv", {
             download: true, header: true, skipEmptyLines: true,
             complete: function(results) {
@@ -530,7 +558,7 @@
                 procesarDatosYConstruirTablero("TODAS");
                 poblarSelectorDepartamentos();
                 
-                // DESBLOQUEO DE INGRESO: El botón se activa solo cuando el CSV está en memoria
+                // DESBLOQUEO DE INGRESO
                 const btnIngreso = document.getElementById('btn-ingreso');
                 btnIngreso.innerText = "Ingresar al Tablero";
                 btnIngreso.style.opacity = "1";
@@ -885,23 +913,6 @@
                 })
                 .catch(error => console.error('Error cargando la cartografía:', error));
         }
-
-        chartEvolucion = new Chart(document.getElementById('graficoEvolucion').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: ['4T-2021', '4T-2022', '4T-2023', '4T-2024', '4T-2025', '2T-2026'],
-                datasets: [
-                    { label: 'Fibra Óptica', data: [34688, 47285, 62301, 89971, 119255, 128273], borderColor: colorFibra, backgroundColor: 'rgba(139, 92, 246, 0.15)', borderWidth: 3, tension: 0.4, fill: true },
-                    { label: 'Cobre y transición (ADSL/Cablemódem)', data: [98693, 85847, 74277, 62723, 54752, 49286], borderColor: colorCable, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, borderDash: [5, 5] }
-                ]
-            },
-            options: { 
-                responsive: true, maintainAspectRatio: false, animation: { duration: 1500, easing: 'easeOutQuart' }, 
-                plugins: { legend: { position: 'top' }, datalabels: { display: false }, 
-                    tooltip: { padding: 15, titleFont: { size: 14 }, bodyFont: { size: 13 }, callbacks: { label: function(context) { return ` ${context.dataset.label}: ${context.raw.toLocaleString('es-AR')} enlaces activos`; } } } 
-                }, scales: { y: { beginAtZero: true } } 
-            }
-        });
     </script>
 </body>
 </html>
