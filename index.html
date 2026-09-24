@@ -47,8 +47,11 @@
         #splash-screen h1 { font-size: 4.2rem; margin-bottom: 0; line-height: 1.1; letter-spacing: -2px; font-weight: 700; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #splash-screen h2 { font-size: 1.7rem; font-weight: 300; color: #818cf8; margin-top: 10px; margin-bottom: 30px; letter-spacing: 0px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         #splash-screen p { font-size: 1.15rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 35px auto; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s; }
+        
+        /* BOTÓN DE INGRESO (Estado inicial y animaciones) */
+        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s; }
         .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
+        .btn-iniciar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
         .organizers-footer { margin-top: auto; padding-top: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .organizers-footer > p { font-size: 0.85rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -218,7 +221,8 @@
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
-            <button class="btn-iniciar" onclick="iniciarApp()">Ingresar al Tablero</button>
+            <!-- BOTÓN CON BLOQUEO ASÍNCRONO INICIAL -->
+            <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled style="opacity: 0.4; cursor: not-allowed;">Conectando al ENACOM...</button>
         </div>
         
         <div class="organizers-footer">
@@ -540,13 +544,20 @@
             }, 150);
         }
 
-        /* LECTURA Y PIVOTE DE DATOS A DEPARTAMENTOS */
+        /* LECTURA Y GESTIÓN ASÍNCRONA DE DATOS */
         Papa.parse("enacom.csv", {
             download: true, header: true, skipEmptyLines: true,
             complete: function(results) {
                 datosCrudosGlobales = results.data;
                 procesarDatosYConstruirTablero("TODAS");
                 poblarSelectorDepartamentos();
+                
+                // DESBLOQUEO DE INGRESO: El botón se activa solo cuando el CSV está en memoria
+                const btnIngreso = document.getElementById('btn-ingreso');
+                btnIngreso.innerText = "Ingresar al Tablero";
+                btnIngreso.style.opacity = "1";
+                btnIngreso.style.cursor = "pointer";
+                btnIngreso.disabled = false;
             }
         });
 
@@ -573,7 +584,6 @@
 
         function procesarDatosYConstruirTablero(filtroDepto) {
             
-            // Población oficial definitiva (Censo INDEC 2022) para cálculo de penetración
             const poblacionDepartamentos = {
                 "SAN FERNANDO": 416113, "COMANDANTE FERNANDEZ": 101954, "GENERAL GUEMES": 68525, 
                 "LIBERTADOR GENERAL SAN MARTIN": 65627, "MAYOR LUIS J. FONTANA": 59965, "ALMIRANTE BROWN": 37851, 
@@ -590,7 +600,6 @@
             
             let departamentos = {}; 
             
-            // Pre-inicializar para robustez total
             Object.keys(poblacionDepartamentos).forEach(dName => {
                 departamentos[dName] = { nombre: dName, total: 0, fibra: 0, wireless: 0, cable: 0, poblacion: poblacionDepartamentos[dName], penetracion: 0 };
             });
@@ -778,7 +787,6 @@
                 });
             }
 
-            // INICIALIZACIÓN DEL MAPA TOPOJSON (Optimizado para Móviles y Bidireccional)
             if (!miMapa) {
                 miMapa = L.map('mapa', { 
                     zoomControl: false,
@@ -848,13 +856,12 @@
                                 `;
                                 layer.bindPopup(popupHTML);
 
-                                // SINCRONIZACIÓN BIDIRECCIONAL: Clic en el polígono del mapa
                                 layer.on({
                                     click: function(e) {
                                         let select = document.getElementById('filtroLocalidad');
-                                        select.value = nombre;
+                                        select.value = nombre; 
                                         document.getElementById('tituloFiltroPrint').innerText = "Dpto. " + nombre;
-                                        procesarDatosYConstruirTablero(nombre);
+                                        procesarDatosYConstruirTablero(nombre); 
                                     },
                                     mouseover: function(e) {
                                         let capa = e.target;
