@@ -282,7 +282,7 @@
             <!-- PESTAÑA 1 -->
             <div id="vista-matriz" class="tab-content active fade-in" role="tabpanel" aria-label="Panel de Matriz Operativa">
                 <div style="background: rgba(139,92,246,0.1); border-left: 4px solid var(--color-fibra); padding: 25px; margin-bottom: 40px; border-radius: 4px; color: #3730a3; font-size: 1.1rem;">
-                    <strong>Resumen Técnico:</strong> Desglose dinámico de los soportes físicos de enlace. Permite identificar la proporción de conexiones modernas frente a tecnologías de transición por nodo seleccionado.
+                    <strong>Hipótesis de este tablero:</strong> Chaco atraviesa una modernización real de su matriz TIC, pero esa modernización avanza de forma desigual en el territorio. Las próximas pestañas siguen ese mismo hilo: primero el desglose técnico por departamento, después el mapa de dónde se concentra el riesgo, la comparativa capital-interior, y por último si la tendencia histórica cierra esa brecha o la profundiza.
                 </div>
                 <div class="grid-2">
                     <div class="card">
@@ -310,6 +310,7 @@
                             <p style="margin-bottom: 15px; font-size: 1rem; color: #14532d;">El mapa evidencia un extenso vacío de infraestructura troncal en el noroeste provincial. Estas zonas de baja densidad demográfica carecen de viabilidad para el tendido físico.</p>
                             <p style="margin: 0; font-size: 1rem; color: #14532d;"><strong>Despliegue Táctico:</strong> La conectividad en este sector depende casi íntegramente de <strong>tecnologías no incluidas en el mix troncal</strong> (Satelital, Celular, Dial Up y Otros), siendo las constelaciones LEO (ej. Starlink) y redes GEO (ARSAT) la principal garantía de enlace para operaciones productivas e instituciones públicas.</p>
                         </div>
+                        <p style="color: #64748b; font-size: 0.92rem; font-style: italic; margin: -15px 0 25px 5px; border-left: 3px solid #cbd5e1; padding-left: 12px;">Concentración y vacío son la misma cara de un mismo problema: la matriz troncal se construyó desde un único nodo, sin una ruta secundaria diseñada para el resto del territorio.</p>
                         <div class="card" style="padding: 25px;">
                             <h3 style="font-size: 1.1rem; text-align: center;">Concentración de Red Óptica</h3>
                             <div class="chart-wrapper-sm"><canvas id="graficoGravedad" role="img" aria-label="Gráfico circular evidenciando la concentración masiva de enlaces de Fibra Óptica en el Gran Resistencia versus el resto del interior."></canvas></div>
@@ -354,12 +355,27 @@
                         <div style="padding-left: 20px;">
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
                             <p style="color: #475569; margin-bottom: 25px;">Entre el 4T-2021 y el 2T-2026, la Fibra Óptica pasó de representar el 26% al 72% de los enlaces cobre+fibra en la provincia, mientras el cobre (ADSL/Cablemódem) cayó de 98.693 a 49.286 accesos. El cobre no desapareció, pero dejó de ser la tecnología dominante en apenas cuatro años y medio.</p>
-                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Estabilidad Estratégica</h4>
-                            <p style="color: #475569;">Esta migración hacia soportes ópticos aísla a la red de vulnerabilidades climáticas, garantizando una continuidad ininterrumpida para las operaciones actuales de la provincia.</p>
+                            <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Una pregunta abierta</h4>
+                            <p style="color: #475569;">Esta serie es agregada a nivel provincial: no permite saber si el nuevo despliegue de fibra se está repartiendo hacia el interior o si sigue concentrándose en el Gran Resistencia (ver pestaña "Mapa de Resiliencia"). Es la pregunta que este tablero deja abierta, y la que debería guiar la próxima etapa de inversión: ¿la próxima ola de fibra reduce la brecha territorial, o la profundiza?</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="card" style="max-width: 1200px; margin: 0 auto 30px auto; background: #0f172a; color: #e2e8f0;">
+            <h3 style="color: #ffffff;">Síntesis: una modernización real, pero desigual</h3>
+            <p style="color: #cbd5e1; margin-bottom: 0;">
+                En apenas cuatro años y medio, Chaco pasó de una matriz dominada por cobre a una mayoritariamente
+                construida sobre fibra óptica — un cambio tecnológico real, verificable con datos oficiales de ENACOM.
+                Pero esa modernización no es pareja: se concentra en el Gran Resistencia (Dpto. San Fernando), que
+                actúa como nodo único de la red troncal provincial, mientras buena parte del interior —especialmente
+                en El Impenetrable— depende de tecnologías no troncales (wireless y satelital) sin respaldo físico
+                alternativo. El resultado es una provincia que modernizó su conectividad al mismo tiempo que concentró
+                su vulnerabilidad. Extender el despliegue de fibra hacia los departamentos hoy dependientes de
+                wireless o satelital no sería solo una mejora de servicio: sería la forma concreta de convertir el
+                crecimiento de los últimos años en resiliencia real para toda la provincia, y no solo para su capital.
+            </p>
         </div>
 
         <div class="card" id="metodologia" style="max-width: 1200px; margin: 0 auto;">
