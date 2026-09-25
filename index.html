@@ -4,7 +4,6 @@
     <script src="https://unpkg.com/topojson-client@3"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta etiquetas para SEO y Accesibilidad -->
     <meta name="description" content="Tablero interactivo sobre el despliegue físico y resiliencia de la infraestructura TIC y Fibra Óptica en la provincia del Chaco, Argentina.">
     <title>Arterias de Cristal - Matriz Estratégica TIC Chaco</title>
     
@@ -51,9 +50,10 @@
         #splash-screen p { font-size: 1.15rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 35px auto; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         
         /* BOTÓN DE INGRESO (Estado inicial y animaciones) */
-        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s; }
-        .btn-iniciar:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
-        .btn-iniciar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-iniciar { background: white; color: #020617; padding: 18px 45px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 30px rgba(139,92,246,0.3); transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s, background-color 0.3s; }
+        .btn-iniciar:hover:not(:disabled) { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(139,92,246,0.5); }
+        .btn-iniciar:disabled { opacity: 0.5; cursor: wait; transform: none; box-shadow: none; }
+        .btn-error { background-color: #ef4444 !important; color: white !important; opacity: 1 !important; cursor: not-allowed !important; box-shadow: none !important; }
 
         .organizers-footer { margin-top: auto; padding-top: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .organizers-footer > p { font-size: 0.85rem !important; color: #94a3b8 !important; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -193,7 +193,7 @@
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
-            <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled aria-label="Ingresar al tablero interactivo" style="opacity: 0.4; cursor: not-allowed;">Conectando al ENACOM...</button>
+            <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled aria-label="Ingresar al tablero interactivo" style="cursor: wait;">Cargando datos del ENACOM...</button>
         </div>
         
         <div class="organizers-footer">
@@ -234,6 +234,7 @@
                     <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento (o haz clic en el mapa) para aislar su topología de red.</span>
                 </div>
                 <div>
+                    <!-- ACCESIBILIDAD: Aria Label -->
                     <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Desplegable para seleccionar departamento y filtrar todos los datos del tablero">
                         <option value="TODAS">🌐 Provincia del Chaco (Global)</option>
                     </select>
@@ -243,23 +244,23 @@
             <div class="kpi-grid" aria-label="Indicadores Clave de Rendimiento">
                 <div class="kpi-card" tabindex="0">
                     <h4>Total de Accesos TIC</h4>
-                    <p class="kpi-value" id="kpiTotal">0</p>
+                    <p class="kpi-value" id="kpiTotal">...</p>
                     <p class="kpi-sub" id="kpiTotalSub">Cuentas activas en la región</p>
                 </div>
                 <div class="kpi-card" style="--color-fibra: #8b5cf6;" tabindex="0">
                     <h4>Fibra Óptica (FTTH)</h4>
-                    <p class="kpi-value" id="kpiFibra">0</p>
-                    <p class="kpi-sub" id="kpiFibraSub">0% de la matriz seleccionada</p>
+                    <p class="kpi-value" id="kpiFibra">...</p>
+                    <p class="kpi-sub" id="kpiFibraSub">...% de la matriz seleccionada</p>
                 </div>
                 <div class="kpi-card wireless" tabindex="0">
                     <h4>Conectividad Wireless</h4>
-                    <p class="kpi-value" id="kpiWireless">0</p>
-                    <p class="kpi-sub" id="kpiWirelessSub">0% de la matriz seleccionada</p>
+                    <p class="kpi-value" id="kpiWireless">...</p>
+                    <p class="kpi-sub" id="kpiWirelessSub">...% de la matriz seleccionada</p>
                 </div>
                 <div class="kpi-card cobre" tabindex="0">
                     <h4>Cobre y Tecnologías de Transición</h4>
-                    <p class="kpi-value" id="kpiCobre">0</p>
-                    <p class="kpi-sub" id="kpiCobreSub">0% de la matriz seleccionada</p>
+                    <p class="kpi-value" id="kpiCobre">...</p>
+                    <p class="kpi-sub" id="kpiCobreSub">...% de la matriz seleccionada</p>
                 </div>
             </div>
 
@@ -581,7 +582,7 @@
         
         cargarDatosHistoricos();
 
-        /* LECTURA Y GESTIÓN ASÍNCRONA DE DATOS PRINCIPALES */
+        /* LECTURA Y GESTIÓN ASÍNCRONA DE DATOS PRINCIPALES CON MANEJO DE ERRORES UX */
         Papa.parse("enacom.csv", {
             download: true, header: true, skipEmptyLines: true,
             complete: function(results) {
@@ -595,6 +596,14 @@
                 btnIngreso.style.opacity = "1";
                 btnIngreso.style.cursor = "pointer";
                 btnIngreso.disabled = false;
+            },
+            error: function(err, file, inputElem, reason) {
+                // MANEJO DE ERRORES UX: Si el CSV falla, alertar al usuario y pintar el botón de rojo
+                console.error("Error al cargar el archivo enacom.csv: ", reason);
+                const btnIngreso = document.getElementById('btn-ingreso');
+                btnIngreso.innerText = "Error cargando datos. Reintente.";
+                btnIngreso.classList.add('btn-error');
+                btnIngreso.disabled = true;
             }
         });
 
