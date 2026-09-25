@@ -4,6 +4,8 @@
     <script src="https://unpkg.com/topojson-client@3"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta etiquetas para SEO y Accesibilidad -->
+    <meta name="description" content="Tablero interactivo sobre el despliegue físico y resiliencia de la infraestructura TIC y Fibra Óptica en la provincia del Chaco, Argentina.">
     <title>Arterias de Cristal - Matriz Estratégica TIC Chaco</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -164,7 +166,7 @@
 </head>
 <body>
 
-    <!-- TEXTURA SVG PARA ZONAS OSCURAS (Líneas diagonales) -->
+    <!-- TEXTURA SVG PARA ZONAS OSCURAS (Líneas diagonales) Oculta a lectores de pantalla -->
     <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <pattern id="pattern-zona-oscura" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -174,8 +176,8 @@
         </defs>
     </svg>
 
-    <div id="splash-screen">
-        <div class="arteries-container">
+    <div id="splash-screen" role="banner">
+        <div class="arteries-container" aria-hidden="true">
             <div class="fiber-pulse" style="top: 10%; left: 10%; animation-duration: 4s; animation-delay: 0s;"></div>
             <div class="fiber-pulse" style="top: 30%; left: 40%; animation-duration: 5s; animation-delay: 1.5s;"></div>
             <div class="fiber-pulse" style="top: 60%; left: 0%; animation-duration: 3.5s; animation-delay: 2.2s;"></div>
@@ -184,44 +186,43 @@
         </div>
 
         <div style="margin-top: 25px; margin-bottom: auto; z-index: 1;">
-            <img src="unnamed.jpg" alt="Concurso Contar con Datos 2026" style="height: 120px; width: auto; max-width: 90vw; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <img src="unnamed.jpg" alt="Logo oficial del certamen nacional Contar con Datos 2026" style="height: 120px; width: auto; max-width: 90vw; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
         </div>
         
         <div class="splash-content">
             <h1>Arterias de Cristal</h1>
             <h2>Topología y resiliencia de la matriz TIC en Chaco</h2>
             <p>Análisis territorial interactivo sobre el despliegue físico de infraestructura, concentración logística de fibra óptica y evaluación táctica de vulnerabilidad de red.</p>
-            <!-- BOTÓN CON BLOQUEO ASÍNCRONO INICIAL -->
-            <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled style="opacity: 0.4; cursor: not-allowed;">Conectando al ENACOM...</button>
+            <button class="btn-iniciar" id="btn-ingreso" onclick="iniciarApp()" disabled aria-label="Ingresar al tablero interactivo" style="opacity: 0.4; cursor: not-allowed;">Conectando al ENACOM...</button>
         </div>
         
         <div class="organizers-footer">
             <p>Organizan y Avalan</p>
             <div class="logos-container">
-                <img src="logos-institucionales.png?v=5" alt="Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, Universidad de San Andrés" style="width: 100%; height: auto; object-fit: contain; display: block; margin: 0 auto;">
+                <img src="logos-institucionales.png?v=5" alt="Logotipos de los organizadores: Secretaría de Innovación, Jefatura de Gabinete, Data Science Lab, y Universidad de San Andrés" style="width: 100%; height: auto; object-fit: contain; display: block; margin: 0 auto;">
             </div>
         </div>
     </div>
 
     <!-- APLICACIÓN PRINCIPAL -->
-    <div id="app-principal">
-        <nav class="navbar">
-            <div class="nav-brand">
+    <div id="app-principal" role="main">
+        <nav class="navbar" role="navigation" aria-label="Navegación principal del tablero">
+            <div class="nav-brand" aria-hidden="true">
                 <span>✦</span> Arterias de Cristal
             </div>
-            <div class="nav-links">
-                <button class="nav-btn nav-btn-home" onclick="volverInicio()">🏠 Inicio</button>
-                <button class="nav-btn active" onclick="abrirPestana('vista-matriz', this)">Matriz Operativa</button>
-                <button class="nav-btn" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
-                <button class="nav-btn" onclick="abrirPestana('vista-comparativa', this)">Comparativa Regional</button>
-                <button class="nav-btn" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
-                <button class="nav-btn nav-btn-export" onclick="exportarPDF()">🖨️ Exportar / PDF</button>
+            <div class="nav-links" role="tablist">
+                <button class="nav-btn nav-btn-home" onclick="volverInicio()" aria-label="Volver a la pantalla de inicio">🏠 Inicio</button>
+                <button class="nav-btn active" role="tab" aria-selected="true" onclick="abrirPestana('vista-matriz', this)">Matriz Operativa</button>
+                <button class="nav-btn" role="tab" aria-selected="false" onclick="abrirPestana('vista-mapa', this)">Mapa de Resiliencia</button>
+                <button class="nav-btn" role="tab" aria-selected="false" onclick="abrirPestana('vista-comparativa', this)">Comparativa Regional</button>
+                <button class="nav-btn" role="tab" aria-selected="false" onclick="abrirPestana('vista-evolucion', this)">Evolución Histórica</button>
+                <button class="nav-btn nav-btn-export" onclick="exportarPDF()" aria-label="Exportar tablero actual a formato PDF">🖨️ Exportar / PDF</button>
             </div>
         </nav>
 
         <div class="container">
             
-            <div id="printHeader" class="print-only">
+            <div id="printHeader" class="print-only" aria-hidden="true">
                 <h2 style="color: var(--text-main); margin-bottom: 5px;">Arterias de Cristal: Reporte Estratégico TIC</h2>
                 <h3 style="color: var(--color-fibra); margin-top: 0;">Zona Analizada: <span id="tituloFiltroPrint">Provincia del Chaco (Global)</span></h3>
                 <hr style="border: 1px solid #e2e8f0; margin-bottom: 20px;">
@@ -230,33 +231,32 @@
             <div id="barraFiltroContainer" class="filter-bar">
                 <div>
                     <strong style="color: #1e293b; font-size: 1.05rem;">📍 Filtro Cruzado Territorial:</strong>
-                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento (o haz clic en el mapa) para aislar su topología de red en tiempo real.</span>
+                    <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento (o haz clic en el mapa) para aislar su topología de red.</span>
                 </div>
                 <div>
-                    <!-- ACCESIBILIDAD: Aria Label -->
-                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Seleccionar departamento para filtrar datos del tablero">
+                    <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Desplegable para seleccionar departamento y filtrar todos los datos del tablero">
                         <option value="TODAS">🌐 Provincia del Chaco (Global)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="kpi-grid">
-                <div class="kpi-card">
+            <div class="kpi-grid" aria-label="Indicadores Clave de Rendimiento">
+                <div class="kpi-card" tabindex="0">
                     <h4>Total de Accesos TIC</h4>
                     <p class="kpi-value" id="kpiTotal">0</p>
                     <p class="kpi-sub" id="kpiTotalSub">Cuentas activas en la región</p>
                 </div>
-                <div class="kpi-card" style="--color-fibra: #8b5cf6;">
+                <div class="kpi-card" style="--color-fibra: #8b5cf6;" tabindex="0">
                     <h4>Fibra Óptica (FTTH)</h4>
                     <p class="kpi-value" id="kpiFibra">0</p>
                     <p class="kpi-sub" id="kpiFibraSub">0% de la matriz seleccionada</p>
                 </div>
-                <div class="kpi-card wireless">
+                <div class="kpi-card wireless" tabindex="0">
                     <h4>Conectividad Wireless</h4>
                     <p class="kpi-value" id="kpiWireless">0</p>
                     <p class="kpi-sub" id="kpiWirelessSub">0% de la matriz seleccionada</p>
                 </div>
-                <div class="kpi-card cobre">
+                <div class="kpi-card cobre" tabindex="0">
                     <h4>Cobre y Tecnologías de Transición</h4>
                     <p class="kpi-value" id="kpiCobre">0</p>
                     <p class="kpi-sub" id="kpiCobreSub">0% de la matriz seleccionada</p>
@@ -264,24 +264,24 @@
             </div>
 
             <!-- PESTAÑA 1 -->
-            <div id="vista-matriz" class="tab-content active fade-in">
+            <div id="vista-matriz" class="tab-content active fade-in" role="tabpanel" aria-label="Panel de Matriz Operativa">
                 <div style="background: rgba(139,92,246,0.1); border-left: 4px solid var(--color-fibra); padding: 25px; margin-bottom: 40px; border-radius: 4px; color: #3730a3; font-size: 1.1rem;">
                     <strong>Resumen Técnico:</strong> Desglose dinámico de los soportes físicos de enlace. Permite identificar la proporción de conexiones modernas frente a tecnologías de transición por nodo seleccionado.
                 </div>
                 <div class="grid-2">
                     <div class="card">
                         <h3>Topología Provincial / Departamental</h3>
-                        <div class="chart-wrapper"><canvas id="graficoDonut" role="img" aria-label="Gráfico de dona comparando la proporción total de accesos por Fibra Óptica, Red Wireless y Cobre en la provincia."></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoDonut" role="img" aria-label="Gráfico de dona comparando la proporción total de accesos por Fibra Óptica, Red Wireless y Cobre en la zona seleccionada."></canvas></div>
                     </div>
                     <div class="card">
                         <h3>Composición por Departamentos Críticos</h3>
-                        <div class="chart-wrapper"><canvas id="graficoBarras" role="img" aria-label="Gráfico de barras mostrando el ranking de los 8 nodos críticos de la provincia y su composición tecnológica."></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoBarras" role="img" aria-label="Gráfico de barras mostrando el ranking de los 8 nodos críticos de la zona seleccionada y su composición tecnológica."></canvas></div>
                     </div>
                 </div>
             </div>
 
             <!-- PESTAÑA 2 -->
-            <div id="vista-mapa" class="tab-content fade-in">
+            <div id="vista-mapa" class="tab-content fade-in" role="tabpanel" aria-label="Panel de Mapa de Resiliencia">
                 <div class="grid-uneven">
                     <div>
                         <div class="alert-panel" style="margin-bottom: 30px;">
@@ -300,13 +300,13 @@
                         </div>
                     </div>
                     <div class="card" style="padding: 15px;">
-                        <div id="mapa"></div>
+                        <div id="mapa" role="region" aria-label="Mapa interactivo del Chaco. Seleccione un departamento para ver su tasa de penetración y filtrar los datos del tablero."></div>
                     </div>
                 </div>
             </div>
 
             <!-- PESTAÑA 3 -->
-            <div id="vista-comparativa" class="tab-content fade-in">
+            <div id="vista-comparativa" class="tab-content fade-in" role="tabpanel" aria-label="Panel de Comparativa Regional">
                 <div class="grid-2">
                     <div class="card">
                         <h3>Benchmark: Capital vs. Interior</h3>
@@ -330,11 +330,11 @@
             </div>
 
             <!-- PESTAÑA 4 -->
-            <div id="vista-evolucion" class="tab-content fade-in">
+            <div id="vista-evolucion" class="tab-content fade-in" role="tabpanel" aria-label="Panel de Evolución Histórica">
                 <div class="card">
                     <h3>Tendencia de Migración de Red (2021-2026) - Visión Macro Provincial</h3>
                     <div class="grid-2" style="align-items: center; margin-top: 30px;">
-                        <div class="chart-wrapper"><canvas id="graficoEvolucion" role="img" aria-label="Gráfico de líneas histórico desde 2021 a 2026 mostrando el crecimiento de la fibra óptica y el declive del cobre."></canvas></div>
+                        <div class="chart-wrapper"><canvas id="graficoEvolucion" role="img" aria-label="Gráfico de líneas histórico desde el cuarto trimestre de 2021 al segundo trimestre de 2026 mostrando el crecimiento sostenido de la fibra óptica y el declive del cobre."></canvas></div>
                         <div style="padding-left: 20px;">
                             <h4 style="color: var(--color-fibra); font-size: 1.3rem; margin-bottom: 10px;">Sustitución Tecnológica Consolidada</h4>
                             <p style="color: #475569; margin-bottom: 25px;">Entre el 4T-2021 y el 2T-2026, la Fibra Óptica pasó de representar el 26% al 72% de los enlaces cobre+fibra en la provincia, mientras el cobre (ADSL/Cablemódem) cayó de 98.693 a 49.286 accesos. El cobre no desapareció, pero dejó de ser la tecnología dominante en apenas cuatro años y medio.</p>
@@ -390,10 +390,10 @@
             </p>
         </div>
 
-        <footer>
+        <footer role="contentinfo">
             Proyecto desarrollado para el Certamen Nacional "Contar con Datos" 2026. Categoría Exploración Interactiva.<br>
             Fuente de datos: Ente Nacional de Comunicaciones (ENACOM), corte 2T-2026, datosabiertos.enacom.gob.ar. Ver detalle completo en
-            <a href="#metodologia" style="color:#64748b;">Metodología y fuentes</a>.
+            <a href="#metodologia" style="color:#64748b;" aria-label="Ir a la sección de Metodología y fuentes">Metodología y fuentes</a>.
         </footer>
     </div>
 
@@ -447,6 +447,10 @@
                 if(chartBarras) { chartBarras.resize(); chartBarras.update(); }
                 if(chartBenchmark) { chartBenchmark.resize(); chartBenchmark.update(); }
                 if(miMapa) { miMapa.invalidateSize(); }
+                
+                // Mover foco al contenedor principal para usuarios de teclado
+                app.setAttribute('tabindex', '-1');
+                app.focus();
             }, 800);
         }
 
@@ -469,11 +473,17 @@
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false'); // Accesibilidad
+            });
             
             let pestanaDestino = document.getElementById(idPestana);
             if(pestanaDestino) pestanaDestino.classList.add('active');
-            if(boton) boton.classList.add('active');
+            if(boton) {
+                boton.classList.add('active');
+                boton.setAttribute('aria-selected', 'true'); // Accesibilidad
+            }
 
             const barraFiltro = document.getElementById('barraFiltroContainer');
             if (idPestana === 'vista-evolucion' || idPestana === 'vista-comparativa') {
@@ -569,7 +579,6 @@
             });
         }
         
-        // Ejecutamos la carga del gráfico histórico en paralelo
         cargarDatosHistoricos();
 
         /* LECTURA Y GESTIÓN ASÍNCRONA DE DATOS PRINCIPALES */
@@ -580,7 +589,7 @@
                 procesarDatosYConstruirTablero("TODAS");
                 poblarSelectorDepartamentos();
                 
-                // DESBLOQUEO DE INGRESO: El botón se activa solo cuando el CSV está en memoria
+                // DESBLOQUEO DE INGRESO
                 const btnIngreso = document.getElementById('btn-ingreso');
                 btnIngreso.innerText = "Ingresar al Tablero";
                 btnIngreso.style.opacity = "1";
@@ -627,7 +636,7 @@
             let wirelessMetro = 0, wirelessInterior = 0;
             
             let departamentos = {}; 
-            let datosLocalidades = {}; // Registro individual para los Nodos del mapa
+            let datosLocalidades = {}; 
             
             Object.keys(poblacionDepartamentos).forEach(dName => {
                 departamentos[dName] = { nombre: dName, total: 0, fibra: 0, wireless: 0, cable: 0, poblacion: poblacionDepartamentos[dName], penetracion: 0 };
@@ -667,21 +676,18 @@
                             else wirelessInterior += cantidad;
                         }
 
-                        // Acumuladores del Departamento
                         departamentos[nombreDepto].total += cantidad;
                         if (isFibra) departamentos[nombreDepto].fibra += cantidad;
                         if (isWireless) departamentos[nombreDepto].wireless += cantidad;
                         if (isCable) departamentos[nombreDepto].cable += cantidad;
 
-                        // Acumuladores por Ciudad (Para los nodos del mapa)
                         if (!datosLocalidades[locNorm]) {
                             datosLocalidades[locNorm] = { depto: nombreDepto, total: 0, fibra: 0, wireless: 0 };
                         }
                         datosLocalidades[locNorm].total += cantidad;
                         if (isFibra) datosLocalidades[locNorm].fibra += cantidad;
-                        else datosLocalidades[locNorm].wireless += cantidad; // Agrupa todo lo que no es fibra
+                        else datosLocalidades[locNorm].wireless += cantidad;
 
-                        // Sumadores de filtro activo
                         if (filtroDepto === "TODAS" || nombreDepto === filtroDepto) {
                             if (isFibra) totalFibra += cantidad;
                             else if (isWireless) totalWireless += cantidad;
@@ -850,7 +856,7 @@
             }
 
             if (window.capaGeoJSON) { miMapa.removeLayer(window.capaGeoJSON); }
-            if (window.capaNodos) { miMapa.removeLayer(window.capaNodos); } // Limpiar nodos anteriores
+            if (window.capaNodos) { miMapa.removeLayer(window.capaNodos); } 
 
             function obtenerColorCoropleta(densidad, totalAccesos) {
                 if (totalAccesos === 0) return 'url(#pattern-zona-oscura)'; 
@@ -955,11 +961,10 @@
                     
                     Object.keys(datosLocalidades).forEach(loc => {
                         let dataLoc = datosLocalidades[loc];
-                        // Solo renderiza si no hay filtro o si la localidad pertenece al depto filtrado
                         if (filtroDepto === "TODAS" || dataLoc.depto === filtroDepto) {
                             if (coordenadasLocalidades[loc] && dataLoc.total > 0) {
                                 let tieneFibra = dataLoc.fibra > 0;
-                                let colorNodo = tieneFibra ? '#38bdf8' : '#f59e0b'; // Celeste brillante si hay fibra, Ámbar si es solo cobre/wireless
+                                let colorNodo = tieneFibra ? '#38bdf8' : '#f59e0b'; 
                                 
                                 L.circleMarker(coordenadasLocalidades[loc], {
                                     radius: tieneFibra ? 6 : 4,
