@@ -125,16 +125,31 @@
 
         footer { text-align: center; padding: 40px; color: #64748b; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid #e2e8f0; }
 
-        /* OPTIMIZACIÓN MÓVIL (Smartphones) */
+        /* OPTIMIZACIÓN MÓVIL (Smartphones) - MEJORADA */
         @media (max-width: 768px) {
-            #splash-screen h1 { font-size: 2.5rem; }
-            #splash-screen h2 { font-size: 1.2rem; }
+            #splash-screen h1 { font-size: 2.2rem; }
+            #splash-screen h2 { font-size: 1.1rem; }
             .nav-links { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; gap: 5px; }
             .nav-btn { white-space: nowrap; padding: 12px 15px; font-size: 0.9rem; }
-            .container { padding: 0 10px; margin: 20px auto; }
-            .card, .kpi-card { padding: 20px; }
+            
+            .container { padding: 0 10px; margin: 15px auto; }
+            .card, .kpi-card { padding: 15px; } 
+            
+            /* Ajustes para la barra de filtros en celulares */
+            .filter-bar { flex-direction: column; align-items: stretch; text-align: left; gap: 15px; padding: 15px; }
+            .filter-bar select { width: 100%; font-size: 16px; /* 16px evita el auto-zoom en iOS */ }
+            
+            /* Ajustes en mapas y gráficos */
             #mapa { height: 400px; }
-            .chart-wrapper { height: 300px; }
+            .chart-wrapper { height: 280px; }
+            .chart-wrapper-sm { height: 250px; }
+            
+            /* Ajustes en los paneles de alerta */
+            .alert-panel { padding: 15px; border-radius: 8px; border-left-width: 4px; }
+            .alert-panel h4 { font-size: 1.1rem; }
+            
+            /* Ajustes en los valores KPI */
+            .kpi-card .kpi-value { font-size: 1.7rem; }
         }
 
         /* ACCESIBILIDAD: Modo de Alto Contraste Automático */
@@ -234,7 +249,7 @@
                     <span style="color: #64748b; font-size: 0.9rem; margin-left: 10px;">Selecciona un departamento (o haz clic en el mapa) para aislar su topología de red.</span>
                 </div>
                 <div>
-                    <!-- ACCESIBILIDAD: Aria Label -->
+                    <!-- ACCESIBILIDAD Y MOVILIDAD: Aria Label y ancho 100% en celular -->
                     <select id="filtroLocalidad" onchange="aplicarFiltroCruzado()" aria-label="Desplegable para seleccionar departamento y filtrar todos los datos del tablero">
                         <option value="TODAS">🌐 Provincia del Chaco (Global)</option>
                     </select>
